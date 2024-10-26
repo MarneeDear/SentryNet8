@@ -1,0 +1,1484 @@
+﻿@model Sentry.WebApp.ViewModels.EmployeeBadViewModel
+
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]:
+            <span id="editRecord">@Html.DisplayFor(m => m.FirstName_Output) @Html.DisplayFor(m => m.LastName_Output)</span>
+        </h1>
+    </li>
+    <li>
+        <h1>
+            Id:
+            <span id="recordId">@Html.DisplayFor(m => m.Employee_ID_Output)</span>
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+    <li><a asp-area="" asp-controller="Employee" asp-action="Index">Record List</a></li>
+    <li class="active">Record Details</li>
+</ol>
+
+<div class="content-container">
+    <form asp-action="Edit" id="employeeEditForm">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="System" />
+        <input type="hidden" asp-for="Integration" />
+        <input type="hidden" name="Remediated" />
+
+        <div id="page-top" class="page-heading">
+            <span>&nbsp;</span>
+            <p id="OriginalValue">Input: Original</p>
+            <p id="ChangedValue">Input: Current</p>
+            <div class="page-toolbar">
+                @*<button type="button" class="btn btn-primary btn-database mr-3" data-toggle="modal" data-target="#employeeDataSourceDataModal" tabindex="-1" title="View All Source Data"><i class="fas fa-print fa-sm">&nbsp;</i>View All Source Data</button>*@
+                <button type="button" class="btn btn-primary btn-print" tabindex="-1" title="Print"><i class="fas fa-print fa-sm">&nbsp;</i>Print</button>
+            </div><!-- /.page-toolbar -->
+        </div>
+
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Employee Details:</h3>
+                <div class="panel-toolbar">
+                    @*<button type="button" class="btn btn-link" target="_blank" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i>History</button>
+                        <button type="button" class="btn btn-link" target="_blank" data-toggle="modal" data-target="#employeeDataSourceDataModal" tabindex="-1"><i class="fas fa-database fa-bars sm">&nbsp;</i>Source Data</button>*@
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;2019/05/23</span>
+                    <span class="sourceSystem"><strong>Source System:</strong>&nbsp;Sage</span>
+                    <span class="sourceRecordId"><strong>System Record Id:</strong>&nbsp;68761358651</span>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-6 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Bio/Dem Details:</h3>
+                            <div class="panel-toolbar">
+                                <a href="#employeeDataDetailHistoryBioDemModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                                <a href="#employeeDataSourceDataBioDemModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <fieldset>
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs info" role="button" rel="popover" tabindex="-1"><i class="fas fa-info-circle fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="FirstName_Output" class="control-label"></label>
+                                        <input asp-for="FirstName_Output" class="form-control" placeholder="First Name" tabindex="0" autofocus />
+                                        <span class="fas form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="FirstName_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs info" role="button" rel="popover" tabindex="-1"><i class="fas fa-info-circle fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="LastName_Output" class="control-label"></label>
+                                        <input asp-for="LastName_Output" class="form-control" placeholder="Last Name" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="LastName_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="NetworkID_Output" class="control-label"></label>
+                                        <input asp-for="NetworkID_Output" class="form-control" placeholder="Network Username" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="NetworkID_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="PreferredName_Output" class="control-label"></label>
+                                        <input asp-for="PreferredName_Output" class="form-control" placeholder="Preferred Name" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="PreferredName_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Home_Addr1_Output" class="control-label"></label>
+                                        <input asp-for="Home_Addr1_Output" class="form-control" placeholder="123 Anywhere St." />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Home_Addr1_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Home_Addr2_Output" class="control-label"></label>
+                                        <input asp-for="Home_Addr2_Output" class="form-control" placeholder="Ste. 100" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Home_Addr2_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Home_City_Output" class="control-label"></label>
+                                        <input asp-for="Home_City_Output" class="form-control" placeholder="Anytown" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Home_City_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-5 col-lg-3">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="Click to View History - PS: This is now a searchable drop-down select field (still hard-coded, and needs wiring up to DB - View: [MDS_UAF].[mdm].[State])." data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="bd-homeStateSelector" class="control-label">State:</label>
+                                        <select id="bd-homeStateSelector" class="select2 form-control">
+                                            <option value="">-- Select a State --</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AK">AK</option>
+                                            <option value="AR">AR</option>
+                                            <option value="AZ">AZ</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-7 col-lg-3">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Home_PostalCode_Output" class="control-label"></label>
+                                        <input asp-for="Home_PostalCode_Output" class="form-control" placeholder="85719" type="number" minlength="5" maxlength="10" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Home_PostalCode_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryBioDemModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataBioDemModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="bd-homeCountrySelector">Country:</label>
+                                        @*<partial name="~/Views/Shared/_CountryListPartial.cshtml" />*@
+                                        <select id="bd-homeCountrySelector" class="select2 form-control">
+                                            <option value="">-- Choose Country --</option>
+                                            <option value="GB">United Kingdom</option>
+                                            <option value="US" selected>United States of America</option>
+                                            <option value="UM">United States Minor Outlying Islands</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+                <div class="col-sm-12 col-md-6 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Workplace Details:</h3>
+                            <div class="panel-toolbar">
+                                <a href="#employeeDataDetailHistoryWorkplaceModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                                <a href="#employeeDataSourceDataWorkplaceModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <fieldset>
+                                <div class="col-sm-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="BusinessEmail_Output" class="control-label"></label>
+                                        <input asp-for="BusinessEmail_Output" class="form-control" placeholder="Business Email" type="email" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="BusinessEmail_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="wd-officeLocation">Office Location Name:</label>
+                                        <select id="wd-officeLocation" class="select2 form-control">
+                                            <option value="">-- Choose Location --</option>
+                                            <option value="wd-officeLocation-swede">Swede Johnson</option>
+                                            <option value="wd-officeLocation-vine" selected>Vine</option>
+                                            <option value="wd-officeLocation-mountain">Mountain</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Office_Number_Output" class="control-label"></label>
+                                        <input asp-for="Office_Number_Output" class="form-control" placeholder="19A" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Office_Number_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Office_Addr1_Output" class="control-label"></label>
+                                        <input asp-for="Office_Addr1_Output" class="form-control" placeholder="123 Anywhere St." />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Office_Addr1_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Office_Addr2_Output" class="control-label"></label>
+                                        <input asp-for="Office_Addr2_Output" class="form-control" placeholder="Ste. 100" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Office_Addr2_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Office_City_Output" class="control-label"></label>
+                                        <input asp-for="Office_City_Output" class="form-control" placeholder="Anytown" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Office_City_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-5 col-lg-3">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="Click to View History - PS: This is now a searchable drop-down select field (still hard-coded, and needs wiring up to DB - View: [MDS_UAF].[mdm].[State])." data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="wd-workStateSelector" class="control-label">State:</label>
+                                        <select id="wd-workStateSelector" class="select2 form-control">
+                                            <option value="">-- Select a State --</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AK">AK</option>
+                                            <option value="AR">AR</option>
+                                            <option value="AZ">AZ</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-7 col-lg-3">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Office_PostalCode_Output" class="control-label"></label>
+                                        <input asp-for="Office_PostalCode_Output" class="form-control" placeholder="85719" type="number" minlength="5" maxlength="10" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Office_PostalCode_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataWorkplaceModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="wd-workCountrySelector">Country:</label>
+                                        @*<partial name="~/Views/Shared/_CountryListPartial.cshtml" />*@
+                                        <select id="wd-workCountrySelector" class="select2 form-control">
+                                            <option value="">-- Choose Country --</option>
+                                            <option value="GB">United Kingdom</option>
+                                            <option value="US" selected>United States of America</option>
+                                            <option value="UM">United States Minor Outlying Islands</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+                <div class="col-sm-12 col-md-6 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Employment Details:</h3>
+                            <div class="panel-toolbar">
+                                <a href="#employeeDataDetailHistoryModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                                <a href="#employeeDataSourceDataEmploymentModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <fieldset>
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Job_Organization_Output" class="control-label"></label>
+                                        @Html.DropDownListFor(model => model.Job_Organization_Output,
+                                              new SelectList((IEnumerable<SelectListItem>)Model.organizations, "Value", "Text", Model.Job_Organization_Output),
+                                              htmlAttributes: new { @class = "form-control" }
+                                              )
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Job_Organization_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="ed-divisionSelector">Division:</label>
+                                        <select id="ed-divisionSelector" class="select2 form-control">
+                                            <option value="">-- Choose Division --</option>
+                                            <option value="ed-divisionSelector-devs">Development Services</option>
+                                            <option value="ed-divisionSelector-crmcgp">Consituent Relations, Marketing Communications, and Giving Programs</option>
+                                            <option value="ed-divisionSelector-mpg">Major and Principle Gifts</option>
+                                            <option value="ed-divisionSelector-fs" selected>Financial Services</option>
+                                        </select>
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Job_Department_Output" class="control-label"></label>
+                                        @Html.DropDownListFor(model => model.Job_Department_Output, new SelectList((IEnumerable<SelectListItem>)Model.departments, "Value", "Text", Model.Job_Department_Output),
+                                              htmlAttributes: new { @class = "form-control" }
+                                              )
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Job_Department_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" tooltip-title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" tooltip-title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" tooltip-title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Job_Manager_Output" class="control-label"></label>
+                                        <input asp-for="Job_Manager_Output" class="form-control" placeholder="Name of Manager" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Job_Manager_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" tooltip-title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" tooltip-title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" tooltip-title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Job_Title_Output" class="control-label"></label>
+                                        <input asp-for="Job_Title_Output" class="form-control" placeholder="Job Title" />
+                                        <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Job_Title_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" tooltip-title="View Comments -- This needs to be a drop-down menu!" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" tooltip-title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" tooltip-title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Employee_ID_Output" class="control-label"></label>
+                                        <input asp-for="Employee_ID_Output" class="form-control" placeholder="123456789" />
+                                        <span class="fas form-control-feedback" aria-hidden="true"></span>
+                                        <span asp-validation-for="Employee_ID_Output" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" tooltip-title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" tooltip-title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" tooltip-title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        @*<label asp-for="Employee_Type_Output" class="control-label"></label>
+                                            @Html.DropDownListFor(model => model.Employee_Type_Output, new SelectList((IEnumerable<SelectListItem>)Model.EmployeesBadList, "Value", "Text", Model.Employee_Type_Output),
+                                                  htmlAttributes: new { @class = "form-control" }
+                                                  )
+                                            <span class="fa form-control-feedback" aria-hidden="true"></span>
+                                            <span asp-validation-for="Employee_Type_Output" class="text-danger help-block"></span>*@
+                                        <label for="ed-employmentTypeSelector">Employment Type:</label>
+                                        <select id="ed-employmentTypeSelector" class="form-control">
+                                            <option value="" selected>-- Choose Employment Type --</option>
+                                            <option value="ed-emplymentType-ft">Full Time</option>
+                                            <option value="ed-emplymentType-pt">Part Time</option>
+                                            <option value="ed-emplymentType-c">Contract</option>
+                                            <option value="ed-emplymentType-temp">Temporary</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" role="button" rel="popover" tooltip-title="View Comments" tabindex="-1"><i class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" tooltip-title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs source" tooltip-title="View Source Data" data-toggle="modal" data-target="#employeeDataSourceDataEmploymentModal" tabindex="-1"><i class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" role="button" rel="popover" title="Field Errors:" tabindex="-1"><i class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label asp-for="Job_StartDate_Output" class="control-label"></label>
+                                        @*<label for="ed-datePicker">Start Date / Hired Date:</label>*@
+                                        <div class="input-group date" id="Job_StartDate_Output">
+                                            <input asp-for="Job_StartDate_Output" class="form-control" placeholder="today" />
+                                            @*<input type="text" class="form-control" id="ed-datePicker" name="date" value="">*@
+                                            <span class="input-group-addon">
+                                                <i class="fas fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+            <div class="panel-footer text-right">
+                <a asp-action="Index" class="btn btn-link" title="Cancel Changes" data-toggle="tooltip"><i class="fas fa-times">&nbsp;</i>Discard</a>
+                <button type="submit" id="btnSavePartial" class="btn btn-info" title="Save Partial Record" data-toggle="tooltip" disabled><i class="fas fa-save">&nbsp;</i>Save Partial Record</button>
+                <button type="submit" id="btnResolve" class="btn btn-primary" title="Re-Validate Record" data-toggle="tooltip" disabled><i class="fas fa-check">&nbsp;</i>Resolve Record</button>
+            </div><!-- /.panel-footer -->
+
+        </div><!-- /.panel-secondary -->
+
+    </form>
+</div><!-- /.content-container -->
+
+<!-- Modal - History Per Record (Bio/Dem) -->
+<div class="modal fade" id="employeeDataDetailHistoryBioDemModal" tabindex="-1" role="dialog" aria-labelledby="#employeeDataDetailHistoryBioDemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataDetailHistoryBioDemModalLabel">Record History (Bio/Dem):</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <h3>Biographic/Demographic:</h3>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="historyPerRecordTableBioDem" class="table responsive history table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all" width="30px">Status:</th>
+                                        <th class="all">Date:</th>
+                                        <th class="all">Name:</th>
+                                        <th class="all">Building Code:</th>
+                                        <th class="all">Address 1:</th>
+                                        <th class="all">Address 2:</th>
+                                        <th class="all">City:</th>
+                                        <th class="all">State:</th>
+                                        <th class="all">Postal Code:</th>
+                                        <th class="all">Country:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="changedDataHistory">
+                                        <td data-header="Status"><i class="fas fa-pen-square" title="Changed Data"></i></td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="goodDataHistory">
+                                        <td data-header="Status"><i class="fas fa-check-square" title="Good Data"></i></td>
+                                        <td data-header="Date">2019-05-04</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="badDataHistory">
+                                        <td data-header="Status"><i class="fas fa-ban" title="Bad Data"></i></td>
+                                        <td data-header="Date">2019-05-04</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="enrichedDataHistory">
+                                        <td data-header="Status"><i class="fas fa-cog" title="Enriched Data"></i></td>
+                                        <td data-header="Date">2019-05-03</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="notProvidedDataHistory">
+                                        <td data-header="Status"><i class="fas fa-exclamation-triangle" title="Data Not Provided"></i></td>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Name">Vine Annex</td>
+                                        <td data-header="Building Code">190</td>
+                                        <td data-header="Address 1">1125 N. Vine</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">Ariz</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">US</td>
+                                    </tr>
+                                    <tr class="sourceDataHistory">
+                                        <td data-header="Status"><i class="fas fa-server" title="Source Data"></i></td>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Name">Vine Annex</td>
+                                        <td data-header="Building Code">190</td>
+                                        <td data-header="Address 1">1125 N. Vine</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">Ariz</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">US</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal - History Per Record (Workplace) -->
+<div class="modal fade" id="employeeDataDetailHistoryWorkplaceModal" tabindex="-1" role="dialog" aria-labelledby="#employeeDataDetailHistoryWorkplaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataDetailHistoryWorkplaceModalLabel">Record History (Bio/Dem):</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <h3>Workplace:</h3>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="historyPerRecordTableWorkplace" class="table responsive history table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all" width="30px">Status:</th>
+                                        <th class="all">Date:</th>
+                                        <th class="all">Name:</th>
+                                        <th class="all">Building Code:</th>
+                                        <th class="all">Address 1:</th>
+                                        <th class="all">Address 2:</th>
+                                        <th class="all">City:</th>
+                                        <th class="all">State:</th>
+                                        <th class="all">Postal Code:</th>
+                                        <th class="all">Country:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="changedDataHistory">
+                                        <td data-header="Status"><i class="fas fa-pen-square" title="Changed Data"></i></td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="goodDataHistory">
+                                        <td data-header="Status"><i class="fas fa-check-square" title="Good Data"></i></td>
+                                        <td data-header="Date">2019-05-04</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="badDataHistory">
+                                        <td data-header="Status"><i class="fas fa-ban" title="Bad Data"></i></td>
+                                        <td data-header="Date">2019-05-04</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="enrichedDataHistory">
+                                        <td data-header="Status"><i class="fas fa-cog" title="Enriched Data"></i></td>
+                                        <td data-header="Date">2019-05-03</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr class="notProvidedDataHistory">
+                                        <td data-header="Status"><i class="fas fa-exclamation-triangle" title="Data Not Provided"></i></td>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Name">Vine Annex</td>
+                                        <td data-header="Building Code">190</td>
+                                        <td data-header="Address 1">1125 N. Vine</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">Ariz</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">US</td>
+                                    </tr>
+                                    <tr class="sourceDataHistory">
+                                        <td data-header="Status"><i class="fas fa-server" title="Source Data"></i></td>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Name">Vine Annex</td>
+                                        <td data-header="Building Code">190</td>
+                                        <td data-header="Address 1">1125 N. Vine</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">Ariz</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">US</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal - Source Data (Bio/Dem) -->
+<div class="modal fade" id="employeeDataSourceDataBioDemModal" tabindex="-1" role="dialog" aria-labelledby="#employeeDataSourceDataBioDemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataSourceDataBioDemModalLabel">Record Source Data (Bio/Dem):</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <h3>Biographic/Demographic:</h3>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="sourceDataPerRecordTableBioDem" class="table responsive sourceData table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Date:</th>
+                                        <th class="all">Source:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Field">First Name</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.FirstName_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.FirstName_Output)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__First_Name__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Last Name</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.LastName_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.LastName_Output)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Surname__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Network Username</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.NetworkID_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.NetworkID_Source)</td>
+                                        <td data-header="Source Field Id"><span class="text-danger" title="Data Not Provided">No Data Provided</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Preferred First Name</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.PreferredName_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.PreferredName_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Preferred_Name__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Home Address 1</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Home_Addr1_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Home_Addr1_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Home_Address_1__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Home Address 2</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Home_Addr2_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Home_Addr2_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Home_Address_2__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">City</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Home_City_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Home_City_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Home_Address_City__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">State</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Home_State_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Home_State_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.UDF_Home_Address_State__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Zip</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Home_PostalCode_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Home_PostalCode_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Home_Address_Postal_Code__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Country</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Home_Country_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Home_Country_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Home_Address_Country__c</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal - Source Data (Workplace) -->
+<div class="modal fade" id="employeeDataSourceDataWorkplaceModal" tabindex="-1" role="dialog" aria-labelledby="#employeeDataSourceDataWorkplaceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataSourceDataWorkplaceModalLabel">Record Source Data (Workplace):</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <h3>Workplace:</h3>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="sourceDataPerRecordTableWorkplace" class="table responsive sourceData table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Date:</th>
+                                        <th class="all">Source:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Field">Business Email</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.BusinessEmail_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.BusinessEmail_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Email__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Office Location Name</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_Location_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_Location_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Office Number</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_Number_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_Number_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Employment__c.Office_Number__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Business Address 1</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_Addr1_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_Addr1_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Address_1__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Business Address 2</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_Addr2_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_Addr2_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Address_2__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">City</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_City_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_City_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Address_City__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">State</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_State_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_State_Source)</td>
+                                        <td data-header="Source Field Id"><span class="text-danger" title="Data Not Provided">No Data Provided</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Zip</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_PostalCode_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_PostalCode_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Address_Postal_Code__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Country</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Office_Country_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Office_Country_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Country__c</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal - Source Data (Employment) -->
+<div class="modal fade" id="employeeDataSourceDataEmploymentModal" tabindex="-1" role="dialog" aria-labelledby="#employeeDataSourceDataEmploymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataSourceDataEmploymentModalLabel">Source Data (Employment):</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <h3>Employment:</h3>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="sourceDataPerRecordTableEmployment" class="table responsive sourceData table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Date:</th>
+                                        <th class="all">Source:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Field">Organization</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Job_Organization_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Job_Organization_Source)</td>
+                                        <td data-header="Source Field Id">fHCM2__Employment__c.Company_Code__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Division</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Job_Division_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Job_Division_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Division__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Department</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Job_Department_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Job_Department_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Business__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Manager's Name</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Job_Manager_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Job_Manager_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Manager__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Job Title</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Job_Title_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Job_Title_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Job_Title__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Employee Id</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Employee_ID_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Employee_ID_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.Empl_ID__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Employment Type</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Employee_Type_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Employee_Type_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Employment_Status__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Hire Date</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">@Html.DisplayFor(m => m.Job_StartDate_Output)</td>
+                                        <td data-header="Original Value">@Html.DisplayFor(m => m.Job_StartDate_Source)</td>
+                                        <td data-header="Source Field Id">TeamMember.fHCM2__Job_Effective_Date__c</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Popover - Title -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i class="btn-icon ua-brand-x">&nbsp;</i></a>
+    Business Info:
+</div><!-- /.popover (title) -->
+
+<!-- Popover - Content -->
+<div id="popover-info-content" class="popover hide">
+    <div class="">
+        <ul class="arrowList">
+            <li><span><strong>Business Glossary Name:</strong> [Need Data]</span></li>
+            <li><span><strong>Business Glossary Description:</strong> [Need Data]</span></li>
+            <li><span><strong>Source:</strong> [Need Data]</span></li>
+            <li><span><strong>Source Field Id:</strong> [Need Data]</span></li>
+        </ul>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+
+<!-- Popover - Comments Title -->
+<div id="popover-comments-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" type="button" role="button" class="pull-right close" title="Close Comments"><i class="btn-icon ua-brand-x">&nbsp;</i></a>
+    <a href="javascript:;" type="button" role="button" class=" btn btn-xs btn-link reverse pull-right" title="Add New Note/Comment"><i class="fas fa-plus-circle"></i> New</a>
+    Comments:
+</div><!-- /.popover (title) -->
+
+<!-- Popover - Comments Content -->
+<div id="popover-comments-content" class="popover hide">
+    <div class="timeline">
+        <ul>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet chili"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num significa nadis i pareci latim. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis.</p>
+                    <div class="people" data-toggle="tooltip" title="Username">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/ashleyford/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                    <div class="time"><i class="fas fa-calendar-alt"></i> 49 minutes ago</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet sky"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Suco de cevadiss, é um leite divinis, qui tem lupuliz, matis, aguis e fermentis. Interagi no mé, cursus quis, vehicula ac nisi. Aenean vel dui dui. Nullam leo erat, aliquet quis tempus a, posuere ut mi.</p>
+                    <div class="people">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/mattsince87/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                    <div class="time"><i class="fas fa-calendar-alt"></i> Yesterday</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet chili"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac mauris lectus, non scelerisque augue. Aenean justo massa.</p>
+                    <div class="people">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/ashleyford/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                    <div class="time"><i class="fas fa-calendar-alt"></i> 3 days ago</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet bloom"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <div class="time"><i class="fas fa-calendar-alt"></i> 12 weeks ago</div>
+                    <div class="people">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+
+
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // https://select2.org/
+
+            // Bio/Dem Details ---
+            $('#bd-homeStateSelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            $('#bd-homeCountrySelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+
+            // Workplace Details ---
+            $('#wd-officeLocation').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            $('#wd-workStateSelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            $('#wd-workCountrySelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+
+            // Employment Details ---
+            $('#Job_Organization_Output').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            var orgDbValue = $('#select2-Job_Organization_Output-container')
+            //orgDbValue.value();
+            console.log(orgDbValue);
+
+            $('#ed-divisionSelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            $('#Job_Department_Output').select2({
+                selectOnClose: true,
+                width: '100%',
+                placeholder: 'Facilities'
+            });
+            $('#ed-employmentTypeSelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+
+            $('#btnResolve').on('click', function () {
+                $('input[name="Remediated"]').val("True");
+            });
+
+
+
+            // jQuery Validation
+            // ---------------------------------------------------------------------
+            var form = $('.content-container > form')
+                , formData = $.data(form[0])
+                , settings = formData.validator.settings
+                // Store existing event handlers in local variables
+                , oldErrorPlacement = settings.errorPlacement
+                , oldSuccess = settings.success;
+
+            settings.errorPlacement = function (label, element) {
+                // Call old handler so it can update the HTML
+                oldErrorPlacement(label, element);
+
+                // Add Bootstrap classes to newly added elements
+                label.parents('.form-group').addClass('has-error has-feedback').removeClass('has-success');
+                label.parents('.form-group').find('.form-control-feedback').addClass('fa-times').removeClass('fa-star');
+                label.addClass('text-danger');
+                label.parents('.form-group').find('.field-validation-error').addClass('hide')
+                label.parents('.form-group').find('.form-error').removeClass('hide');
+                label.parents('.form-group').find('.form-error').popover({
+                    html: true
+                    , container: $('body')
+                    , placement: 'top'
+                    , trigger: 'click'
+                    , content: function () {
+                        return $('.field-validation-error').html();
+                    }
+                })
+                    .data('bs.popover')
+                    .tip()
+                    .addClass('error-form-popover');
+            };
+
+            // Validate Drop-down form fields.
+            $("select").on("select2:close", function (e) {
+                $(this).valid();
+            });
+
+            settings.success = function (label, element) {
+                // Remove error class from <div class="form-group">, but don't worry about
+                // validation error messages as the plugin is going to remove it anyway
+                label.parents('.form-group').removeClass('has-error').addClass('has-success has-feedback');
+                label.parents('.form-group').find('.form-control-feedback').removeClass('fa-times');
+                label.parents('.form-group').find('.form-error').addClass('hide');
+                label.parents('.form-group').find('.form-error').popover('hide');
+
+                // Call old handler to do rest of the work
+                oldSuccess(label);
+            };
+
+
+            //// Get & Store current value:
+            //var editedClass = 'fa-pen-square';
+            //// Check if value has changed:
+            //$('form :input').on('input', function () {
+            //    //$(this).data("val", $(this).val());
+            //    var originalInputValue = $(this).on('focusin', function () {
+            //        console.log("Original value " + $(this).val());
+            //        $(this).data('val', $(this).val());
+            //    });
+            //    var changedValue = $(this).val();
+            //    $('#OriginalValue').html('Original Value: ' + originalInputValue);
+            //    $('#ChangedValue').html('Changed Value: ' + changedValue);
+            //    // If it has changed, set updated icon:
+            //    if (originalInputValue !== changedValue) {
+            //        $(this).parents('.form-group').find('.form-control-feedback').addClass(editedClass);
+            //    } else { // If changed back to original value, set icon back to star
+            //        $(this).parents('.form-group').find('.form-control-feedback').removeClass(editedClass);
+            //    };
+            //});
+
+            // Check if and fields are 'dirty'
+            // Get & Store current value:
+            var originalInputValue = $('.content-container > form .form-control').val();
+            var editedClass = 'fa-pen-square';
+            // Check if value has changed:
+            $('#FirstName_Output').on('input', function () {
+                var changedValue = $(this).val();
+                $('#ChangedValue').html('Changed Value: ' + changedValue);
+                // If it has changed, set updated icon:
+                if (originalInputValue !== changedValue) {
+                    $(this).parents('.form-group').find('.form-control-feedback').addClass(editedClass);
+                    $('#btnResolve').removeAttr('disabled');
+                    $('#btnSavePartial').removeAttr('disabled');
+                } else { // If changed back to original value, set icon back
+                    $(this).parents('.form-group').find('.form-control-feedback').removeClass(editedClass);
+                    $('#btnResolve').attr('disabled', 'true');
+                    $('#btnSavePartial').attr('disabled', 'true');
+                };
+            });
+
+            //$(document).on('focusin', 'input', function () {
+            //    //console.log("Saving value " + $(this).val());
+            //    var originalInputValue = $(this).val();
+            //    $(this).data('val', $(this).val());
+            //    console.log("Original value " + originalInputValue);
+            //}).on('change', 'input', function () {
+            //    var prev = $(this).data('val');
+            //    var current = $(this).val();
+            //    //console.log("Original value " + originalInputValue);
+            //    console.log("Prev value " + prev);
+            //    console.log("New value " + current);
+            //});
+
+
+
+            // DataTable [History Per Record] Definition
+            // ------------------------------------------------------------
+            var exampleTable = $('#historyPerRecordTableBioDemm');
+
+            $(exampleTable).DataTable({
+                //ajax: {
+                //    url: "../../js/modelAttributes.txt",
+                //    type: "GET",
+                //    jsonp: 'callback',
+                //    dataType: 'json',
+                //    crossDomain: true,
+                //},
+                paging: true,
+                pageLength: 10,
+                "lengthMenu": [10, 25, 50, 75, 100],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'ltip',
+                //language: {
+                //    search: 'Filter'
+                //},
+                // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                columnDefs: [{
+                    targets: 1 // Column # (Zero-based)
+                    , render: $.fn.dataTable.render.ellipsis(50, true)
+                    , width: '20%'
+                },
+                { responsivePriority: 1, targets: 0 },
+                { responsivePriority: 2, targets: -2 }
+                ],
+                responsive: true,
+                order: [
+                    [0, "desc"]
+                ],
+                //buttons: [
+                //    'excel', 'pdfHtml5', 'print'
+                //],
+                "columns": [
+                    { "data": "date", "date": "Date", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "buildingCode", "buildingCode": "Building Code", "autoWidth": true },
+                    { "data": "address1", "address1": "Address 1", "autoWidth": true },
+                    { "data": "address2", "address2": "Address 2", "autoWidth": true },
+                    { "data": "city", "city": "City", "autoWidth": true },
+                    { "data": "state", "state": "State", "autoWidth": true },
+                    { "data": "postalCode", "postalCode": "Postal Code", "autoWidth": true },
+                    { "data": "country", "country": "Country", "autoWidth": true },
+                ]
+            });
+            console.log("DataTable [History Per Record] has been defined.");
+
+
+
+            // DataTable [Source Data Per Record] Definition
+            // ------------------------------------------------------------
+            var exampleTable = $('#sourceDataPerRecordTablee'); // Wrong name on purpose. Don't think we need a DataTable here.
+
+            $(exampleTable).DataTable({
+                //ajax: {
+                //    url: "../../js/modelAttributes.txt",
+                //    type: "GET",
+                //    jsonp: 'callback',
+                //    dataType: 'json',
+                //    crossDomain: true,
+                //},
+                paging: true,
+                pageLength: 10,
+                "lengthMenu": [10, 25, 50, 75, 100],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'ltip',
+                //language: {
+                //    search: 'Filter'
+                //},
+                // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                //columnDefs: [{
+                //    targets: 1 // Column # (Zero-based)
+                //    , render: $.fn.dataTable.render.ellipsis(50, true)
+                //    , width: '20%'
+                //},
+                //    { responsivePriority: 1, targets: 0 },
+                //    { responsivePriority: 2, targets: -2 }
+                //],
+                responsive: true,
+                //order: [
+                //    [0, "desc"]
+                //],
+                //buttons: [
+                //    'excel', 'pdfHtml5', 'print'
+                //],
+                "columns": [
+                    { "data": "field", "field": "Field", "autoWidth": true },
+                    { "data": "date", "date": "Date", "autoWidth": true },
+                    { "data": "source", "source": "Source", "autoWidth": true },
+                    { "data": "currentValue", "currentValue": "Current Value", "autoWidth": true },
+                    { "data": "originalValue", "originalValue": "Original Value", "autoWidth": true },
+                    { "data": "sourceFieldId", "sourceFieldId": "Source Field Id", "autoWidth": true },
+                ]
+            });
+            console.log("DataTable [Source Data Per Record] has been defined.");
+
+
+
+        });
+
+    </script>
+}

@@ -1,0 +1,43 @@
+﻿@using Sentry.WebApp.ViewModels
+@model QueueEntryCountsViewModel
+
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <style>
+        .boldRed {
+            color: darkred;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<br />
+
+<h2>@Model.Title</h2>
+
+
+<div class="container-fluid">
+    <table class="table table-bordered" style="width:auto">
+        <thead>
+            <tr>
+                <th>Queue Name</th>
+                <th>Entries</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{foreach (QueueEntryCountRow row in Model.QueueEntryCountRows)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(m => row.QueueName) </td>
+                    <td style="text-align:center">@Html.DisplayFor(m => row.EntryCount)</td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

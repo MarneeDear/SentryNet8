@@ -1,0 +1,65 @@
+﻿@model Sentry.WebApp.ViewModels.GiftDisbursements.GiftDisbursementsListViewModel
+
+@{
+    ViewData["Title"] = "Gift Disbursements to the University of Arizona";
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="GiftDisbursements" asp-action="Index">Gift Disbursements Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container table-responsive" role="main">
+    @await Html.PartialAsync("_CurrentRole")
+    <table id="EtGiftDisbursementTable" class="table table-hover table-striped postToGL recordList">
+        <caption class="sr-only">UA Transfers List</caption>
+        <thead>
+            <tr class="tableHeader">
+                <th style="display: none">giftDisbursementId</th>
+                <th style="display: none">isPending</th>
+                <th style="display: none">pendingComments</th>
+                <th title="Status">Status</th>
+                <th title="Prepared By">Preparer:</th>
+                <th title="Form Number">Form #:</th>
+                <th title="Department">Department:</th>
+                <th title="Total Amount">Amount:</th>
+                <th style="display: none">Reviewer Notes</th>
+                <th title="Last Date Approved On">Date Approved:</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var giftDisbursement in Model.Disbursements)
+            {
+                <tr class="@giftDisbursement.RowStatusClass">
+                    <td style="display: none">@giftDisbursement.GiftDisbursementId</td>
+                    <td style="display: none">@giftDisbursement.IsPending</td>
+                    <td style="display: none">@giftDisbursement.PendingComments</td>
+                    <td>@giftDisbursement.Rejected</td>
+                    <td>@giftDisbursement.PreparedByName</td>
+                    <td>@giftDisbursement.FormNumber</td>
+                    <td>@giftDisbursement.DepartmentCode - @giftDisbursement.DepartmentName</td>
+                    <td>@giftDisbursement.Total</td>
+                    <td style="display: none">@giftDisbursement.ReviewerNotes</td>
+                    <td>@giftDisbursement.LastApprovedOnDate</td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>
+
+@section scripts{
+    @await Html.PartialAsync("_Scripts")
+}

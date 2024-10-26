@@ -1,0 +1,143 @@
+﻿@model Sentry.WebApp.ViewModels.EmployeePossibleMatchViewModel
+
+@{
+    Layout = null;
+}
+
+<table id="employeePossibleMatchTable" class="table table-hover table-striped employee recordList">
+    <thead>
+        <tr class="tableHeader">
+            <th class="hide">Id</th>
+            <th>Select</th>
+            <th>Match Confidence:</th>
+            <th>Name:</th>
+            <th>Employee Id:</th>
+            <th>Birth Date:</th>
+            <th class="none">None</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i <= Model.PossibleMatches.Count - 1; i++)
+        {
+        <tr class="@Model.PossibleMatches[i].Selected">
+            <td data-header="Id" class="hide">@Model.PossibleMatches[i].MasterId</td>
+            <td data-header="Check">
+                <div class="checkbox checkbox-primary">
+
+                </div>
+            </td>
+            <td data-header="Match Confidence">@Html.DisplayFor(m => m.PossibleMatches[i].MatchConfidence)%</td>
+            <td data-header="Name">@Html.DisplayFor(m => m.PossibleMatches[i].Name)</td>
+            <td data-header="EmployeeId">@Html.DisplayFor(m => m.PossibleMatches[i].UAPersonId)</td>
+            <td data-header="BirthDate">@Html.DisplayFor(m => m.PossibleMatches[i].BirthDate)</td>
+            <td data-header="None" class="hide">&nbsp;</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+
+    // Data Table Variables
+    // ------------------------------------------------------------
+    var employeePossibleMatchTable = $('#employeePossibleMatchTable');
+    var pageLength = 5;
+    var pageLegthChanger = "l";
+    var paginationControlVisibility = "p";
+
+    var employeeCount = @Model.PossibleMatches.Count;
+    //console.log("# of Designation Records: " + designationCount);
+
+    if (employeeCount <= pageLength) {
+        pageLegthChanger = ""; // hides pagination
+        paginationControlVisibility = ""; // hides pagination
+    };
+
+    // Data Table Definition
+    // ------------------------------------------------------------
+    $(employeePossibleMatchTable).DataTable({
+        paging: true,
+        pageLength: pageLength,
+        "lengthMenu": [5, 10],
+        // dom() more info: https://datatables.net/reference/option/dom ::
+        // B = Buttons
+        // l = page (l)ength changing input control
+        // f = (f)iltering input
+        // r = p(r)ocessing display element
+        // t = (t)able
+        // i = table (i)nfo summary - aka: showing x of x records
+        // p = (p)agination control
+        dom: 'B' + pageLegthChanger + 'frti' + paginationControlVisibility,
+        language: {
+            loadingRecords: '&nbsp;',
+            processing: 'Processing... <div class="spinner"></div>',
+            search: 'Filter',
+            emptyTable: "No possible matches found."
+        },
+        'columnDefs': [ // Checkboxes: https://www.gyrocode.com/projects/jquery-datatables-checkboxes/ ::
+            {
+                'targets': 1,
+                'render': function (data, type, row, meta) {
+                    if (type === 'display') {
+                        data = '<div class="checkbox checkbox-primary"><input id="someid" type="checkbox" class="dt-checkboxes" data-rowid="' + row.id + '" name="rowSelect" value="' + row.id + '" /><label for="someid">Select</label></div>';
+                    }
+                    return data;
+                },
+                'checkboxes': {
+                    'selectRow': true,
+                    'selectAllRender': '<div class="checkbox checkbox-primary"><input type="checkbox" class="dt-checkboxes" /><label>Choose</label></div>',
+                    'selectAll': false
+                }
+            },
+            { // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                targets: 3 //  Column # (Zero-based)
+                , render: $.fn.dataTable.render.ellipsis(40, true)
+            }
+        ],
+        'select': 'single',
+        'order': [[2, 'desc']],
+        buttons: [
+            'excel', 'pdfHtml5', 'print'
+        ],
+        "columns": [
+            { "data": "id", "id": "Id", "autoWidth": true },
+            { "data": "select", "select": "Select", "autoWidth": true },
+            { "data": "matchConfidence", "matchConfidence": "Match Confidence", "autoWidth": true },
+            { "data": "name", "name": "Name", "autoWidth": true, "width": "40%" },
+            { "data": "uaPersonId", "uaPersonId": "Employee Id", "autoWidth": false },
+            { "data": "birthDate", "birthDate": "Birth Date", "autoWidth": false },
+            { "data": "none", "name": "None", "autoWidth": true },
+        ]
+    });
+
+
+    // Get RowId on row click:
+    // ------------------------------------------------------------
+    $('#employeePossibleMatchTable tbody').on('click', 'tr', function () {
+        var table = $('#employeePossibleMatchTable').DataTable();
+        var rowData = table.row(this).data();
+        var rowId = rowData.id;
+
+        $(this).each(function () {
+            //alert(rowId);
+            //var rowCheckboxId = rowData.select('value').val();
+            console.log('Clicked RowId: ' + rowId);
+            //alert('Clicked Row Checkbox: ' + rowCheckboxId);
+
+            // Check if Checkbox is already selected:
+            if ($(this).find('input[type="checkbox"]').prop("checked") == false) {
+                console.log("Checkbox is unchecked.");
+                $(this).closest(".panel").find("#compareButton").removeAttr("disabled");
+                $(this).closest(".panel").find("#matchButton").removeAttr("disabled");
+            }
+            else if ($(this).find('input[type="checkbox"]').prop("checked") == true) {
+                console.log("Checkbox is checked.");
+                $(this).closest(".panel").find("#compareButton").attr("disabled", "disabled");
+                $(this).closest(".panel").find("#matchButton").attr("disabled", "disabled");
+            };
+        });
+
+        window.rowIdValue = rowId;
+    });
+
+</script>

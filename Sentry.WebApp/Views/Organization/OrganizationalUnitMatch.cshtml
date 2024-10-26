@@ -1,0 +1,333 @@
+﻿@model Sentry.WebApp.ViewModels.OrganizationalUnitMatchViewModel
+
+@{
+    ViewData["Title"] = Model.OrganizationalUnitName + " | " + Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h2>
+            Date:
+            <span title="Date of Integration: @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source:
+            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source Record Id:
+            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+        </h2>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-area="" asp-controller="Organization" asp-action="OrganizationalUnitList">Record List</a></li>
+    <li class="active">Record Details</li>
+</ol>
+
+<form asp-action="OrganizationalUnitEdit" id="OrganizationalUnitMatchForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div id="content-container" class="content-container" role="main">
+
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.Title Matching for: <span class="record-text h3">@Model.OrganizationalUnitName</span></h3>
+                <div class="panel-toolbar"></div>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Match Criteria:</h4>
+                            <div class="panel-toolbar"></div>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="col-sm-12">
+                                <dl class="dl-horizontal displayOnly">
+                                    <dt>Name:</dt>
+                                    <dd><span title="Match Weight: @Model.OrganizationalUnitName_Weight">@Html.DisplayFor(m => m.OrganizationalUnitName)</span></dd>
+                                    <dt>Code:</dt>
+                                    <dd><span title="Match Weight: @Model.OrganizationalUnitCode_Weight">@Html.DisplayFor(m => m.OrganizationalUnitCode)</span></dd>
+                                    <dt>Type:</dt>
+                                    <dd><span title="Match Weight: @Model.OrganizationalUnitType_Weight">@Html.DisplayFor(m => m.OrganizationalUnitType)</span></dd>
+                                    <dt>Organization:</dt>
+                                    <dd><span title="Match Weight: @Model.Organization_Weight">@Html.DisplayFor(m => m.Organization)</span></dd>
+                                </dl>
+                            </div>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+
+                    <div class="panel panel-secondary matching">
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Possible Matches:</h4>
+                            <div class="panel-toolbar"></div>
+                        </div>
+
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table id="organizationalUnitPossibleMatchTable" class="table table-hover table-striped organizationalUnit recordList">
+                                            <thead>
+                                                <tr class="tableHeader">
+                                                    <th class="hide">Id</th>
+                                                    <th>Select</th>
+                                                    <th>Match Confidence:</th>
+                                                    <th>Name:</th>
+                                                    <th>Code:</th>
+                                                    <th>Type:</th>
+                                                    <th>Organization:</th>
+                                                    <th class="none">None</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i <= Model.PossibleMatches.Count - 1; i++)
+                                                {
+                                                    <tr class="@Model.PossibleMatches[i].Selected">
+                                                        <td data-header="Id" class="hide">@Model.PossibleMatches[i].MasterId</td>
+                                                        <td data-header="Check">
+                                                            <div class="checkbox checkbox-primary">
+
+                                                            </div>
+                                                        </td>
+                                                        <td data-header="Match Confidence">@Html.DisplayFor(m => m.PossibleMatches[i].MatchConfidence)%</td>
+                                                        <td data-header="Name">@Html.DisplayFor(m => m.PossibleMatches[i].OrganizationalUnitName)</td>
+                                                        <td data-header="Code">@Html.DisplayFor(m => m.PossibleMatches[i].OrganizationalUnitCode)</td>
+                                                        <td data-header="Type">@Html.DisplayFor(m => m.PossibleMatches[i].OrganizationalUnitType)</td>
+                                                        <td data-header="Organization">@Html.DisplayFor(m => m.PossibleMatches[i].OrganizationName)</td>
+                                                        <td data-header="None" class="hide">&nbsp;</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div><!-- /.panel-body -->
+
+                        <div class="panel-footer text-right">
+                            <a asp-area="" asp-controller="Organization" asp-action="OrganizationalUnitList" class="btn btn-link pull-left" title="Cancel Matching, Back to Listing" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Cancel</a>
+                            <button type="button" id="nomatchButton" class="btn btn-info" title="Submit as New Record" data-toggle="tooltip"><i role="img" class="fas fa-ban">&nbsp;</i>No Matching Records</button>
+                            <button type="button" id="compareButton" class="btn btn-default" title="Compare records" data-toggle="modal" data-target="#organizationalUnitMatchCompareModal" disabled="disabled"><i role="img" class="fal fa-columns">&nbsp;</i>Compare Records</button>
+                            <button type="button" id="matchButton" class="btn btn-primary" title="Match this record" data-toggle="tooltip" disabled="disabled"><i role="img" class="fas fa-check">&nbsp;</i>Match Record</button>
+                        </div><!-- /.panel-footer -->
+
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+        </div><!-- /.panel-secondary -->
+    </div><!-- /.content-container -->
+    <!-- Modal - Compare Record -->
+    <div class="modal fade" id="organizationalUnitMatchCompareModal" tabindex="-1" role="dialog" aria-labelledby="organizationalUnitMatchCompareModal organizationalUnitMatchCompareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="center-block text-center" style="background-color: #fff; border: 5px solid #ccc;">
+                    <img alt="Image" title="Loading..." src="~/img/throbber.gif" /> Loading...
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</form>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Data Table Variables
+            // ------------------------------------------------------------
+            var organizationalUnitPossibleMatchTable = $('#organizationalUnitPossibleMatchTable');
+            var pageLength = 5;
+            var pageLengthChanger = "l";
+            var paginationControlVisibility = "p";
+
+            var organizationalUnitCount = @Model.PossibleMatches.Count;
+            //console.log("# of Organizational Unit Records: " + organizationalUnitCount);
+
+            if (organizationalUnitCount <= pageLength) {
+                pageLengthChanger = ""; // hides pagination
+                paginationControlVisibility = ""; // hides pagination
+            };
+
+            // Data Table Definition
+            // ------------------------------------------------------------
+            $(organizationalUnitPossibleMatchTable).DataTable({
+                paging: true,
+                pageLength: pageLength,
+                "lengthMenu": [5, 10],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'B' + pageLengthChanger + 'frti' + paginationControlVisibility,
+                language: {
+                    loadingRecords: '&nbsp;',
+                    processing: 'Processing... <div class="spinner"></div>',
+                    search: 'Filter'
+                },
+                'columnDefs': [ // Checkboxes: https://www.gyrocode.com/projects/jquery-datatables-checkboxes/ ::
+                    {
+                        'targets': 1,
+                        'render': function (data, type, row, meta) {
+                            if (type === 'display') {
+                                data = '<div class="checkbox checkbox-primary"><input id="someid" type="checkbox" class="dt-checkboxes" data-rowid="' + row.id + '" name="rowSelect" value="' + row.id + '" /><label for="someid">Select</label></div>';
+                            }
+                            return data;
+                        },
+                        'checkboxes': {
+                            'selectRow': true,
+                            'selectAllRender': '<div class="checkbox checkbox-primary"><input type="checkbox" class="dt-checkboxes" /><label>Choose</label></div>',
+                            'selectAll': false
+                        }
+                    },
+                    { // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                        targets: 3 //  Column # (Zero-based)
+                        , render: $.fn.dataTable.render.ellipsis(50, true)
+                    }
+                ],
+                'select': 'single',
+                'order': [[2, 'desc']],
+                buttons: [
+                    'excel', 'pdfHtml5', 'print'
+                ],
+                "columns": [
+                    { "data": "id", "id": "Id", "autoWidth": true },
+                    { "data": "select", "select": "Select", "autoWidth": true },
+                    { "data": "matchConfidence", "matchConfidence": "Match Confidence", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": false, "width": "30%" },
+                    { "data": "buildingCode", "buildingCode": "Building Code", "autoWidth": true },
+                    { "data": "type", "type": "Organizational Unit Type", "autoWidth": true },
+                    { "data": "organization", "organization": "Organization", "autoWidth": true },
+                    { "data": "none", "name": "None", "autoWidth": true },
+                ]
+            });
+
+            var organizationalUnitPossibleMatchTableDT = $('#organizationalUnitPossibleMatchTable').DataTable();
+            // get row id
+            //$('#organizationalUnitPossibleMatchTable').on('click', 'tr', function () {
+            //    //var id = organizationalUnitPossibleMatchTable.row().id();
+            //    //alert('Clicked row id: ' + id);
+
+            //    // if checked/selected, enable match/compare buttons
+            //    var attr = $(this).closest(".panel").find("#matchButton").attr('disabled');
+
+            //    // For some browsers, `attr` is undefined; for others, `attr` is false. Check for both.
+            //    if (typeof attr !== typeof undefined && attr !== false) {
+            //        // Element HAS this attribute
+            //        $(this).closest(".panel").find("#compareButton").removeAttr("disabled");
+            //        $(this).closest(".panel").find("#matchButton").removeAttr("disabled");
+            //    } else { // if not checked/selected, disable match/compare buttons
+            //        // Element does NOT have this attribute
+            //        $(this).closest(".panel").find("#compareButton").attr("disabled", "disabled");
+            //        $(this).closest(".panel").find("#matchButton").attr("disabled", "disabled");
+            //    };
+            //});
+
+
+            // Get RowId on row click:
+            // ------------------------------------------------------------
+            $('#organizationalUnitPossibleMatchTable tbody').on('click', 'tr', function () {
+                var table = $('#organizationalUnitPossibleMatchTable').DataTable();
+                var rowData = table.row(this).data();
+                var rowId = rowData.id;
+
+                $(this).each(function() {
+                    //alert(rowId);
+                    //var rowCheckboxId = rowData.select('value').val();
+                    console.log('Clicked RowId: ' + rowId);
+                    //alert('Clicked Row Checkbox: ' + rowCheckboxId);
+
+                    // Check if Checkbox is already selected:
+                    if ($(this).find('input[type="checkbox"]').prop("checked") == false) {
+                        console.log("Checkbox is unchecked.");
+                        $(this).closest(".panel").find("#compareButton").removeAttr("disabled");
+                        $(this).closest(".panel").find("#matchButton").removeAttr("disabled");
+                    }
+                    else if ($(this).find('input[type="checkbox"]').prop("checked") == true) {
+                        console.log("Checkbox is checked.");
+                        $(this).closest(".panel").find("#compareButton").attr("disabled", "disabled");
+                        $(this).closest(".panel").find("#matchButton").attr("disabled", "disabled");
+                    };
+                });
+
+                window.rowIdValue = rowId;
+            });
+
+            // Match button click event:
+            $('#matchButton').on('click', function () {
+                var rowIdValue = window.rowIdValue;
+
+                var urlMatch = '@Html.Raw((Url.Action("OrganizationalUnitManualMatch", "Organization") + string.Format("/{0}/?IntegrationId={1}&SystemId={2}&MasterId=", Model.Id, Model.IntegrationId, Model.SystemId)))' + window.rowIdValue;
+
+                window.location.href = urlMatch;
+            });
+
+            // No Match button click event:
+            $('#nomatchButton').on('click', function () {
+                var rowIdValue = window.rowIdValue;
+
+                var urlMatch = '@Html.Raw((Url.Action("OrganizationalUnitManualMatch", "Organization") + string.Format("/{0}/?IntegrationId={1}&SystemId={2}", Model.Id, Model.IntegrationId, Model.SystemId)))';
+
+                window.location.href = urlMatch;
+            });
+
+            // Compare button click event:
+            $('#compareButton').on('click', function () {
+                var rowIdValue = window.rowIdValue;
+
+                var urlCompare = '@Html.Raw((Url.Action("OrganizationalUnitCompare", "Organization") + string.Format("/{0}/?SystemId={1}&MasterId=", Model.Id, Model.SystemId)))' + window.rowIdValue
+
+
+                // Load Compare Data into Modal
+                $('#organizationalUnitMatchCompareModal').on('show.bs.modal', function (e) {
+                    $.get(urlCompare, function (data) {
+                        $(".modal-content").html(data);
+                        //alert("Load was performed.");
+                    });
+                });
+            });
+
+
+
+
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

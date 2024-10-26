@@ -1,0 +1,1425 @@
+﻿@model Sentry.WebApp.ViewModels.PostToGLViewModel
+@using Sentry.WebApp.Extensions;
+
+@{
+    ViewData["Title"] = Model.DesignationName + " | " + Model.Title;
+}
+
+@if (Model != null)
+{
+    <ul class="page-title">
+        <li>
+            <h2>
+                Date:
+                <span title="Date of Integration: @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source:
+                <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source Record Id:
+                <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+            </h2>
+        </li>
+    </ul>
+
+    <ol class="breadcrumb">
+        <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+        <li><a asp-area="" asp-controller="PostToGL" asp-action="PostToGLList">Record List</a></li>
+        <li class="active">Record Details</li>
+    </ol>
+
+    <div id="content-container" class="content-container" role="main">
+        <form asp-action="PostToGLEdit" id="PostToGLEditForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SystemId" />
+            <input type="hidden" asp-for="System" />
+            <input type="hidden" asp-for="SourceRecordId" />
+            <input type="hidden" asp-for="IntegrationId" />
+            <input type="hidden" asp-for="Integration" />
+            <input type="hidden" asp-for="CreatedOnDT" />
+            @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+            {
+                @Html.HiddenFor(m => m.HistoryData[i].HistoryDate)
+            }
+
+            <div class="panel panel-secondary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@Model.Title for: <span class="record-text h3">@Model.DesignationName</span> <span class="updatedFormAlert label label-warning hide">Modified</span></h3>
+                    <div class="panel-toolbar">
+                        <a href="#PostToGLSourceDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="col-sm-12 col-md-12 panel-container">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Details:</h4>
+                                <div class="panel-toolbar">
+                                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+
+                                <fieldset>
+                                    <legend class="sr-only">Designation Details:</legend>
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.DesignationId_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="DesignationId_BusinessName" />
+                                                <input type="hidden" asp-for="DesignationId_BusinessDescription" />
+                                                <input type="hidden" asp-for="DesignationId_Source" />
+                                                <input type="hidden" asp-for="DesignationId_Status" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.DesignationId_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.DesignationId_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.DesignationId_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLDesignationIdHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].DesignationId_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].DesignationId)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="DesignationId">@Model.DesignationId_BusinessName:</label>
+                                            <input asp-for="DesignationId" class="form-control" placeholder="@Model.DesignationId_BusinessName" />
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="DesignationId" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.DesignationName_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="DesignationName_BusinessName" />
+                                                <input type="hidden" asp-for="DesignationName_BusinessDescription" />
+                                                <input type="hidden" asp-for="DesignationName_Source" />
+                                                <input type="hidden" asp-for="DesignationName_Status" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.DesignationName_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.DesignationName_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.DesignationName_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLDesignationNameHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].DesignationName_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].DesignationName)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="DesignationName">@Model.DesignationName_BusinessName:</label>
+                                            <input asp-for="DesignationName" class="form-control" placeholder="@Model.DesignationName_BusinessName" />
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="DesignationName" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.UADepartment_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="UADepartment_BusinessName" />
+                                                <input type="hidden" asp-for="UADepartment_BusinessDescription" />
+                                                <input type="hidden" asp-for="UADepartment_Source" />
+                                                <input type="hidden" asp-for="UADepartment_Status" />
+                                                <input type="hidden" asp-for="DesignationName" />
+                                                <input type="hidden" asp-for="DesignationId" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.UADepartment_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.UADepartment_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.UADepartment_AttributeId)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLUADepartmentHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].UADepartment_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].UADepartment)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="UADepartment">@Model.UADepartment_BusinessName:</label>
+                                            <select id="UADepartment" class="select2 form-control">
+                                                <option value="" selected>-- Select Department --</option>
+                                                <option value="0101">0101 - CALS Career & Acad Svcs</option>
+                                                <option value="0104">0104 - Boyce Thompson Arboretum</option>
+                                                <option value="0107">0107 - Sch of Family & Consum Sci-Ins</option>
+                                                <option value="0108">0108 - Agricultural Education-Ins</option>
+                                                <option value="0112">0112 - Sch of Natural Resources-Ins</option>
+                                                <option value="0118">0118 - Agric & Resource Econ-Ins</option>
+                                                <option value="0121">0121 - Soil Water and Enviro Sci-Ins</option>
+                                                <option value="0122">0122 - Biosystems Engineering-Ins</option>
+                                                <option value="0123">0123 - Nutritional Sciences-Ins</option>
+                                                <option value="0125">0125 - School of Plant Sciences-Ins</option>
+                                                <option value="0126">More...</option>
+                                            </select>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="UADepartment" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.DesignationType_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="DesignationType_BusinessName" />
+                                                <input type="hidden" asp-for="DesignationType_BusinessDescription" />
+                                                <input type="hidden" asp-for="DesignationType_Source" />
+                                                <input type="hidden" asp-for="DesignationType_Status" />
+                                                <input type="hidden" asp-for="DesignationName" />
+                                                <input type="hidden" asp-for="DesignationId" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.DesignationType_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.DesignationType_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.DesignationType_AttributeId)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLDesignationTypeHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].DesignationType_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].DesignationType)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="DesignationType">@Model.DesignationType_BusinessName:</label>
+                                            <select id="DesignationType" class="select2 form-control">
+                                                <option value="">-- Select a Designation Type --</option>
+                                                <option value="E">Endowment</option>
+                                                <option value="TR">Trust - Restricted</option>
+                                                <option value="TU">Trust - Unrestricted</option>
+                                                <option value="TE" selected>Trust - Endowment</option>
+                                                <option value="UAFR">UAF Realty</option>
+                                                <option value="OTH">Other</option>
+                                                <option value="RES">Restricted</option>
+                                                <option value="FLEX">Flex</option>
+                                                <option value="BD">Board Designated</option>
+                                                <option value="UR">Unrestricted</option>
+                                                <option value="HOL">Holding</option>
+                                            </select>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="DesignationType" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.DesignationSubtype_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="DesignationSubtype_BusinessName" />
+                                                <input type="hidden" asp-for="DesignationSubtype_BusinessDescription" />
+                                                <input type="hidden" asp-for="DesignationSubtype_Source" />
+                                                <input type="hidden" asp-for="DesignationSubtype_Status" />
+                                                <input type="hidden" asp-for="DesignationName" />
+                                                <input type="hidden" asp-for="DesignationId" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.DesignationSubtype_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.DesignationSubtype_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.DesignationSubtype_AttributeId)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLDesignationSubtypeHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].DesignationSubtype_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].DesignationSubtype)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="DesignationSubtype">@Model.DesignationSubtype_BusinessName:</label>
+                                            <select id="DesignationSubtype" class="select2 form-control">
+                                                <option value="">-- Select a Designation Subtype --</option>
+                                                <option value="CRU">Charitable Remainder Unitrust</option>
+                                                <option value="PIF">Pooled Income Fund</option>
+                                                <option value="O">Other</option>
+                                                <option value="NA">Not Applicable</option>
+                                                <option value="CLT">Lead Trust</option>
+                                                <option value="GA">Gift Annuity</option>
+                                                <option value="CRA">Charitable Remainder Annuity</option>
+                                                <option value="SCH">Scholarship</option>
+                                                <option value="RES" selected>Restricted Purpose</option>
+                                                <option value="FV">Fair Value</option>
+                                                <option value="BUD">Budget</option>
+                                                <option value="BAL">Balancing</option>
+                                                <option value="HOL">Holding</option>
+                                                <option value="HOS">Scholarship - Holding</option>
+                                                <option value="DS">Scholarship - Donor Select</option>
+                                                <option value="GEN">General Purpose</option>
+                                                <option value="BLD">Building</option>
+                                                <option value="Restricted - Eminent Scholar">ES</option>
+                                            </select>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="DesignationSubtype" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.DesignationStatus_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="DesignationStatus_BusinessName" />
+                                                <input type="hidden" asp-for="DesignationStatus_BusinessDescription" />
+                                                <input type="hidden" asp-for="DesignationStatus_Source" />
+                                                <input type="hidden" asp-for="DesignationStatus_Status" />
+                                                <input type="hidden" asp-for="DesignationName" />
+                                                <input type="hidden" asp-for="DesignationId" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.DesignationStatus_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.DesignationStatus_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.DesignationStatus_AttributeId)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLDesignationStatusHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].DesignationStatus_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].DesignationStatus)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="DesignationStatus">@Model.DesignationStatus_BusinessName:</label>
+                                            <select id="DesignationStatus" class="select2 form-control">
+                                                <option value="">-- Select a Designation Status --</option>
+                                                <option value="NULL?" selected>Open</option>
+                                                <option value="807">Hold</option>
+                                                <option value="808">Closed</option>
+                                            </select>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="DesignationStatus" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.StartDate_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="StartDate_BusinessName" />
+                                                <input type="hidden" asp-for="StartDate_BusinessDescription" />
+                                                <input type="hidden" asp-for="StartDate_Source" />
+                                                <input type="hidden" asp-for="StartDate_Status" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.StartDate_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.StartDate_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.StartDate_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLStartDateHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].StartDate_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].StartDate)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="HireDate">@Model.StartDate_BusinessName:</label>
+                                            <div class="input-group date">
+                                                <input asp-for="StartDate" class="form-control" type="text" placeholder="@Model.StartDate_BusinessName" />
+                                                <span class="input-group-addon">
+                                                    <i role="img" class="fas fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="StartDate" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.EndDate_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="EndDate_BusinessName" />
+                                                <input type="hidden" asp-for="EndDate_BusinessDescription" />
+                                                <input type="hidden" asp-for="EndDate_Source" />
+                                                <input type="hidden" asp-for="EndDate_Status" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.EndDate_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.EndDate_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.EndDate_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLEndDateHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].EndDate_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].EndDate)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="HireDate">@Model.EndDate_BusinessName:</label>
+                                            <div class="input-group date">
+                                                <input asp-for="EndDate" class="form-control" type="text" placeholder="@Model.EndDate_BusinessName" />
+                                                <span class="input-group-addon">
+                                                    <i role="img" class="fas fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="EndDate" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.DesignationState_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="DesignationState_BusinessName" />
+                                                <input type="hidden" asp-for="DesignationState_BusinessDescription" />
+                                                <input type="hidden" asp-for="DesignationState_Source" />
+                                                <input type="hidden" asp-for="DesignationState_Status" />
+                                                <input type="hidden" asp-for="DesignationName" />
+                                                <input type="hidden" asp-for="DesignationId" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.DesignationState_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.DesignationState_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.DesignationState_AttributeId)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#postToGLDesignationStateHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].DesignationState_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].DesignationState)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="DesignationState">@Model.DesignationState_BusinessName:</label>
+                                            <select id="DesignationState" class="select2 form-control">
+                                                <option value="">-- Select a Designation State --</option>
+                                                <option value="1" selected>Active</option>
+                                                <option value="2">Inactive (prevent data entry)</option>
+                                                <option value="3">Inactive (prevent data entry and posting after)</option>
+                                            </select>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="DesignationState" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                </fieldset>
+
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel-primary -->
+                    </div><!-- /.panel-container -->
+
+                </div><!-- /.panel-body -->
+
+                <div class="panel-footer text-right">
+                    <a asp-area="" asp-controller="PostToGL" asp-action="PostToGLList" class="btn btn-link" title="Cancel Changes" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Discard</a>
+                    <button type="submit" id="btnSavePartial" class="btn btn-info" title="Save Partial Record" data-toggle="tooltip" formaction='@Url.Action("PostToGLSave", "PostToGL")' disabled="disabled">
+                        <i role="img" class="fas fa-save">&nbsp;</i>Save Partial Record
+                    </button>
+                    <button type="submit" id="btnResolve" class="btn btn-primary" title="Re-Validate Record" data-toggle="tooltip" formaction='@Url.Action("PostToGLRevalidate", "PostToGL")'>
+                        <i role="img" class="fas fa-check">&nbsp;</i>Resolve Record
+                    </button>
+                </div><!-- /.panel-footer -->
+
+            </div><!-- /.panel-secondary -->
+        </form>
+    </div><!-- /.content-container -->
+
+    <div id="callbackBox"></div>
+
+}
+else
+{
+    // Temporary: Record Not Found Content
+    // TODO: Implement error handling
+    <div class="recordNotFoundContent">
+        <ul class="page-title">
+            <li>
+                <h1>Ya done messed up, A-A-ron...</h1>
+                <h3>Record not found</h3>
+                <p>More than likely, there's a NULL value which is not being accounted for yet.</p>
+            </li>
+        </ul>
+        <img src="~/img/page-rip-hole.jpg" alt="Error Image" />
+        <p><a asp-area="" asp-controller="Organization" asp-action="OrganizationalUnitList">Back to List</a></p>
+    </div>
+}
+
+<!-- Popover - Title: Legend -->
+<div id="popover-legend-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    <span>Status Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Legend -->
+<div id="popover-legend-content" class="popover hide">
+    <div class="">
+        <table id="historyPerFieldTable" class="table historyData table-striped">
+            <thead>
+                <tr class="tableHeader">
+                    <th>Status:</th>
+                    <th>Description:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="changedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-pen-square" data-toggle="tooltip" title="Changed Data"></i> Changed Data</td>
+                    <td data-header="Meaning">This data was manually modified by a Data Steward</td>
+                </tr>
+                <tr class="goodDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-check-square" data-toggle="tooltip" title="Valid Data"></i> Valid Data</td>
+                    <td data-header="Date">This data is valid</td>
+                </tr>
+                <tr class="enrichedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-cog" data-toggle="tooltip" title="Enriched Data"></i> Enriched Data</td>
+                    <td data-header="Date">This data was enriched by the Integration Framework</td>
+                </tr>
+                <tr class="badDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-ban" data-toggle="tooltip" title="Invalid Data"></i> Invalid Data</td>
+                    <td data-header="Date">This data is invalid</td>
+                </tr>
+                <tr class="notProvidedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Data not applicable"></i> N/A</td>
+                    <td data-header="Date">This data is not appliciable</td>
+                </tr>
+                <tr class="sourceDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-server" data-toggle="tooltip" title="Source Data"></i> Source Data</td>
+                    <td data-header="Date">Original data provided by the Source System</td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Info -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    @*<a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>*@
+    <span>Field Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Info -->
+<div id="popover-info-content" class="popover hide">
+    <ul class="triangle">
+        <li>
+            <span><strong>Business Glossary Name:</strong> <span id="popover-info-content-name">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Business Glossary Description:</strong> <span id="popover-info-content-description">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source System:</strong> <span id="popover-info-content-source">[No Data Provided]</span></span>
+        </li>
+        @*<li>
+                <span><strong>Source Field Id:</strong> <span id="popover-info-content-sourcefieldid">[No Data Provided]</span></span>
+            </li>*@
+    </ul>
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Field History -->
+<div id="popover-history-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    Field History:
+</div><!-- /.popover (title) -->
+<!-- Modal - Content: Designation Name History -->
+<div class="modal fade" id="postToGLDesignationNameHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLDesignationNameHistoryModal postToGLDesignationNameHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLDesignationNameHistoryModalLabel">@Model.DesignationName_BusinessName History: @Model.DesignationName</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="DesignationNameHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Model.DesignationName_Source"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].DesignationName_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].DesignationName_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].DesignationName_Status">
+                                                    @Html.Raw(Model.HistoryData[i].DesignationName ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].DesignationName)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation Name) -->
+<!-- Modal - Content: Designation Id History -->
+<div class="modal fade" id="postToGLDesignationIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLDesignationIdHistoryModal postToGLDesignationIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLDesignationIdHistoryModalLabel">@Model.DesignationId_BusinessName History: @Model.DesignationId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="DesignationIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.DesignationId_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].DesignationId_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].DesignationId_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].DesignationId_Status">
+                                                    @Html.Raw(Model.HistoryData[i].DesignationId ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].DesignationId)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation Id) -->
+<!-- Modal - Content: Start Date History -->
+<div class="modal fade" id="postToGLStartDateHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLStartDateHistoryModal postToGLStartDateHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLStartDateHistoryModalLabel">@Model.StartDate_BusinessName History: @Model.StartDate</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="StartDateHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.StartDate_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].StartDate_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].StartDate_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].StartDate_Status">
+                                                    @Html.Raw(Model.HistoryData[i].StartDate.HasValue ? Model.HistoryData[i].StartDate.Value.ToString() : "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].StartDate)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Start Date) -->
+<!-- Modal - Content: End Date History -->
+<div class="modal fade" id="postToGLEndDateHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLEndDateHistoryModal postToGLEndDateHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLEndDateHistoryModalLabel">@Model.EndDate_BusinessName History: @Model.EndDate</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="EndDateHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.EndDate_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].EndDate_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].EndDate_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].EndDate_Status">
+                                                    @Html.Raw(Model.HistoryData[i].EndDate.HasValue ? Model.HistoryData[i].EndDate.Value.ToString() : "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].EndDate)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (End Date) -->
+<!-- Modal - Content: Designation Type History -->
+<div class="modal fade" id="postToGLDesignationTypeHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLDesignationTypeHistoryModal postToGLDesignationTypeHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLDesignationTypeHistoryModalLabel">@Model.DesignationType_BusinessName History: @Model.DesignationType</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="DesignationTypeHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.EndDate_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].DesignationType_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].DesignationType_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].DesignationType_Status">
+                                                    @Html.Raw(Model.HistoryData[i].DesignationType ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].DesignationType)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation Type) -->
+<!-- Modal - Content: Designation Subtype History -->
+<div class="modal fade" id="postToGLDesignationSubtypeHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLDesignationSubtypeHistoryModal postToGLDesignationSubtypeHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLDesignationSubtypeHistoryModalLabel">@Model.DesignationSubtype_BusinessName History: @Model.DesignationSubtype</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="DesignationSubtypeHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.DesignationSubtype_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].DesignationSubtype_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].DesignationSubtype_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].DesignationSubtype_Status">
+                                                    @Html.Raw(Model.HistoryData[i].DesignationSubtype ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].DesignationSubtype)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation Subtype) -->
+<!-- Modal - Content: Designation Status History -->
+<div class="modal fade" id="postToGLDesignationStatusHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLDesignationStatusHistoryModal postToGLDesignationStatusHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLDesignationStatusHistoryModalLabel">@Model.DesignationStatus_BusinessName History: @Model.DesignationStatus</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="DesignationStatusHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.DesignationStatus_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].DesignationStatus_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].DesignationStatus_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].DesignationStatus_Status">
+                                                    @Html.Raw(Model.HistoryData[i].DesignationStatus ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].DesignationStatus)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation Status) -->
+<!-- Modal - Content: Designation State History -->
+<div class="modal fade" id="postToGLDesignationStateHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLDesignationStateHistoryModal postToGLDesignationStateHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLDesignationStateHistoryModalLabel">@Model.DesignationState_BusinessName History: @Model.DesignationState</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="DesignationStatusHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.DesignationState_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].DesignationState_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].DesignationState_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].DesignationState_Status">
+                                                    @Html.Raw(Model.HistoryData[i].DesignationState ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].DesignationState)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation State) -->
+<!-- Modal - Content: UA Department History -->
+<div class="modal fade" id="postToGLUADepartmentHistoryModal" tabindex="-1" role="dialog" aria-labelledby="postToGLUADepartmentHistoryModal postToGLUADepartmentHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="postToGLUADepartmentHistoryModalLabel">@Model.UADepartment_BusinessName History: @Model.UADepartment</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem">
+                        <strong>Source System:</strong>&nbsp;
+                        @Html.Raw(Model.System ?? "N/A")
+                    </span>
+                    <span class="sourceRecordId">
+                        <strong>System Record Id:</strong>&nbsp;
+                        @Html.Raw(Model.SourceRecordId ?? "N/A")
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="UADepartmentHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.UADepartment_Source ?? "N/A")"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].UADepartment_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Name">
+                                                <i role="img" class="fas @Model.HistoryData[i].UADepartment_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].UADepartment_Status">
+                                                    @Html.Raw(Model.HistoryData[i].UADepartment ?? "N/A")
+                                                    @Html.HiddenFor(m => m.HistoryData[i].UADepartment)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Designation State) -->
+<!-- Modal - Source Data -->
+<div class="modal fade" id="PostToGLSourceDataModal" tabindex="-1" role="dialog" aria-labelledby="PostToGLSourceDataModal PostToGLSourceDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="PostToGLSourceDataModalLabel">Record Source Data:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History/Source Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <div class="panel-toolbar">
+                    <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.CreatedOnDT)</span>
+                    <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+                    <span class="sourceRecordId"><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId)</span>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="officeLocationSourceDataPerRecordTable" class="table responsive sourceDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="@Model.DesignationName_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.DesignationName_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.DesignationName_Status">
+                                                <i role="img" class="fas @Model.DesignationName_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.DesignationName
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="DesignationName_OriginalValue" />
+                                            <span title="Original Data">@Model.DesignationName_OriginalValue</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.DesignationName_Source == "" || Model.DesignationName_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Applicable in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.DesignationName_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.DesignationId_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.DesignationId_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.DesignationId_Status">
+                                                <i role="img" class="fas @Model.DesignationId_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.DesignationId
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="DesignationId_OriginalValue" />
+                                            <span title="Original Value">@Model.DesignationId_OriginalValue</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.DesignationId_Source == "" || Model.DesignationId_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Applicable in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.DesignationId_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.StartDate_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.StartDate_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.StartDate_Status">
+                                                <i role="img" class="fas @Model.StartDate_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.StartDate
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="StartDate_OriginalValue" />
+                                            <span title="Original Value">@Model.StartDate_OriginalValue</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.StartDate_Source == "" || Model.StartDate_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Applicable in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.StartDate_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.EndDate_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.EndDate_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.EndDate_Status">
+                                                <i role="img" class="fas @Model.EndDate_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.EndDate
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="EndDate_OriginalValue" />
+                                            <span title="Original Value">@Model.EndDate_OriginalValue</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.EndDate_Source == "" || Model.EndDate_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Applicable in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.EndDate_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.DesignationType_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.DesignationType_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.DesignationType_Status">
+                                                <i role="img" class="fas @Model.DesignationType_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.DesignationType
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="DesignationType_OriginalValue" />
+                                            <span title="Original Value">@Model.DesignationType_OriginalValue</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.DesignationType_Source == "" || Model.DesignationType_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Applicable in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.DesignationType_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            // https://select2.org/
+            // -------------------------------------------------
+
+            // Designation Type ---
+            $('#DesignationType').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Designation Subtype ---
+            $('#DesignationSubtype').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Designation Status ---
+            $('#DesignationStatus').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Designation State ---
+            $('#DesignationState').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // UA Department ---
+            $('#UADepartment').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+
+            // Get/Set Current Drop-Down Value:
+            // -------------------------------------------------
+            $('#DesignationType').on('change', function () {
+                // get current value/text
+                var currentSelectListValue = $(this).find(":selected").val();
+                //alert(currentSelectListValue);
+
+                // set current id on hidden field
+                if (currentSelectListValue !== "") {
+                    $('#DesignationType').val(currentSelectListValue);
+                } else {
+                    $('#DesignationType').val("");
+                };
+            });
+
+            $('#DesignationSubtype').on('change', function () {
+                // get current value/text
+                var currentSelectListValue = $(this).find(":selected").val();
+                //alert(currentSelectListValue);
+
+                // set current id on hidden field
+                if (currentSelectListValue !== "") {
+                    $('#DesignationSubtype').val(currentSelectListValue);
+                } else {
+                    $('#DesignationSubtype').val("");
+                };
+            });
+
+            $('#DesignationStatus').on('change', function () {
+                // get current value/text
+                var currentSelectListValue = $(this).find(":selected").val();
+                //alert(currentSelectListValue);
+
+                // set current id on hidden field
+                if (currentSelectListValue !== "") {
+                    $('#DesignationStatus').val(currentSelectListValue);
+                } else {
+                    $('#DesignationStatus').val("");
+                };
+            });
+
+            $('#DesignationState').on('change', function () {
+                // get current value/text
+                var currentSelectListValue = $(this).find(":selected").val();
+                //alert(currentSelectListValue);
+
+                // set current id on hidden field
+                if (currentSelectListValue !== "") {
+                    $('#DesignationState').val(currentSelectListValue);
+                } else {
+                    $('#DesignationState').val("");
+                };
+            });
+
+            $('#UADepartment').on('change', function () {
+                // get current value/text
+                var currentSelectListValue = $(this).find(":selected").val();
+                //alert(currentSelectListValue);
+
+                // set current id on hidden field
+                if (currentSelectListValue !== "") {
+                    $('#UADepartment').val(currentSelectListValue);
+                } else {
+                    $('#UADepartment').val("");
+                };
+            });
+
+
+            var form = $('.content-container > form');
+            var formGroup = $(':input').parent('.form-group');
+            var editedClass = 'fa-pen-square';
+
+            // Get Current Form Field Value:
+            // -------------------------------------------------
+            $(form).on('keyup change paste', ':input', function () {
+
+                var formField = $(this);
+                var thisFormFieldsValue = $(this).val();
+                //console.log('form field value: ' + thisFormFieldsValue);
+
+                return (formField);
+                console.log(formField);
+
+            });
+
+
+            var dfOptions = {
+                denoteDirtyForm: true,
+                denoteDirtyOptions: true,
+                dirtyOptionClass: "dirtyChoice",
+                trimText: true,
+                textboxContext: 'parent',
+
+                preFieldChangeCallback: function (originalValue) {
+                    //$("#callbackBox").html("[preFieldChangeCallback] Original value of field '" + $(this).attr("name") + "' is: " + originalValue + "<br />");
+                },
+                fieldChangeCallback: function (originalValue, result) {
+                    //$("#callbackBox").append("[fieldChange callback] Original value of field  '" + $(this).attr("name") + "' is: " + originalValue + ".  Dirty status is " + result + "<br />");
+                },
+                formChangeCallback: function (result, dirtyFieldsArray) {
+                    var recordName = "@Model.DesignationName";
+                    var dirtyFieldParentPanelTitle = $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert');
+                    var cleanFieldParentPanelTitle = $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert');
+                    if (result) { // Dirty
+                        //$("#callbackBox").append("[formChangeCallback] Form is dirty. Dirty fields are: " + dirtyFieldsArray + "<br />");
+                        $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                        $(this).find("#btnResolve").removeAttr("disabled");
+                        //$(dirtyFieldParentPanelTitle).removeClass("hide").html("*" + recordName + "'s record has been modified*");
+                        $(dirtyFieldParentPanelTitle).removeClass("hide").html("*Save your changes*");
+                        $('#btnSavePartial').removeAttr('disabled');
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                            $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert').removeClass("hide").html("*Save your changes*");
+                        });
+                    }
+                    else { // Clean
+                        //$("#callbackBox").append("[formChangeCallback] Form is clean.<br />");
+                        $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                        $(this).find("#btnSavePartial").attr("disabled", "disabled");
+                        $(cleanFieldParentPanelTitle).addClass("hide").html("");
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                            $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert').addClass("hide").html("");
+                        });
+                    }
+                    //Scrolls the logging div to the bottom
+                    //var objDiv = document.getElementById("callbackBox");
+                    //objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            };
+
+            $(form).dirtyFields(dfOptions);
+
+
+        });
+    </script>
+
+}

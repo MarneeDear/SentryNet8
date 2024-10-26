@@ -1,0 +1,71 @@
+﻿@model Sentry.WebApp.ViewModels.FundsTransfer.FundsTransferListViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="FundsTransfer" asp-action="Index">Funds Transfer Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="table-responsive">
+        <table id="fundsTransferTable" class="table table-hover table-striped fundsTransfer recordList">
+            <caption class="sr-only">@ViewData["Title"]</caption>
+            <thead>
+                <tr class="tableHeader">
+                    <th style="visibility: collapse">Id</th>
+                    <th style="display: none">isPending</th>
+                    <th style="display: none">pendingComments</th>
+                    <th>Status</th>
+                    <th>Form Number</th>
+                    <th>Preparer</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th style="display: none">To</th>
+                    <th>Amount</th>
+                    <th>Date Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var form in Model.FundsTransfers)
+                {
+                    <tr>
+                        <td style="visibility: collapse">@form.Id</td>
+                        <td style="display: none">@form.IsPending</td>
+                        <td style="display: none">@form.PendingComments</td>
+                        <td>@form.Status</td>
+                        <td>@form.FormNumber</td>
+                        <td>@form.PreparedByName</td>
+                        <td>@form.TransferFrom</td>
+                        <td>@form.TransferTo</td>
+                        <td style="display: none">@form.TransferTo</td>
+                        <td>@form.Total</td>
+                        <td>@form.LastApprovedOnDate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section scripts {
+    <script>
+        
+    </script>
+    @await Html.PartialAsync("_Scripts")
+}
+
+

@@ -1,0 +1,85 @@
+﻿@model Sentry.WebApp.ViewModels.GiftTransmittal.GiftTransmittalListViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="GiftTransmittal" asp-action="Index">Gift GiftTransmittal Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="table-responsive">        
+        <div>
+            @if (Model.DisplayRequiringPhysicalDocuments)
+            {
+                <a href="/GiftTransmittal/@Model.ListType?displayRequiringPhysicalDocuments=false">Display all forms ready for processing</a>
+            }
+            else
+            {
+                <a href="/GiftTransmittal/@Model.ListType?displayRequiringPhysicalDocuments=true">Display forms awaiting physical documents</a>
+            }
+        </div>
+        <table id="giftTransmittalTable" class="table table-hover table-striped postToGL recordList">
+            <caption class="sr-only">@ViewData["Title"]</caption>
+            <thead>
+                <tr class="tableHeader">
+                    <th style="visibility: collapse">Id</th>
+                    <th style="visibility: collapse">Item Id</th>
+                    <th style="visibility: collapse">Waiting on Response from Bursar</th>
+                    <th style="visibility: collapse">Waiting on Response from Preparer</th>
+                    <th style="visibility: collapse">Status</th>
+                    <th style="visibility: collapse">Secondary Approver Status</th>
+                    <th title="Status">Status</th>
+                    <th>Form Number:</th>
+                    <th>Transaction  Type:</th>
+                    <th>Prepared By:</th>
+                    <th>Constituent:</th>
+                    <th>Total:</th>
+                    <th>Processing Error:</th>
+                    <th>Date Created:</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var giftTransmittal in Model.GiftTransmittals)
+                {
+                    <tr class="@(giftTransmittal.SecondaryApproverStatus == "Rejected" ? "rejectedStatus" : "") 
+                               @(giftTransmittal.HasProcessingError == true ? "rejectedStatus" : "")">
+                        <td style="visibility: collapse">@giftTransmittal.Id</td>
+                        <td style="visibility: collapse">@giftTransmittal.ItemId</td>
+                        <td style="visibility: collapse">@giftTransmittal.WaitingOnResponseFromBursar</td>
+                        <td style="visibility: collapse">@giftTransmittal.WaitingOnResponseFromPreparer</td>
+                        <td style="visibility: collapse">@giftTransmittal.SecondaryApproverStatus</td>
+                        <td style="visibility: collapse">@giftTransmittal.Status</td>
+                        <td>@giftTransmittal.WaitingOnResponseFromBursar</td>
+                        <td>@giftTransmittal.FormNumber</td>
+                        <td>@giftTransmittal.BatchType</td>
+                        <td>@giftTransmittal.PreparedBy</td>
+                        <td>@giftTransmittal.Constituent</td>
+                        <td>@giftTransmittal.Total</td>
+                        <td>@(@giftTransmittal.HasProcessingError ? "Yes": "No")</td>
+                        <td>@giftTransmittal.DateCreated</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section scripts{
+    @await Html.PartialAsync("_Scripts")
+}
+
+

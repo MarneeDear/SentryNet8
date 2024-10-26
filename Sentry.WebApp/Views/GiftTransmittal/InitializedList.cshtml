@@ -1,0 +1,63 @@
+﻿@model Sentry.WebApp.ViewModels.GiftTransmittal.GiftTransmittalListViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            Initialized Gift Transmittals
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="GiftTransmittal" asp-action="Index">Gift GiftTransmittal Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="table-responsive">
+        
+        <table id="initializedGiftTransmittalTable" class="table table-hover table-striped postToGL recordList">
+            <caption class="sr-only">Initialized Gift Transmittals</caption>
+            <thead>
+                <tr class="tableHeader">
+                    <th style="visibility: collapse">Id</th>
+                    <th style="visibility: collapse">Item Id</th>
+                    <th>Form Number:</th>
+                    <th>Transaction Type:</th>
+                    <th>Prepared By:</th>
+                    <th>Constituent:</th>
+                    <th>Total:</th>
+                    <th>Date Created:</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var giftTransmittal in Model.GiftTransmittals)
+                {
+                    <tr>
+                        <td style="visibility: collapse">@giftTransmittal.Id</td>
+                        <td style="visibility: collapse">@giftTransmittal.ItemId</td>
+                        <td>@giftTransmittal.FormNumber</td>
+                        <td>@giftTransmittal.BatchType</td>
+                        <td>@giftTransmittal.PreparedBy</td>
+                        <td>@giftTransmittal.Constituent</td>
+                        <td>@giftTransmittal.Total</td>
+                        <td>@giftTransmittal.DateCreated</td>                       
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section scripts{
+    @await Html.PartialAsync("_Scripts")
+}
+
+

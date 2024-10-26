@@ -1,0 +1,495 @@
+﻿@model Sentry.WebApp.ViewModels.FundsTransfer.FundsTransferViewModel
+
+<ul class="page-title">
+    <li>
+        <h2>
+            Form:
+            <span title="Form Number: @Model.FormNumber"> @Model.FormNumber</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Date:
+            <span title="Date Created: @Model.CreatedOnDT"> @Model.CreatedOnDT</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source:
+            <span title="Source System">UAFDN</span>
+        </h2>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="FundsTransfer" asp-action="@Model.PreviousPage">Funds Transfer List</a></li>
+    <li class="active">Funds Transfer</li>
+</ol>
+
+
+<div id="content-container" class="content-container" role="main">
+    <form id="editForm" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" asp-for="FundsTransferId" value="@Model.FundsTransferId" />
+        <input type="hidden" asp-for="PreparedByEmployeeId" value="@Model.PreparedByEmployeeId" />
+        <input type="hidden" asp-for="PreparedByEmail" value="@Model.PreparedByEmail" />
+        <input type="hidden" asp-for="PreparedByFirstName" value="@Model.PreparedByFirstName" />
+        <input type="hidden" asp-for="PreparedByLastName" value="@Model.PreparedByLastName" />
+        <input type="hidden" asp-for="PreparedByPhone" value="@Model.PreparedByPhone" />
+        <input type="hidden" asp-for="FormNumber" value="@Model.FormNumber" />
+        <input type="hidden" asp-for="IsRestrictedOrEndowment" value="@Model.IsRestrictedOrEndowment" />
+        <input type="hidden" asp-for="TransferRoutingType" value="@Model.TransferRoutingType" />
+        <input type="hidden" asp-for="ProjectId" value="@Model.ProjectId" />
+        <input type="hidden" asp-for="AccountNumber" value="@Model.AccountNumber" />
+        <input type="hidden" asp-for="TransferPurpose" value="@Model.TransferPurpose" />
+        <input type="hidden" asp-for="PostDate" value="@Model.PostDate" />
+
+        @if (!Model.IsReadyForProcessing && Model.PreviouslyApprovedByUser)
+        {
+            <h4 class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> You have previously approved or rejected this funds transfer.</h4>
+        }
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Form number: <span class="record-text h3">@Model.FormNumber</span></h3>
+            </div>
+
+            @if(Model.IsReadyForProcessing
+                && !String.IsNullOrWhiteSpace(Model.ProcessingError))
+            {
+                <div class="panel-body">
+                    <div class="col-sm-12 col-lg-12 panel-container">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Processing Error</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-xs-12 col-sm-12 col-lg-12 text-danger">
+                                    @Model.ProcessingError
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-lg-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Request Details</h4>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="col-xs-12 col-sm-12 col-lg-6">
+                                    <h3>Request Details</h3>
+                                    <dl class="dl-horizontal">
+                                        <dt>Prepared By:</dt>
+                                        <dd>@Model.PreparedByFirstName @Model.PreparedByLastName </dd>
+                                        <dd>@Model.PreparedByEmail</dd>
+                                        <dd>@Model.PreparedByJobTitle</dd>
+                                        <dt>Prepared By Date:</dt>
+                                        <dd>@Model.CreatedOn</dd>
+                                        <dt>Campus Approved Date:</dt>
+                                        <dd>@Model.CampusApproveOn</dd>
+                                       @*  <dt>Division:</dt>
+                                        <dd>@Model.DivisionCode - @Model.DivisionName</dd>
+                                        <dt>Department:</dt>
+                                        <dd>@Model.DepartmentCode - @Model.DepartmentName</dd> *@
+                                    </dl>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-lg-6">
+                                    <h3>Request Overview</h3>
+                                    <dl class="dl-horizontal">
+                                        <dt># of Projects:</dt>
+                                        <dd>@Model.Items.Distinct().Count()</dd>
+                                        <dt># of Transactions:</dt>
+                                        <dd>@Model.Items.Count()</dd>
+                                        <dt>Total Transfer Amount:</dt>
+                                        <dd>@Model.OverallTotal.ToString("c")</dd>
+                                    </dl>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-lg-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Transfer</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-xs-12 col-sm-12 col-lg-12">
+                                <table id="transaction_details" class="table transaction-table">
+                                    <thead class="theader">
+                                        <tr style="@(!Model.ProjectId.StartsWith("10") ? "" : "display: none;" )">
+                                            <th colspan="4">
+
+                                            </th>
+                                            <th>
+                                                <span class="project-balance pull-right"
+                                                      title="Project: @Model.ProjectId">Balance:</span>
+                                            </th>
+                                            <th>
+                                                <span id="projectBalance"
+                                                      title="Project Balance for @Model.ProjectId - @Model.ProjectDescription">@Model.ProjectBalance.ToString("C")</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Project #</th>
+                                            <th>Project Name</th>
+                                            <th>Account #</th>
+                                            <th>Account Name</th>
+                                            <th class="col-md-2">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right">
+                                                <b>FROM</b>
+                                                <button type="button"
+                                                        id="projectPurposeButton"
+                                                        class="btn btn-sm btn-primary mb-1"
+                                                        style="padding: .20em; height:26px;"
+                                                        onclick="getProjectPurpose()">
+                                                    <i role="img" class="fas fa-circle-info" title="View Project Purpose"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <span>@Model.ProjectId</span>
+                                            </td>
+                                            <td>
+                                                <span>@Model.ProjectDescription</span>                                                
+                                            </td>
+                                            <td>
+                                                <span>@Model.AccountNumber</span>
+                                            </td>
+                                            <td>
+                                                <span>@Model.AccountName</span>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-md-2 text-right pr-2 label-top" style="border-top:none;">Line Item Description</td>
+                                            <td colspan="3" style="border-top:none;">
+                                                <span>@Model.LineItemDescription</span>
+                                            </td>
+                                        </tr>
+                                        <tr style="border-bottom:solid 1px black;"></tr>
+                                        @for (int i = 0; i < Model.Items.Count(); i++)
+                                        {
+                                            <input type="hidden" value="@Model.Items[i].ProjectId" id='@($"Items_{i}__ProjectId")' name='@($"Items[{i}].ProjectId")'/>
+                                            <tr style="border-top: 1px solid #ddd;">
+                                                <td class="text-right">
+                                                    <b>TO</b>
+                                                    <button type="button"
+                                                            id="projectPurposeButton"
+                                                            class="btn btn-sm btn-primary mb-1"
+                                                            style="padding: .20em; height:26px;"
+                                                            onclick="getToProjectPurpose('@i')">
+                                                        <i role="img" class="fas fa-circle-info" title="View Project Purpose"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <span>@Model.Items[i].ProjectId</span>
+                                                </td>
+                                                <td>
+                                                    <span>@Model.Items[i].ProjectDescription</span>
+                                                </td>
+                                                <td>
+                                                    <span>@Model.Items[i].AccountNumber</span>
+                                                </td>
+                                                <td>
+                                                    <span>@Model.Items[i].AccountName</span>
+                                                </td>
+                                                <td>
+                                                    <span>@Model.Items[i].Amount.ToString("C")</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="ProjectTotalSection">
+                                            @{
+                                                var balance = Model.ProjectBalance - Model.Items.Sum(x => x.Amount);
+                                                var amntClass = String.Empty;
+                                                if (balance < 0)
+                                                {
+                                                    amntClass = "text-danger";
+                                                }
+                                            }
+                                            <td class="text-right" colspan="5">Transfer Total:</td>
+                                            <td>
+                                                <span id="totalProjectToAmount" class="@amntClass">@Model.Items.Sum(a => a.Amount).ToString("C")</span>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Supporting Documents:</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="control-label" asp-for="TransferPurpose">UofA Purpose of Transfer <span class="required">*</span></label>
+                                <p>@Model.TransferPurpose</p>
+                            </div>
+                            @if(Model.AllowFileUpload)
+                            {
+                                <div class="alert alert-info">
+                                    At least one attachment is required to support amount and purpose of transfer. Please consolidate documentation into a single attachment if possible.
+                                </div>
+                                <div id="SupportingDocumentsSection">
+                                    Loading Documents. Please wait ... .
+                                    @await Html.PartialAsync("_SupportingDocumentsList", Model.SupportingDocuments)
+                                </div>
+                                <div class="upload-container ml-3 mr-3">
+                                    <div class="">
+                                        <input type="file" id="file_upload" accept=".png, .jpg, .jpeg, .tif, .tiff, .pdf, .xls, xlsx, .doc, .docx, application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                                        @for (int i = 0; i < Model.ValidFileTypes.Count(); i++)
+                                        {
+                                            <input type="hidden" id='@($"ValidFileTypes_{i}")' name='@($"ValidFileTypes[{i}]")' value="@Model.ValidFileTypes[i]" />
+                                        }
+                                    </div>
+                                    <small class="text-silver"><strong>Supported file types:</strong> .pdf, .jpg, .png, .tif, .doc, .docx, .xls, .xlsx, .txt</small>
+                                    <br />
+                                    <small class="text-silver"><strong>File size limit:</strong> 9MB</small>
+                                    <br>
+                                    <div id="UploadStatusMessage" class="alert alert-danger d-none col-md-3"></div>
+                                    <button type="button" class="btn btn-blue pull-right" onclick="uploadFiles()"><i class="fa fa-cloud-arrow-up" title="Upload"></i> Upload Supporting Document</button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div id="SupportingDocumentsSection">
+                                    @await Html.PartialAsync("_ReadOnlySupportingDocumentsList", Model.SupportingDocuments)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- END panel container-->
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                Approvers: <button class="btn btn-sm infoLegend float-left ml-2"
+                                                   type="button"
+                                                   data-toggle="modal"
+                                                   data-target="#ApprovalHistoryModal"
+                                                   tabindex="-1">
+                                    <i role="img" class="fas fa-history fa-sm" title="History"></i>
+                                </button>
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-lg-12">
+                                @await Html.PartialAsync("_Approvers")
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div> <!--END Approvers panel -->
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-lg-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Approve/Reject Comments:</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-xs-12 col-sm-12 col-lg-12">
+                                <div class="form-group col-lg-12">
+                                    <label class="control-label" asp-for="Comments">Comments</label>
+                                    <textarea class="form-control" type="text" asp-for="Comments" rows="6" title="Comments" placeholder="Supply reason(s) here."></textarea>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="form-group col-lg-12">
+                                <label class="control-label" asp-for="CCEmails">CC Emails <span class="text-danger">(Rejection notifications only)</span></label>
+                                <textarea class="form-control" type="text" asp-for="CCEmails" rows="4" title="CCEmails" placeholder="Enter email(s) separated by comma"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Post Date:</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group col-md-3">
+                                <label class="control-label" for="PostDate">Post Date</label>
+                                <div>
+                                    @Model.PostDate
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> @*END Post Date panel*@
+
+            <div class="panel-body">
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Journal Entry Batch Preview:</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group col-md-3 col-lg-12">
+                                <table class="table approvers">
+                                    <thead>
+                                        <tr>
+                                            <th>Account</th>
+                                            <th>Post Date</th>                                            
+                                            <th>Journal</th>
+                                            <th class="col-md-3">Journal Reference</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>                                            
+                                            <th class="col-md-3">Project</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var entry in Model.FundsTransferJournalEntries)
+                                        {
+                                            <tr>
+                                                <td>@entry.Account - @entry.AccountName</td>
+                                                <td>@entry.PostDate</td>                                                
+                                                <td>@entry.Journal</td>
+                                                <td>@entry.JournalReference</td>                                                
+                                                <td>@String.Format("{0:C}", entry.Debit)</td>
+                                                <td>@String.Format("{0:C}", entry.Credit)</td>
+                                                <td>@entry.Project - @entry.ProjectName</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> @*END Journal Entry Batch Preview panel*@
+
+            <div class="panel-footer clearfix">
+                @if (!Model.IsReadyForProcessing)
+                {
+                    @if (!Model.IsPending && Model.AllowApproval)
+                    {
+                        @*AF: Separated because if we have to add the Discard button later, it is not under the AllowApproval condition*@
+                        @if (Model.AllowApproval)
+                        {
+                            <div class="pull-right">
+                                <button id="btnReject" type="submit" class="btn btn-red"
+                                        title="Reject" data-toggle="tooltip" value="Reject" asp-action="Reject" asp-route-save="false" asp-route-review="false" asp-route-returnView="@Model.PreviousPage" disabled formnovalidate>
+                                    <i role="img" class="fas fa-ban">&nbsp;</i>Reject
+                                </button>
+                                <button id="btnApprove" type="submit" class="btn btn-light"
+                                        title="Approve" data-toggle="tooltip" value="Approve" asp-action="Approve" asp-route-save="false" asp-route-review="false" asp-route-returnView="@Model.PreviousPage">
+                                    <i role="img" class="fas fa-bookmark">&nbsp;</i>Approve
+                                </button>
+                            </div>
+                            
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    @if (Model.AllowProcessing)
+                    {
+                        <button type="submit" class="btn btn-primary pull-right" title="Process Funds Transfer"
+                                asp-action="Process">
+                            <i role="img" class="fas fa-check">&nbsp;</i>Process
+                        </button>
+                        <button type="submit" class="btn btn-link"
+                                value="Kickback"
+                                title="Reset Approvers for Form @Model.FormNumber"
+                                asp-action="ResetUAFApprovers"
+                                asp-route-fundsTransferId="@Model.FundsTransferId ">
+                            <i role="img" class="fas fa-times">&nbsp;</i>Kickback
+                        </button>
+                    }
+                    
+                }
+
+                
+            </div>
+        </div>
+
+
+
+    </form>
+</div>
+
+
+<div class="modal fade" id="ApprovalHistoryModal" tabindex="-1" role="dialog" aria-labelledby="ApprovalHistoryModal ApprovalHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ApprovalHistoryModalLabel">Approval History</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            @await Html.PartialAsync("_ApprovalHistory")
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (ApprovalHistory) -->
+
+<partial name="_PendingCommentsModal" />
+<partial name="_PleaseWaitSupportingDocumentsModal" />
+<partial name="_PleaseWaitSupportingDocumentsDeleteModal" />
+<!--Project description Modal -->
+@await Html.PartialAsync("_ProjectPurposeModal")
+
+
+
+@section scripts {
+    <script>
+        var formNumber = "@Model.FormNumber";
+        var getSupportingDocumentsURL = "@Url.Action("GetSupportingDocuments")";
+        var viewSupportingDocumentURL = "@Url.Action("ViewSupportingDocument")";
+        var addItemURL = '@Url.Action("AddItem")';
+    </script>
+    @await Html.PartialAsync("_Scripts")
+}
+

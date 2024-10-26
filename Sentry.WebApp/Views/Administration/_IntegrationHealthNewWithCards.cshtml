@@ -1,0 +1,229 @@
+﻿@model Sentry.WebApp.ViewModels.Administration.IntegrationHealthViewModel
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<div id="content-container container-fluid" class="content-container" role="main">
+    <p>The integration title bars below (e.g. Bio/Dem) will either have status* of:</p>
+    <ul>
+        <li><span class="unprocGreen"><b>Good</b></span> - All insert triggers are ON and no unprocessed records, or ...</li>
+        <li><span class="unprocRed"><b>Bad</b></span> - One or more insert triggers turned OFF, and/or unprocessed records in one of the tables</li>
+    </ul>
+
+    <p>*Good/Bad status is assigned as the integration data loads. Make sure all data is finished loading - see indicator at the top of the page - before assuming status is final.</p>
+    <p><div class="badge badge-danger">Badges</div> display unprocessed, unmastered, and unpromoted records. Click the badge to see additional detail.</p>
+
+    @foreach (var entity in Model.Entities)
+    {
+        <h2>@entity.Name</h2>
+        @foreach (var category in entity.Categories)
+        {
+            <div class="accordion" id="accordionWhole">
+                <div class="card">
+                    <div class="card-header parentRow alert-light" id="heading_@category.Id">
+                        <h4 class="mb-0"
+                            data-toggle="collapse"
+                            data-target="#collapse_@category.Id"
+                            aria-expanded="false"
+                            data-bs-parent="#accordionWhole">
+                            <i class="fa fa-angle-right"></i>
+                            @category.DisplayName
+                        </h4>
+                    </div>
+                    <div id="collapse_@category.Id" class="collapse" aria-labelledby="heading_@category.Id">
+                        <div class="card-body">
+                            <table class="table student childRowTableChild generatedTable">
+                                <thead>
+                                    <tr id="integrationStateHed">
+                                        <th scope="col"></th>
+                                        <th scope="col" colspan="4" style="text-align:center;">Trigger Status (<span style="color:green;"><b>Green</b></span>=On, <span style="color:red;"><b>Red</b></span>=Off) & Unprocessed Records</th>
+                                    </tr>
+                                    <tr id="integrationStateHed">
+                                        <th scope="col">Source System</th>
+                                        <th scope="col">History</th>
+                                        <th scope="col">Stage</th>
+                                        <th scope="col">Good</th>
+                                        <th scope="col">Bad</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statusItems">
+                                    @foreach (var sourceSystem in category.SourceSystems)
+                                    {
+                                        var statusRowId = $"statusRow_{sourceSystem.SystemId}_{sourceSystem.IntegrationId}";
+                                        <tr class="statusRow" id="@statusRowId">
+                                            <td class="dataField" id="sourceSystem">@sourceSystem.DisplayName</td>
+                                            <td class="dataField" id="history">Loading data ...</td>
+                                            <td class="dataField" id="stage">
+                                                <a id="stagePopover"
+                                                   tabindex="0"
+                                                   class="btn btn-sm btn-danger dataVals"
+                                                   role="button"
+                                                   data-html="true"
+                                                   data-toggle="popover"
+                                                   data-trigger="focus"
+                                                   data-placement="top"
+                                                   data-content="TODO">
+                                                    Loading...
+                                                </a>
+                                            </td>
+                                            <td class="dataField" id="good">
+                                                <a id="goodPopover"
+                                                   tabindex="0"
+                                                   class="btn btn-sm btn-danger"
+                                                   data-html="true"
+                                                   data-toggle="popover"
+                                                   data-trigger="focus"
+                                                   data-placement="top"
+                                                   data-content="TODO">
+                                                    Loading...
+                                                </a>
+                                            </td>
+                                            <td class="dataField" id="bad"></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function () {
+        // Add down arrow icon for collapse element which is open by default
+        $(".collapse.show").each(function () {
+            $(this).prev(".card-header").find(".fa").addClass("fa-angle-down").removeClass("fa-angle-right");
+        });
+
+        // Toggle right and down arrow icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function () {
+            $(this).prev(".card-header").find(".fa").removeClass("fa-angle-right").addClass("fa-angle-down");
+        }).on('hide.bs.collapse', function () {
+            $(this).prev(".card-header").find(".fa").removeClass("fa-angle-down").addClass("fa-angle-right");
+        });
+    });
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    });
+
+    function setBadCategoryClass(isGood, categoryDiv) {
+        if (!isGood) {
+            categoryDiv.addClass("alert-danger");
+            categoryDiv.removeClass("alert-light");
+            categoryDiv.removeClass('alert-success');
+        }
+        else {
+            categoryDiv.addClass("alert-success");
+            categoryDiv.removeClass("alert-light");
+            categoryDiv.removeClass('alert-danger');
+        }
+    };
+
+        function updateIntegrationState(systemId, integrationId, categoryId) {
+        //var statusRowId = '#statusRow' + '_' + systemId + '_' + integrationId;
+        var statusRowId = `#statusRow_${systemId}_${integrationId}`;
+        console.log(`statusRowId ${statusRowId}`);
+        //var masterRowId = '#master' + '_' + categoryId;
+        var categoryDivId = `#heading_${categoryId}`;
+        console.log(`categoryDivId ${categoryDivId}`);
+        var statusRow = $(statusRowId);
+        var categoryDiv = $(categoryDivId);
+
+        $.getJSON({
+            url: "@Html.Raw(Url.Action("LoadIntegrationHealth", "Administration"))",
+            type: "GET",
+            data: {
+                "systemId": systemId,
+                "integrationId": integrationId
+            },
+            dataType: "json"
+      })
+            .fail(function (jqXHR, err) {
+                var errorMsg = '';
+                if (jqXHR.status != 200) {
+                    statusRow.find("#history").text("Error retrieving integration health.");
+                }
+                if (jqXHR.status == 500) {
+                    errorMsg = 'Internal Server Error. [500]';
+                    console.log(errorMsg);
+                }
+           })
+
+            .done(function (data, textStatus, jqXHR) {
+                statusRow.find("#stage")
+                    .find("#stagePopover")
+                    .attr("data-content", `Total unprocessed records: ${data.unprocessedRecords}`)
+                    .text(data.unprocessedRecords);
+
+                statusRow.find("#good")
+                    .find("#goodPopover")
+                    .attr("data-content", `Unmastered: ${data.unmasteredRecords} <br>Unpromoted: ${data.unpromotedRecords}`)
+                    .text(data.unpromotedRecords + data.unmasteredRecords);
+
+                statusRow.find("#history").text("");
+                var sumRecords = data.unpromotedRecords + data.unmasteredRecords + data.unprocessedRecords;
+                if (sumRecords !== 0) {
+                    setBadCategoryClass(false, categoryDiv);
+                }
+                else {
+                    setBadCategoryClass(true, categoryDiv);
+                }
+
+                //if (data.unprocessedRecords == 0) {
+                //    $('[id=stagePopover]').addClass('hidden');
+                //}
+
+                if (!data.historyInsertTriggerEnabled) {
+                    statusRow.find("#history").addClass('alert-danger').removeClass('alert-light');
+                    setBadCategoryClass(false, categoryDiv);
+                }
+                else {
+                    statusRow.find("#history").addClass('alert-success').removeClass('alert-light');
+                }
+
+                if (!data.stageInsertTriggerEnabled) {
+                    statusRow.find("#stage").addClass('alert-danger').removeClass('alert-light');
+                    setBadCategoryClass(false, categoryDiv);
+                }
+                else {
+                    statusRow.find("#stage").addClass('alert-success').removeClass('alert-light');
+                }
+
+                if (!data.goodInsertTriggerEnabled) {
+                    statusRow.find("#good").addClass('alert-danger').removeClass('alert-light');
+                    setBadCategoryClass(false, categoryDiv);
+                }
+                else {
+                    statusRow.find("#good").addClass('alert-success').removeClass('alert-light');
+                }
+
+                if (!data.badInsertTriggerEnabled) {
+                    statusRow.find("#bad").addClass('alert-danger').removeClass('alert-light');
+                    setBadCategoryClass(false, categoryDiv);
+                }
+                else {
+                    statusRow.find("#bad").addClass('alert-success').removeClass('alert-light');
+                }
+
+        })
+    };
+    $(document).ready(function () {
+        //produces a variable that is a json array of entities, categories, source systems, integrations
+        var entities = @Html.Raw(Json.Serialize(Model.Entities));
+
+        //iterates over each entity, category, then source system to call the updateIntegrationState function
+        //That function then plugs in the data in the table rows and cards
+        entities.forEach(function (entity, index) {
+            entity.categories.forEach(function (cat, index) {
+                cat.sourceSystems.forEach(function (sys, index) {
+                    updateIntegrationState(sys.systemId, sys.integrationId, cat.id);
+                });
+            });
+        });
+    });
+</script>
+

@@ -1,0 +1,185 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+
+<ul class="page-title">
+    <li>
+        <h1>
+            Welcome to Your @Model.Title Dashboard
+        </h1>
+    </li>
+</ul>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="row">
+        <div class="col-sm-12">
+            @*<p class="lead">Welcome to your @Model.Title Dashboard!</p>*@
+            <p>Here is where you'll remediate any @Model.Title records which have failed the business' validation rules in the Data Integration Framework<sup>&#174;</sup><sup>&trade;</sup></p>
+            <p>The @Model.Title Integration is made up of several smaller integrations as indicated by the sub-menu items listed below the @Model.Title heading.</p>
+            <p>Select one of the smaller Integrations on the left to begin the remediation process.</p>
+        </div>
+        @*<div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="panel panel-primary chart">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Number of Constituents in System:</h3>
+                    <div class="panel-toolbar">
+                        <div class="form-group mb-0">
+                            <label for="amCharts-dateSelector" class="sr-only control-label">Select: </label>
+                            <select id="amCharts-dateSelector" class="form-control thisChart-dateSelector">
+                                <option value="currentYear" selected>Current Year</option>
+                                <option value="lastYear">Last Year</option>
+                                <option value="dateRange">Date Range</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form class="pull-right">
+                        <div class="form-group">
+                            <label class="sr-only control-label">Select: </label>
+                            <div id="throughputDateRange" style="background: #fff; color: #000; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span></span> <i class="fa fa-caret-down"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="chartjs-wrapper clearfix" style="height: 250px;">
+                        <div id="dataQuality" style="height: 250px;"></div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col* -->*@
+    </div><!-- /.row -->
+
+</div><!-- /.content-container -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+
+            // Color Variables
+            const colors = {
+                primaryBlue: '#0C234B',
+                primarySkyBlue: '#81D3EB',
+                primaryOasisBlue: '#378DBD',
+                primaryAzuriteBlue: '#1E5288',
+                primaryMidnightBlue: '#001C48',
+
+                primaryRed: '#AB0520',
+                primaryRedBloom: '#EF4056',
+                primaryRedChili: '#8B0015',
+
+                neutralCoolGray: '#E2E9EB',
+                neutralWarmGray: '#F4EDE5',
+
+                secondaryLeaf: '#70B865',
+                secondaryRiver: '#007D84',
+                secondarySilver: '#9EABAE',
+                secondaryMesa: '#a95c42',
+
+                legacyDarkSilver: '#49595E',
+            };
+
+
+            var systemUserName = '@Model.User';
+            window.systemUserName = '@Model.User';
+            var arr = systemUserName.split('.');
+            var second = arr[1];
+            console.log('array: ' + arr);
+            $('.user-name').html(arr[0]);
+
+
+            // ///////////////////////////////////////////////////////////////
+
+
+            //// Set left/right padding on calendar date text depending on width (number of characters)
+            //// get character count
+            //var calendarTextContainer = $('#numberofDegreesAwardedByType');
+            //var calendarText = $('.calendar-text');
+            //var calendarTextLength = $('.calendar-text').text().length;
+            //console.log("date length = " + calendarTextLength);
+            //var calendarTextValue = $('.calendar-text').text();
+            //console.log("date value = " + calendarTextValue);
+
+            //// if greater than 1, set padding to 0.15em
+            //if (calendarTextLength > 1) {
+            //    calendarText.css({'padding': '0 0.15em'});
+            //} else { // else set padding to 0.35em
+            //    calendarText.css({ 'padding': '0 0.35em' });
+            //};
+
+            ////if (calendarTextValue <= 4) {
+            ////    calendarTextContainer.addClass('danger');
+            ////} else if (calendarTextValue <= 7) {
+            ////    calendarText.addClass('danger');
+            ////};
+
+            ////if (calendarTextValue <= 8) {
+            ////    calendarTextContainer.addClass('warning');
+            ////} else if (calendarTextValue <= 12) {
+            ////    calendarText.addClass('warning');
+            ////};
+
+            //if (calendarTextValue <= 4) {
+            //    calendarTextContainer.addClass('danger');
+            //} else if (calendarTextValue <= 9) {
+            //    calendarTextContainer.addClass('warning');
+            //};
+
+
+            //// ///////////////////////////////////////////////////////////////
+
+
+            //var chart = am4core.create("dataQuality", am4plugins_forceDirected.ForceDirectedTree);
+            //var networkSeries = chart.series.push(new am4plugins_forceDirected.ForceDirectedSeries())
+
+            //chart.data = [
+            //    {
+            //        name: "Constituents",
+            //        children: [
+            //            {
+            //                name: "Org",
+            //                children: [
+            //                    { name: "UA", value: 104023 },
+            //                    { name: "UAF", value: 15 }
+            //                ]
+            //            },
+            //            {
+            //                name: "Group",
+            //                children: [
+            //                    { name: "G1", value: 18235 },
+            //                    { name: "G2", value: 98 },
+            //                    { name: "G3", value: 287 }
+            //                ]
+            //            },
+            //            {
+            //                name: "Individual",
+            //                children: [
+            //                    { name: "C1", value: 810547 },
+            //                    { name: "C2", value: 857 },
+            //                    { name: "C3", value: 269 }
+            //                ]
+            //            }
+
+            //        ]
+            //    }
+            //];
+
+            //networkSeries.dataFields.value = "value";
+            //networkSeries.dataFields.name = "name";
+            //networkSeries.dataFields.children = "children";
+            //networkSeries.nodes.template.tooltipText = "{name}:{value}";
+            //networkSeries.nodes.template.fillOpacity = 1;
+            //networkSeries.manyBodyStrength = -20;
+            //networkSeries.links.template.strength = 0.8;
+            //networkSeries.minRadius = am4core.percent(2);
+
+            //networkSeries.nodes.template.label.text = "{name}"
+            //networkSeries.fontSize = 14;
+
+
+            // ///////////////////////////////////////////////////////////////
+
+
+        });
+    </script>
+}

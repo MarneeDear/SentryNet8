@@ -1,0 +1,96 @@
+﻿@model Sentry.WebApp.ViewModels.GiftDisbursements.GiftDisbursementsListViewModel
+
+@{
+    ViewData["Title"] = "Ready for Processing | " + Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="GiftDisbursements" asp-action="Index">Gift Disbursements Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container table-responsive" role="main">
+
+    <table id="ProcessTable" class="table table-hover table-striped postToGL recordList">
+        <caption class="sr-only">Gift Disbursments</caption>
+        <thead>
+            <tr class="tableHeader">
+                <th style="display: none">giftDisbursementId</th>
+                <th>
+                    <input type="checkbox" id="selectDisbursements" onclick="SelectAllDisbursements(this)" class="custom-control-input" />
+                </th>                
+                <th>Prepared By:</th>
+                <th>Form Number:</th>
+                <th>Payee Name:</th>
+                <th>1099:</th>
+                <th>Type:</th>
+                <th style="display: none">Fund:</th>
+                <th style="display: none">Status</th>
+                <th>Instructions:</th>
+                <th style="display: none">Instructions:</th>
+                <th style="display: none">Reviewer Notes:</th>
+                <th>Total Amount:</th>
+                <th>Processing Error:</th>
+                <th style="display: none">Processing Error:</th>
+                <th>Date Approved:</th>
+                <th style="display: none">1099 Amount:</th>               
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var giftDisbursement in Model.Disbursements)
+            {
+                <tr class="@(giftDisbursement.ProcessingError == null ? "" : "rejectedStatus")">
+                <td style="display: none">@giftDisbursement.GiftDisbursementId</td>
+                <td class="disbursementSelect">
+                    <input type="checkbox" class="custom-control-input" />
+                </td>
+                <td>@giftDisbursement.PreparedByName</td>
+                <td>@giftDisbursement.FormNumber</td>
+                <td>@giftDisbursement.PayeeName</td>
+                <td>@(@giftDisbursement.Has1099TotalValue ? "Yes" : "No")</td>
+                <td>@giftDisbursement.PayeePaymentType</td>
+                <td style="display: none">@giftDisbursement.Fund</td>
+                <td style="display: none">@giftDisbursement.Rejected</td>
+                <td>@giftDisbursement.PayeeSpecialInstructions</td>
+                <td style="display: none">@giftDisbursement.PayeeSpecialInstructions</td>
+                <td style="display: none">@giftDisbursement.ReviewerNotes</td>
+                <td>@giftDisbursement.Total</td>
+                <td>@giftDisbursement.ProcessingError</td>
+                <td style="display: none">@giftDisbursement.ProcessingError</td>
+                <td>@giftDisbursement.LastApprovedOnDate</td>
+                <td style="display: none">@giftDisbursement.Total1099</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <button type="button"
+                class="btn btn-primary"
+                onclick="ShowBulkProcessingModal()">
+            Process All Selected
+        </button>
+    </div>
+
+</div>
+
+@await Html.PartialAsync("_BulkProcessingModal")
+@await Html.PartialAsync("_PleaseWaitModal")
+@await Html.PartialAsync("_BulkProcessingResultsModal")
+
+@section scripts{
+    <script>
+        var bulkProcessUrl = "@Url.Action("BulkProcess", "Invoices")"; 
+    </script>
+    @await Html.PartialAsync("_Scripts")
+}

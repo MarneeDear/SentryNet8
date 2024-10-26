@@ -1,0 +1,78 @@
+﻿@model Sentry.WebApp.ViewModels.GiftDisbursements.ProjectItem
+
+@{
+    var p = ViewData["projectIndex"] as int?;
+    var i = ViewData["projectItemIndex"] as int?;
+    var disbursementType = ViewData["type"] as string;
+}
+
+<tr id="@($"project_{p}_item_{i}")">
+    <td>
+        <button type="button"
+                onclick="RemoveDisbursement(this)"
+                data-projectIndex="@p"
+                data-projectItemIndex="@i"
+                class="btn btn-red">
+            <i class="fa fa-trash-can" title="Delete Transaction"></i>
+        </button>
+    </td>
+    @if (disbursementType != "EM")
+    {
+        <td>
+            <input asp-for="UaAccount" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__UaAccount")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].UaAccount")' class="form-control required" onchange="handleUaAccountNumber(@p, @i)" maxlength="7" />
+        </td>
+
+    }
+    <td>
+        <input asp-for="ObjectCode" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__ObjectCode")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].ObjectCode")' class="form-control required" />
+    </td>
+    <td>
+        <input asp-for="SubAccountCode" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__SubAccountCode")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].SubAccountCode")' class="form-control" />
+    </td>
+    <td>
+        <input asp-for="ProjectCode" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__ProjectCode")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].ProjectCode")' class="form-control" />
+    </td>
+    <td>
+        <input asp-for="DebitAccountNumber"
+               id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__DebitAccountNumber")' 
+               name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].DebitAccountNumber")'
+               class="form-control required"
+               onchange="GetDebitAccountDescription(@p, @i)"
+               maxlength="8"
+               minlength="8"
+               required />
+        <input type="hidden" asp-for="DisbursementItemId" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__DisbursementItemId")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].DisbursementItemId")' class="form-control required" />
+        <input type="hidden" asp-for="Deleted" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__Deleted")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].Deleted")' />
+        <span asp-validation-for="DebitAccountNumber" class="text-danger help-block"></span>
+    </td>
+    <td>
+        <input asp-for="DebitAccountDescription"
+               id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__DebitAccountDescription")' 
+               name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].DebitAccountDescription")'
+               class="form-control"
+               readonly="readonly" />
+    </td>
+    @if (disbursementType == "EM")
+    {
+        <td>
+            <input type="checkbox" asp-for="FundraisingExpense" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__FundraisingExpense")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].FundraisingExpense")' />
+        </td>
+    }
+    <td>
+        @if (disbursementType != "ST")
+        {
+            <input asp-for="Amount" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__Amount")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].Amount")' class="form-control required" onchange="setTotalProjectAmount(this)" />
+        }
+        else
+        {
+            <span id="Amount" name="Amount" class="">@Model.Amount.ToString("C")</span>
+            <input type="hidden" asp-for="Amount" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__Amount")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].Amount")' class="form-control required" />
+        }
+    </td>
+</tr>
+<tr id="@($"project_{p}_item_{i}_description")">
+    <td class="col-md-2 text-right pr-2 label-top">Line Item Description</td>
+    <td colspan="4">
+        <input asp-for="Description" id='@($"GiftDisbursementProjects_{p}__ProjectItems_{i}__Description")' name='@($"GiftDisbursementProjects[{p}].ProjectItems[{i}].Description")' class="form-control" />
+    </td>
+</tr>

@@ -1,0 +1,500 @@
+﻿
+<div class="col-xs-12 col-sm-6 col-lg-4">
+    <!-- OrganizationalUnitMasterId -->
+    <div class='form-group @string.Format("status{0}", Model.OrganizationalUnitMasterId_Status)'>
+        <div class="pull-right">
+            <input type="hidden" asp-for="OrganizationalUnitMasterId_BusinessName" />
+            <input type="hidden" asp-for="OrganizationalUnitMasterId_BusinessDescription" />
+            <input type="hidden" asp-for="OrganizationalUnitMasterId_Source" />
+            <input type="hidden" asp-for="OrganizationalUnitMasterId_Status" />
+            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                    data-info-content-name="@Html.DisplayFor(m => m.OrganizationalUnitMasterId_BusinessName)"
+                    data-info-content-description="@Html.DisplayFor(m => m.OrganizationalUnitMasterId_BusinessDescription)"
+                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source)">
+                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+            </button>
+            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#studentAcademicPlanOrganizationalUnitMasterIdHistoryModal" tabindex="-1"
+                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].OrganizationalUnitMasterId_Status)"
+                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].OrganizationalUnitMasterId)">
+                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+            </button>
+            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+        </div>
+        <label class="control-label" for="OrganizationalUnitMasterId">@Model.OrganizationalUnitMasterId_BusinessName: </label>
+        @Html.DropDownListFor(
+        m => m.OrganizationalUnitMasterId,
+        Model.OrganizationalUnitMasterIdList,
+        htmlAttributes: new { @class = "form-control", @data_disabled = (Model.OrganizationalUnitMasterId_IsReadOnly.ToString()) }
+        )
+        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+        @Html.Raw(Model.OrganizationalUnitMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+        <span asp-validation-for="OrganizationalUnitMasterId" class="text-danger help-block"></span>
+    </div>
+</div><!-- /.col-* -->
+
+
+<!-- Modal - Content: OrganizationalUnitMasterId History -->
+<div class="modal fade" id="studentAcademicPlanOrganizationalUnitMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studentAcademicPlanOrganizationalUnitMasterIdHistoryModal studentAcademicPlanOrganizationalUnitMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentAcademicPlanOrganizationalUnitMasterIdHistoryModalLabel">@Model.OrganizationalUnitMasterId_BusinessName History: @Model.OrganizationalUnitMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="OrganizationalUnitMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Current Value: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.OrganizationalUnitMasterId_Source ?? " Not Provided in " + @Model.System)"></i></th>
+                                        <th class="all original">Original Value:</th>
+                                        <th class="all source">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                    <tr class="@Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Date">
+                                            @Model.HistoryData[i].HistoryDate
+                                        </td>
+                                        <td data-header="Current Value">
+                                            <i role="img" class="fas @Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()"></i>
+                                            <span data-toggle="tooltip" title="@Model.HistoryData[i].OrganizationalUnitMasterId_Status">
+                                                @Model.HistoryData[i].OrganizationalUnitMasterId
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <span>
+                                                @Model.OrganizationalUnitMasterId_OriginalValue
+                                            </span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            <span>
+                                                @(Model.OrganizationalUnitMasterId_Source == "Not Provided" ? Html.Raw("Not Provided") : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (OrganizationalUnitMasterId) -->
+
+
+<!-- Modal - Content: OrganizationalUnitMasterId History -->
+<div class="modal fade" id="studentAcademicPlanOrganizationalUnitMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studentAcademicPlanOrganizationalUnitMasterIdHistoryModal studentAcademicPlanOrganizationalUnitMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentAcademicPlanOrganizationalUnitMasterIdHistoryModalLabel">@Model.OrganizationalUnitMasterId_BusinessName History: @Model.OrganizationalUnitMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped studentAcademicPlan childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                    <tr class="accordion-toggle collapsed @Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#@i-studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerField"
+                                        data-parent="#studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerFieldTable"
+                                        aria-expanded="false"
+                                        aria-controls="@i-studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.HistoryData[i].OrganizationalUnitMasterId_Status">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="@i-studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped studentAcademicPlan childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- OrganizationalUnitMasterId -->
+                                                        <tr class="@Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                OrganizationalUnitMasterId
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].OrganizationalUnitMasterId_Status">
+                                                                    <i role="img" class="fas @Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.HistoryData[i].OrganizationalUnitMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.OrganizationalUnitMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.HistoryData[i].OrganizationalUnitMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- OrganizationalUnitMasterId -->
+                                                        <tr class="@Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                OrganizationalUnitMasterId
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].OrganizationalUnitMasterId_Status">
+                                                                    <i role="img" class="fas @Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.HistoryData[i].OrganizationalUnitMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.OrganizationalUnitMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.HistoryData[i].OrganizationalUnitMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- OrganizationalUnitMasterId -->
+                                                        <tr class="@Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                OrganizationalUnitMasterId
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].OrganizationalUnitMasterId_Status">
+                                                                    <i role="img" class="fas @Model.HistoryData[i].OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.HistoryData[i].OrganizationalUnitMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.OrganizationalUnitMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.HistoryData[i].OrganizationalUnitMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (OrganizationalUnitMasterId) -->
+
+
+<tr class="@Model.OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+    <td data-header="Field">@Model.OrganizationalUnitMasterId_BusinessName</td>
+    <td data-header="Current Value">
+        <span title="@Model.OrganizationalUnitMasterId_Status">
+            <i role="img" class="fas @Model.OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+            @Model.OrganizationalUnitMasterId
+        </span>
+    </td>
+    <td data-header="Original Value">
+        <input type="hidden" asp-for="OrganizationalUnitMasterId_OriginalValue" />
+        <span title="Original Value">@(Model.OrganizationalUnitMasterId_OriginalValue != null ? Html.Raw(Model.OrganizationalUnitMasterId_OriginalValue) : Html.Raw(""))</span>
+    </td>
+    <td data-header="Source Field Id">
+        @if (Model.OrganizationalUnitMasterId_Source == "" || Model.OrganizationalUnitMasterId_Source == null)
+        {
+        <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+        }
+        else
+        {
+        @Model.OrganizationalUnitMasterId_Source
+        }
+    </td>
+</tr>
+
+
+<!-- OrganizationalUnitMasterId -->
+<tr class="accordion-toggle collapsed @Model.OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()"
+    data-toggle="collapse"
+    data-target="#studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerField"
+    aria-expanded="false"
+    aria-controls="studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerField">
+    <td colspan="4">
+        <span title="@Model.OrganizationalUnitMasterId_Status">
+            @Model.OrganizationalUnitMasterId_BusinessName:
+        </span>
+    </td>
+</tr>
+<tr>
+    <td colspan="4" class="hiddenRow">
+        <div id="studentAcademicPlanOrganizationalUnitMasterIdHistoryDataPerField" class="accordian-body collapse">
+            <table class="table table-striped studentAcademicPlan childRowTableChild">
+                <thead>
+                    <tr>
+                        <th>Field:</th>
+                        <th>Current Value:</th>
+                        <th>Original Value:</th>
+                        <th>Source Field Id:</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- OrganizationalUnitMasterId -->
+                    <tr class="@Model.OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+                        <td data-header="Field">
+                            OrganizationalUnitMasterId
+                        </td>
+                        <td data-header="Current Value">
+                            <span data-toggle="tooltip" title="@Model.OrganizationalUnitMasterId_Status">
+                                <i role="img" class="fas @Model.OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                @Model.OrganizationalUnitMasterId
+                            </span>
+                        </td>
+                        <td data-header="Original Value">
+                            <span data-toggle="tooltip" title="Original Value">
+                                @Model.OrganizationalUnitMasterId_OriginalValue
+                            </span>
+                        </td>
+                        <td data-header="Source Field Id">
+                            @(Model.OrganizationalUnitMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                        </td>
+                    </tr>
+                    <!-- OrganizationalUnitMasterId -->
+                    <tr class="@Model.OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass()">
+                        <td data-header="Field">
+                            OrganizationalUnitMasterId
+                        </td>
+                        <td data-header="Current Value">
+                            <span data-toggle="tooltip" title="@Model.OrganizationalUnitMasterId_Status">
+                                <i role="img" class="fas @Model.OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                @Model.OrganizationalUnitMasterId
+                            </span>
+                        </td>
+                        <td data-header="Original Value">
+                            <span data-toggle="tooltip" title="Original Value">
+                                @Model.OrganizationalUnitMasterId_OriginalValue
+                            </span>
+                        </td>
+                        <td data-header="Source Field Id">
+                            @(Model.OrganizationalUnitMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                        </td>
+                    </tr>
+                    <!-- OrganizationalUnitMasterId -->
+                    <tr class="@Model.OrganizationalUnitMasterId_Status.GetHistoryFieldStatusClass() last">
+                        <td data-header="Field">
+                            OrganizationalUnitMasterId
+                        </td>
+                        <td data-header="Current Value">
+                            <span data-toggle="tooltip" title="@Model.OrganizationalUnitMasterId_Status">
+                                <i role="img" class="fas @Model.OrganizationalUnitMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                @Model.OrganizationalUnitMasterId
+                            </span>
+                        </td>
+                        <td data-header="Original Value">
+                            <span data-toggle="tooltip" title="Original Value">
+                                @Model.OrganizationalUnitMasterId_OriginalValue
+                            </span>
+                        </td>
+                        <td data-header="Source Field Id">
+                            @(Model.OrganizationalUnitMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.OrganizationalUnitMasterId_Source))
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </td>
+</tr>
+
+
+// OrganizationalUnitMasterId ---
+            var bioDemOrganizationalUnitMasterIdMasterIdDropDown = $('select#OrganizationalUnitMasterIdMasterId');
+            $(bioDemOrganizationalUnitMasterIdMasterIdDropDown).select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Get/Set Current Drop-Down Value:
+            $(bioDemOrganizationalUnitMasterIdMasterIdDropDown).on('change', function () {
+
+                var url = '@Html.Raw(Url.Action("GetTitle", "designation"))' + '/' + $(this).find(":selected").val();
+                $.getJSON(url, function (data) {
+                    console.log(data);
+                    console.log("success");
+                    $('#OrganizationalUnitMasterId').val(data.titleCode);
+                });
+
+                // get current value/text
+                var currentBioDemOrganizationalUnitMasterIdMasterIdSelectListValue = $(this).find(":selected").val();
+                //alert(currentBioDemOrganizationalUnitMasterIdMasterIdSelectListValue);
+
+                // set current value on hidden field
+                if (currentBioDemOrganizationalUnitMasterIdMasterIdSelectListValue !== "") {
+                    $(bioDemOrganizationalUnitMasterIdMasterIdDropDown).val(currentBioDemOrganizationalUnitMasterIdMasterIdSelectListValue);
+                } else {
+                    $(bioDemOrganizationalUnitMasterIdMasterIdDropDown).val("");
+                };
+            });
+
+
+////////////////////////////////////////////////////////////////////////////
+
+
+            // OrganizationalUnitMasterId ---
+            var OrganizationalUnitMasterIdDropDown = $('select#OrganizationalUnitMasterId');
+            var OrganizationalUnitMasterIdMethod = '@Html.Raw(Url.Action("GetDegreeTypes", "DropDowns"))';
+
+            $(OrganizationalUnitMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true, // adds 'x' to clear selected option
+                width: '100%',
+                ajax: {
+                    delay: 250,
+                    url: OrganizationalUnitMasterIdMethod,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: function (params) {
+                        var queryParams = {
+                            term: params.term, // search term
+                            _type: 'query_append',
+                            selected: true,
+                            page: params.page || 1
+                        }
+                        return queryParams;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                            pagination: {
+                                more: (params.page * 5) < data.length
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: '-- Choose Degree Type --',
+                minimumInputLength: 3,
+                minimumResultsForSearch: 5,
+                templateResult: function (data) {
+                    var $result = $("<span></span>");
+                    $result.text(data.text);
+                    return $result;
+                },
+                templateSelection: function (data) {
+                    return data.text;
+                }
+            });
+
+            // Initialize select2 with Current Value
+            var savedValue = '@Model.DegreeTypeName';
+            console.log('Selected OrganizationalUnitMasterId value: ' + savedValue);
+
+            var masterId = @(Html.Raw(string.IsNullOrEmpty(Model.OrganizationalUnitMasterId) ? "null" : $"'{Model.OrganizationalUnitMasterId}'"));
+
+            if (masterId != null) {
+                var savedOption = new Option(savedValue, masterId, true);
+                $(OrganizationalUnitMasterIdDropDown).append(savedOption).trigger('change');
+            };
+
+            // Get/Set Current Drop-Down Value:
+            $(OrganizationalUnitMasterIdDropDown).on('change', function () {
+
+                var currentOrganizationalUnitMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentOrganizationalUnitMasterIdSelectListValue == null || currentOrganizationalUnitMasterIdSelectListValue == "") {
+                    $('#DegreeTypeName').val(null);
+                    $('#DegreeTypeSourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetStudentAcademicCatalogDegreeType", "Student"))' + '/' + currentOrganizationalUnitMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#DegreeTypeName').val(data.academicCatalogDegreeTypeName);
+                        $('#DegreeTypeSourceSystemRecordId').val(data.academicCatalogDegreeTypeCode);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////

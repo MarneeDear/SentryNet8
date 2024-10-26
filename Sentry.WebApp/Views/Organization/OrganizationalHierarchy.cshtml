@@ -1,0 +1,354 @@
+﻿@model Sentry.WebApp.ViewModels.OrganizationalHierarchyListViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li class="active">Organizational Hierarchy</li>
+</ol>
+
+<div id="content-container" class="content-container organizationalHierarchy" role="main">
+
+    <div class="col-sm-12 col-md-6">
+        <h3>
+            Organizational Hierarchy: <button type="button" class="btn btn-xs btn-link" id="orgHierarchySearchButton" title="Search Hierarchy"><i class="fa fa-search"></i></button>
+            <span class="pull-right">
+                <button type="button" title="Collapse Tree" id="jsTreeCollapseAll" class="btn btn-xs btn-primary"><i class="fas fa-caret-up"></i></button>
+                <button type="button" title="Expand Tree" id="jsTreeExpandAll" class="btn btn-xs btn-primary"><i class="fas fa-caret-down"></i></button>
+                @*<button type="button" title="New Tree Branch" id="addNewNode" class="btn btn-xs btn-primary"><i class="fa fa-plus-square"></i> New</button>*@
+            </span>
+        </h3>
+        <div class="form-group orgHierarchySearchFormGroup hide">
+            @*<input type="text" id="ajaxsearch" name="ajaxsearch" class="form-control hide" placeholder="Search Hierarchy" />
+                <button type="button" class="btn btn-link" id="clearOrgHierarchySearchInput"><i class="fa fa-times"></i></button>*@
+
+            <div class="input-group">
+                @*<input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2">*@
+                <input type="text" id="ajaxsearch" name="ajaxsearch" class="form-control" placeholder="Search Hierarchy" aria-describedby="ajaxClearSearchIcon" />
+                <span class="input-group-addon" id="ajaxClearSearchIcon" title="Clear Search"><i class="fa fa-times-square"></i></span>
+            </div>
+
+        </div>
+
+        <div id="ajax" class="tree-demo"></div>
+
+    </div><!-- /.col-* -->
+
+    <div class="col-sm-12 col-md-6">
+        <div class="hierarchy-details-container hide">
+            <h3>
+                Organization Details:
+                @*<span class="pull-right">
+                    <span class="editButton"></span>
+                </span>*@
+            </h3>
+            <div class="col-sm-12 col-md-2">
+                <div class="profile-img"></div>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <dl class="hierarchy-details dl-horizontal"></dl>
+            </div>
+        </div>
+        @*<div class="hr"></div>*@
+    </div><!-- /.col-* -->
+    <div class="clearfix mb-5"></div>
+
+
+    <!-- Modal - Edit Record -->
+    <div class="modal fade" id="orgHierarchyEditModal" tabindex="-1" role="dialog" aria-labelledby="orgHierarchyEditModal orgHierarchyEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="editOrgHierarchyModal">
+                @Html.AntiForgeryToken()
+                <div class="modal-content">
+                    <div class="center-block text-center" style="background-color: #fff; border: 5px solid #ccc;">
+                        <p class="mt-3 mb-3"><img alt="Image" title="Loading..." src="~/img/throbber.gif" /> Loading...</p>
+                    </div>
+                </div><!-- /.modal-content -->
+            </form>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+
+
+<!-- Popover - Title: Info -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    @*<a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>*@
+    <span>Field Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Info -->
+<div id="popover-info-content" class="popover hide">
+    <ul class="triangle">
+        <li>
+            <span><strong>Business Glossary Name:</strong> <span id="popover-info-content-name">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Business Glossary Description:</strong> <span id="popover-info-content-description">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source System:</strong> <span id="popover-info-content-source">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source Field Id:</strong> <span id="popover-info-content-sourcefieldid">[No Data Provided]</span></span>
+        </li>
+    </ul>
+</div><!-- /.popover (content) -->
+
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            /* jsTree Search */
+            //$.jstree.defaults.search.search_leaves_only = true;
+            $("#ajaxsearch").keyup(function () {
+                var searchString = $(this).val();
+                //console.log(searchString);
+                $('#ajax').jstree('search', searchString);
+            });
+
+            // toggleSearchVisibility
+            var toggleSearchVisibility = function () {
+                $('.orgHierarchySearchFormGroup').toggleClass('hide');
+                $("#ajaxsearch").focus();
+            }
+            $('#orgHierarchySearchButton').on('click', toggleSearchVisibility)
+
+            // clearOrgHierarchySearchInput
+            var clearOrgHierarchySearchInput = function () {
+                $('#ajaxsearch').val('');
+                $('#ajaxsearch').focus();
+                $('#ajax').jstree('search', '');
+            }
+            $('#ajaxClearSearchIcon').on('click', clearOrgHierarchySearchInput)
+
+            /* jsTree Events */
+            $("#ajax").on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                for (i = 0, j = data.selected.length; i < j; i++) {
+                    r.push(data.instance.get_node(data.selected[i]).text);
+                    //console.log("Node Name: " + data.instance.get_node(data.selected[i]).text);
+                    $('.profile-img').html('<img src="' + data.instance.get_node(data.selected[i]).original.avatar + '" alt="icon" rel="tooltip" title="Organization Source: ' + data.instance.get_node(data.selected[i]).original.orgSource + ' // Organization Date: ' + data.instance.get_node(data.selected[i]).original.orgDate + '" />');
+                    $('.editButton').html('<button type="button" rel="tooltip" title="Edit: ' + data.instance.get_node(data.selected[i]).original.name + '" id="' + data.instance.get_node(data.selected[i]).original.id + '" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#orgHierarchyEditModal"><i class="fad fa-pen-square"></i> Edit</button>');
+
+                    // Name
+                    var content = '<dt>Name: </dt><dd><span rel="tooltip" title="Name Source: ' + data.instance.get_node(data.selected[i]).original.nameSource + ' // Name Date: ' + data.instance.get_node(data.selected[i]).original.nameDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.name + '</span></dd>';
+
+                    // Code
+                    content = content + '<dt>Organizational Unit Code: </dt><dd><span rel="tooltip" title="Organizational Unit Code Source: ' + data.instance.get_node(data.selected[i]).original.orgUnitCodeSource + ' // Organizational Unit Code Date: ' + data.instance.get_node(data.selected[i]).original.orgUnitCodeDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.orgUnitCode + '</span></dd>';
+
+                    // Type
+                    content = content + '<dt>Organizational Unit Type: </dt><dd><span rel="tooltip" title="Organizational Unit Type Source: ' + data.instance.get_node(data.selected[i]).original.orgUnitTypeSource + ' // Organizational Unit Type Date: ' + data.instance.get_node(data.selected[i]).original.orgUnitTypeDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.orgUnitType + '</span></dd>'
+
+                    // Parent Organizational Unit
+                    if (data.instance.get_node(data.selected[i]).original.parentOrgUnit != null && data.instance.get_node(data.selected[i]).original.parentOrgUnitType != "Organization") {
+                        content = content + '<dt>Parent Organizational Unit: </dt><dd><span rel="tooltip" title="Parent Organizational Unit Source: ' + data.instance.get_node(data.selected[i]).original.parentOrgUnitSource + ' // Parent Organizational Unit Date: ' + data.instance.get_node(data.selected[i]).original.parentOrgUnitDate + '">'
+                            + data.instance.get_node(data.selected[i]).original.parentOrgUnit + '</span></dd>'
+                    }
+
+                    var dean = '<dt>Dean/Senior VP: </dt><dd><span rel="tooltip" title="Dean or Senior VP">'
+                        + data.instance.get_node(data.selected[i]).original.Dean + '</span></dd>';
+
+                    content = content + dean;
+
+                    content = content + '<dt>MDS Code: </dt><dd><span rel="tooltip" title="Master Data Code">'
+                        + data.instance.get_node(data.selected[i]).original.code + '</span></dd>'
+
+
+                    $('.hierarchy-details').html(content);
+
+                };
+            });
+
+            /* jsTree Configuration */
+            $("#ajax").jstree({
+                "plugins": ["search", "types"],
+                //"massload": {
+                //    //"url": "sentry/js/org-hierarchy.json",
+                //    "data": function (nodes) {
+                //        return { "ids": nodes.join(",") };
+                //    }
+                //},
+                "search": { "show_only_matches": true },
+                "contextmenu": {
+                    "items": function ($node) {
+                        return {
+                            "Enable": {
+                                "label": "Add New Unit",
+                                "action": function (obj) {
+                                    $("#jstree").jstree("enable_node", $node);
+                                }
+                            },
+                            "Disable": {
+                                "label": "Disable",
+                                "action": function (obj) {
+                                    $("#jstree").jstree("disable_node", $node);
+                                }
+                            }
+                        };
+                    }
+                },
+                "core": {
+                    "data": {
+                        //"url": "../../js/root.json",
+                        "url": '@Html.Raw(Url.Action("GetOrganizationalUnitTreeData", "Organization"))'
+                        //"url": "/js/org-hierarchy.json"
+                        //'url': function (node) {
+                        //    //return node.id === '#' ? '../../js/org-hierarchy.json' : '../../js/ua-children.json';
+                        //    return node.id === '#' ? '/js/ajax_demo_roots.json' : '/js/ajax_demo_children.json';
+                        //},
+                        , 'data': function (node) {
+                            return { 'id': node.id };
+                            window.nodeIdValue = node.id;
+                        }
+                        , "dataType": "json" // needed only if you do not supply JSON headers
+                    }
+                    , "themes": {
+                        "responsive": true
+                        , "stripes": false
+                    }
+                    , "types": {
+                        'default': {
+                            'icon': 'fa fa-caret-right fa-fw'
+                        }
+                        , 'f-open': {
+                            'icon': 'fa fa-chair-office fa-fw'
+                        }
+                        , 'f-closed': {
+                            'icon': 'fa fa-chair-office fa-fw'
+                        }
+                    }
+                    , "check_callback": true
+                    //, 'check_callback': function (operation, node, node_parent, node_position, more) {
+                    //    // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node', 'copy_node' or 'edit'
+                    //    // in case of 'rename_node' node_position is filled with the new node name
+                    //    return operation === 'create_node' ? true : false;
+                    //}
+                }
+            })
+                .on('create_node.jstree', function (e, data) {
+                //alert("create me a sammich!");
+                $.get('/js/org-hierarchy.json?operation=create_node', { 'id': data.node.parent, 'position': data.position, 'text': data.node.text })
+                    .done(function (d) {
+                        data.instance.set_id(data.node, d.id);
+                    })
+                    .fail(function () {
+                        data.instance.refresh();
+                    });
+                })
+                .on('rename_node.jstree', function (e, data) {
+                $.get('/js/org-hierarchy.json?operation=rename_node', { 'id': data.node.id, 'text': data.text })
+                    .fail(function () {
+                        data.instance.refresh();
+                    });
+                })
+                .on('delete_node.jstree', function (e, data) {
+                $.get('/js/org-hierarchy.json?operation=delete_node', { 'id': data.node.id })
+                    .fail(function () {
+                        data.instance.refresh();
+                    });
+            });;
+
+
+            /* Expand All Nodes */
+            var expandAllNodes = function () {
+                $('#ajax').jstree('open_all');
+            }
+            $('#jsTreeExpandAll').on('click', expandAllNodes)
+
+            /* Collapse All Nodes */
+            var collapseAllNodes = function () {
+                $('#ajax').jstree('close_all');
+            }
+            $('#jsTreeCollapseAll').on('click', collapseAllNodes)
+
+
+            ///* Bind customize icon change function in jsTree open_node event. */
+            ///* Toggle between folder open and folder closed */
+            $('#ajax').on('open_node.jstree', function (e, data) {
+                var icon = $('#' + data.node.id).find('i.jstree-icon.jstree-themeicon').first();
+                //icon.removeClass('fa-folder').addClass('fa-folder-open');
+                icon.removeClass('fa-folder').addClass('fa-chair-office');
+            });
+
+            // bind customize icon change function in jsTree close_node event.
+            $('#ajax').on('close_node.jstree', function (e, data) {
+                var icon = $('#' + data.node.id).find('i.jstree-icon.jstree-themeicon').first();
+                //icon.removeClass('fa-folder-open').addClass('fa-folder');
+                icon.removeClass('fa-folder').addClass('fa-chair-office');
+            });
+
+            // Show Details section when Tree is 'changed'
+            $('#ajax').on('changed.jstree', function (e) {
+                var detailsContainer = $('.hierarchy-details-container');
+                detailsContainer.removeClass('hide');
+
+                var nodeIdValue = $('#ajax').jstree().get_selected("id")[0].id;
+                window.nodeIdValue = nodeIdValue;
+            });
+
+
+            //// this is for the nested format
+            //var your_tree_nested = $('#ajax').jstree(true).get_json();
+            //// and this is for the flat format (with ID / PARENT)
+            //var your_tree_flat = $('#ajax').jstree(true).get_json(null, { "flat": true });
+            //console.log("YourTreeFlat: " + your_tree_flat);
+
+
+
+
+            // Edit button click event:
+            $('.editButton').on('click', function () {
+                @*var urlEdit = '@Html.Raw((Url.Action("OrganizationalHierarchyEdit", "Organization") + string.Format("/{0}/?IntegrationId={1}&SystemId={2}&MasterId=", Model.Id, Model.IntegrationId, Model.SystemId)))' + window.nodeIdValue*@
+                var url = '';
+                // Load Compare Data into Modal
+                $('#orgHierarchyEditModal').on('show.bs.modal', function (e) {
+                    $.get(urlEdit, function (data) {
+                        $(".modal-content").html(data);
+                        //alert("Load was performed.");
+                    });
+                });
+            });
+
+
+            // Tooltips [Tree]
+            //----------------------------------------------------
+
+            var treeNode = $('.jstree-anchor');
+            console.log(treeNode);
+            $(treeNode).each(function (i, obj) {
+                $(this).tooltip({
+                    title: $(this).attr("title")
+                    , container: 'body'
+                    , placement: 'right'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+            });
+
+
+
+
+        });
+    </script>
+}

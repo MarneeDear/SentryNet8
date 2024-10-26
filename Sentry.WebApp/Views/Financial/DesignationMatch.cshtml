@@ -1,0 +1,210 @@
+﻿@model Sentry.WebApp.ViewModels.DesignationMatchViewModel
+
+@{
+    ViewData["Title"] = Model.DesignationName + " | " + Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h2>
+            Date:
+            <span title="Date of Integration: @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source:
+            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source Record Id:
+            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+        </h2>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="DesignationList">Record List</a></li>
+    <li class="active">Record Details</li>
+</ol>
+
+<form asp-action="PostToGLEdit" id="postToGLEditForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div id="content-container" class="content-container matching" role="main">
+
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.Title for: <span class="record-text h3">@Model.DesignationName</span></h3>
+                <div class="panel-toolbar">
+                    @*<a href="#officeLocationDataDetailSourceDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>*@
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Match Criteria:</h4>
+                            <div class="panel-toolbar">
+                                <a class="btn btn-sm btn-link collapsed" role="button" data-toggle="collapse" href="#displayOnlyMore" aria-expanded="false" aria-controls="displayOnlyMore">
+                                    <span class="if-collapsed"><i role="img" class="fas fa-caret-down fa-sm">&nbsp;</i> Expand Full Record</span>
+                                    <span class="if-not-collapsed"><i role="img" class="fas fa-caret-up fa-sm">&nbsp;</i> Collapse Full Record</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="col-sm-12">
+                                <dl class="dl-horizontal displayOnly">
+                                    <dt>@Model.DesignationId_BusinessName:</dt>
+                                    <dd><span title="Match Weight: Exact Match">@Html.DisplayFor(m => m.DesignationId)</span></dd>
+                                    <dt>@Model.DesignationName_BusinessName:</dt>
+                                    <dd><span title="Match Weight: @Model.DesignationName_Weight">@Html.DisplayFor(m => m.DesignationName)</span></dd>
+                                </dl>
+                            </div>
+
+                            <div class="col-sm-12 collapse" id="displayOnlyMore">
+                                <dl class="dl-horizontal displayOnly">
+                                    <dt>@Html.DisplayFor(m => m.Description_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.Description)</dd>
+                                    <dt>@Html.DisplayFor(m => m.DesignationTypeName_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.DesignationTypeName)</dd>
+                                    <dt>@Html.DisplayFor(m => m.StartDate_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.StartDate)</dd>
+                                    <dt>@Html.DisplayFor(m => m.EndDate_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.EndDate)</dd>
+                                    <dt>@Html.DisplayFor(m => m.KFSAccountCode_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.KFSAccountCode)</dd>
+                                    <dt>@Html.DisplayFor(m => m.VSECategoryName_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.VSECategoryName)</dd>
+                                    <dt>@Html.DisplayFor(m => m.GLOrganizationName_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.GLOrganizationName)</dd>
+                                    <dt>@Html.DisplayFor(m => m.DesignationUseTypeName_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.DesignationUseTypeName)</dd>
+                                    <dt>@Html.DisplayFor(m => m.OrganizationalUnit_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.OrganizationalUnit)</dd>
+                                </dl>
+                            </div>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+
+                    <div class="panel panel-secondary matching">
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Possible Matches:</h4>
+                            <div class="panel-toolbar">
+                                @*<input type="checkbox" id="one" name="one" checked />
+                                    <label for="one">Enable Buttons</label>*@
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <fieldset>
+                                <legend class="sr-only">List of Possible Matches:</legend>
+                                <div class="col-sm-12">
+                                    <div id="loadDesignationPossibleMatchListPartialContainer" class="table-responsive">
+                                        <div class="center-block text-center" style="background-color: #fff; height: 3em;" title="Loading Possible Matches...">
+                                            <i class="fa fa-spin fa-asterisk fa-fw"></i> Loading Possible Matches...
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div><!-- /.panel-body -->
+
+                        <div class="panel-footer text-right">
+                            <a asp-area="" asp-controller="Financial" asp-action="DesignationList" class="btn btn-link pull-left" title="Cancel Matching, Back to Listing" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Cancel</a>
+                            <button type="button" id="noMatchButton" class="btn btn-info" title="Submit as New Record" data-toggle="tooltip"><i role="img" class="fas fa-ban">&nbsp;</i>No Matching Records</button>
+                            <button type="button" id="compareButton" class="btn btn-default" title="Compare records" data-toggle="modal" data-target="#designationMatchCompareModal" disabled="disabled"><i role="img" class="fal fa-columns">&nbsp;</i>Compare Records</button>
+                            <button type="button" id="matchButton" class="btn btn-primary" title="Match this record" data-toggle="tooltip" disabled="disabled"><i role="img" class="fas fa-check">&nbsp;</i>Match Record</button>
+                        </div><!-- /.panel-footer -->
+
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+        </div><!-- /.panel-secondary -->
+    </div><!-- /.content-container -->
+    <!-- Modal - Compare Record -->
+    <div class="modal fade" id="designationMatchCompareModal" tabindex="-1" role="dialog" aria-labelledby="designationMatchCompareModal designationMatchCompareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div id="designationMatchCompareModalLabel" class="modal-content">
+                <div class="center-block text-center" style="background-color: #fff; border: 5px solid #ccc; padding: 2em;" title="Loading Comparison Data...">
+                    <i class="fa fa-spin fa-asterisk fa-fw"></i> Loading Comparison Data...
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</form>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            $.get('@Url.Action("GetPossibleMatchList", "Financial", new { Id = Model.Id, SystemId = Model.SystemId })', function (data) {
+                $("#loadDesignationPossibleMatchListPartialContainer").html(data);
+            });
+
+
+            // Match button click event:
+            $('#matchButton').on('click', function () {
+                Match(window.rowIdValue);
+            });
+
+            // No Match button click event:
+            $('#noMatchButton').on('click', function () {
+                Match(null);
+            });
+
+            // Compare button click event:
+            $('#compareButton').on('click', function () {
+                Compare(window.rowIdValue);
+            });
+
+
+            function Match(data) {
+                var urlMatch = '@Url.Action("DesignationManualMatch", "Financial", new { Id = Model.Id, SystemId = Model.SystemId, IntegrationId = Model.IntegrationId })' + (data == null ? '' : '&MasterId=' + data);
+                window.location.href = urlMatch;
+            }
+
+            function Compare(data) {
+                var urlCompare = '@Url.Action("DesignationCompare", "Financial", new { Id = Model.Id, SystemId = Model.SystemId })' + '?MasterId=' + data
+                $.get(urlCompare, function (data) {
+                    $(".modal-content").html(data);
+                });
+            }
+
+
+
+
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,1338 @@
+﻿@model Sentry.WebApp.ViewModels.ConstituentEmailViewModel
+@using Sentry.WebApp.Extensions;
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@if (Model != null)
+{
+    <ul class="page-title">
+        <li>
+            <h2>
+                Date:
+                <span title="Date of Integration: @Model.IntegrationDate"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source:
+                <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source Record Id:
+                @if (Model.System == "Lynx")
+                {
+                    <a href="@Model.SourceRecordUrl" title="View this record in @Model.System" class="" target="_blank">
+                        <span>@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                    </a>
+                }
+                else
+                {
+                    @*<span title="Source System Record Id">@(Model.SourceRecordId != "" || Model.SourceRecordId != null ? Html.Raw(Model.SourceRecordId) : Html.Raw("N/A"))</span>*@
+                    <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                }
+            </h2>
+        </li>
+    </ul>
+
+    <ol class="breadcrumb">
+        <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+        <li><a asp-area="" asp-controller="Constituent" asp-action="Index">Constituent Dashboard</a></li>
+        <li><a asp-area="" asp-controller="Constituent" asp-action="ConstituentEmailList">Record List</a></li>
+        <li class="active">Record Details</li>
+    </ol>
+
+    <div id="content-container" class="content-container" role="main">
+        <form asp-action="ConstituentEmailEdit" id="ConstituentEmailEditForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SystemId" />
+            <input type="hidden" asp-for="System" />
+            <input type="hidden" asp-for="SourceRecordId" />
+            <input type="hidden" asp-for="IntegrationId" />
+            <input type="hidden" asp-for="Integration" />
+            <input type="hidden" asp-for="CreatedOnDT" />
+            <input type="hidden" asp-for="IsChanged" />
+            @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+            {
+                @Html.HiddenFor(m => m.HistoryData[i].HistoryDate)
+            }
+
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.Title for: <span class="record-text h3">@Model.EmailAddress / @Model.EmailAddressUseType</span> <span class="updatedFormAlert label label-warning hide">Modified</span></h3>
+                <div class="panel-toolbar">
+                    <a href="#ConstituentEmailSourceDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Email Details:</h4>
+                            <div class="panel-toolbar">
+                                <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <fieldset>
+                                <legend class="sr-only">Email Details:</legend>
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- ConstituentMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.ConstituentMasterId_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="ConstituentMasterId_BusinessName" />
+                                            <input type="hidden" asp-for="ConstituentMasterId_BusinessDescription" />
+                                            <input type="hidden" asp-for="ConstituentMasterId_Source" />
+                                            <input type="hidden" asp-for="ConstituentMasterId_Status" />
+                                            <input type="hidden" asp-for="ConstituentSourceSystemRecordId" />
+                                            <input type="hidden" asp-for="FirstName" />
+                                            <input type="hidden" asp-for="LastName" />
+                                            <input type="hidden" asp-for="UAPersonId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.ConstituentMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.ConstituentMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.ConstituentMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#ConstituentEmailConstituentMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].ConstituentMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].ConstituentMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="ConstituentMasterId">@Model.ConstituentMasterId_BusinessName: </label>
+                                        <select asp-for="ConstituentMasterId" class="form-control" placeholder="@Model.ConstituentMasterId_BusinessName" data-disabled="@(Model.ConstituentMasterId_IsReadOnly.ToString())"></select>
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.ConstituentMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="ConstituentMasterId" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- EmailAddressMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.EmailAddress_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="EmailAddress_BusinessName" />
+                                            <input type="hidden" asp-for="EmailAddress_BusinessDescription" />
+                                            <input type="hidden" asp-for="EmailAddress_Source" />
+                                            <input type="hidden" asp-for="EmailAddress_Status" />
+                                            <input type="hidden" asp-for="EmailAddressMasterId" />
+                                            <input type="hidden" asp-for="EmailAddressUseTypeSourceSystemRecordId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.EmailAddressMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.EmailAddressMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.EmailAddressMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentEmailEmailAddressMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].EmailAddressMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].EmailAddressMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="EmailAddress">@Model.EmailAddress_BusinessName: </label>
+                                        <input asp-for="EmailAddress" class="form-control" placeholder="@Model.EmailAddress_BusinessName" data-disabled="@(Model.EmailAddress_IsReadOnly.ToString())" />
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.EmailAddress_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="EmailAddress" class="text-danger help-block"></span>
+                                    </div>
+                                        <div class="lg-12">
+                                            <div class="form-group">
+                                                <div class="checkbox checkbox-primary flex-firstchild">
+                                                    <input type="checkbox" asp-for="TempEmailIsPrimary">
+                                                    <label for="TempEmailIsPrimary">Primary Email</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div><!-- /.col-* -->                               
+                                
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- EmailAddressUseTypeMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.EmailAddressUseTypeMasterId_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="EmailAddressUseTypeMasterId_BusinessName" />
+                                            <input type="hidden" asp-for="EmailAddressUseTypeMasterId_BusinessDescription" />
+                                            <input type="hidden" asp-for="EmailAddressUseTypeMasterId_Source" />
+                                            <input type="hidden" asp-for="EmailAddressUseTypeMasterId_Status" />
+                                            <input type="hidden" asp-for="EmailAddressUseType" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.EmailAddressUseTypeMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.EmailAddressUseTypeMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.EmailAddressUseTypeMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentEmailEmailAddressUseTypeMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].EmailAddressUseTypeMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].EmailAddressUseTypeMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="EmailAddressUseTypeMasterId">@Model.EmailAddressUseTypeMasterId_BusinessName: </label>
+                                        @Html.DropDownListFor(
+                                            m => m.EmailAddressUseTypeMasterId,
+                                            Model.EmailAddressUseTypeList,
+                                            htmlAttributes: new { @class = "form-control", @data_disabled = (Model.EmailAddressUseTypeMasterId_IsReadOnly.ToString()) }
+                                        )
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.EmailAddressUseTypeMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="EmailAddressUseTypeMasterId" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+            <div class="panel-footer" style="height: 100px">
+                @*<button type="button" class="btn btn-link" title="Remove/Archive this Record" data-toggle="modal" data-target="#removeArchiveRecordModal">
+                    <i role="img" class="fas fa-trash-alt">&nbsp;</i>Remove this Record
+                </button>*@           
+                <button type="button" class="btn btn-link @(Model.EmailAddress_Status == "Bad" ? "" : "d-none")" title="Deactivate in @Model.System" data-toggle="modal" data-target="#warningSourceModal">
+                    <i role="img" class="fas fa-trash-alt">&nbsp;</i>Deactivate in @Model.System
+                </button>
+                <button type="submit" id="btnResolve" class="btn btn-primary pull-right" title="Re-Validate Record" data-toggle="tooltip" formaction="@Url.Action("ConstituentEmailRevalidate", "Constituent")/">
+                    <i role="img" class="fas fa-check">&nbsp;</i>Resolve Record
+                </button>
+                <button type="submit" id="btnSavePartial" class="btn btn-info pull-right" title="Save Partial Record" data-toggle="tooltip" formaction="@Url.Action("ConstituentEmailSave", "Constituent")/" disabled="disabled">
+                    <i role="img" class="fas fa-save">&nbsp;</i>Save Partial Record
+                </button>
+                <a asp-area="" asp-controller="Constituent" asp-action="ConstituentEmailList" class="btn btn-link pull-right" title="Cancel Changes" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Discard</a>
+            </div><!-- /.panel-footer -->
+            <!-- Modal - Remove/Archive -->
+            <div class="modal fade" id="removeArchiveRecordModal" tabindex="-1" role="dialog" aria-labelledby="removeArchiveRecordModal removeArchiveRecordModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="removeArchiveRecordModalLabel">Remove This @Model.Integration Record?</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <p>Are you sure you want to remove this @Model.Integration record?</p>
+                                    <ul>
+                                        <li>Email Address: <strong>@Model.EmailAddress</strong></li>
+                                        <li>Email Address Use Type: <strong>@Model.EmailAddressUseType</strong></li>
+                                    </ul>
+                                </div><!-- /.col-* -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Keep Record"><i role="img" class="fas fa-ban">&nbsp;</i> Cancel</button>
+                            <button type="submit" class="btn btn-primary" title="Remove/Archive" formaction='@Url.Action("ConstituentEmailIgnore", "Constituent", new { SystemId = Model.SystemId, IntegrationId = Model.IntegrationId, Id = Model.Id })'><i role="img" class="fas fa-trash-alt">&nbsp;</i> Remove/Archive</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal (Remove/Archive) -->
+            @*<partial name="../Shared/_WarningSourceModal" />*@
+            <!-- Warning Source Modal -->
+            <div class="modal fade" id="warningSourceModal"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="warningSourceModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="warningSourceModalLabel">Warning</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <span id="warningSourceMessage"
+                                      style="color:firebrick;">Are you sure you want to deactivate this @Model.Integration record in @Model.System?</span>
+                                </p>
+                                <ul>
+                                    <li>Email Address: <strong>@Model.EmailAddress</strong></li>
+                                    <li>Email Address Use Type: <strong>@Model.EmailAddressUseType</strong></li>
+                                </ul>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Keep Record"><i role="img" class="fas fa-ban">&nbsp;</i> Cancel</button>
+                            <button type="submit" class="btn btn-primary" title="Deactivate in @Model.System" formaction='@Url.Action("ConstituentEmailRemoveSource", "Constituent", new { SoureRecordId = Model.SourceRecordId })'><i role="img" class="fas fa-trash-alt">&nbsp;</i> Deactivate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div><!-- /.panel-secondary -->
+        </form>
+    </div><!-- /.content-container -->
+
+    <div id="callbackBox"></div>
+
+}
+else
+{
+    // Temporary: Record Not Found Content
+    // TODO: Implement error handling
+    <div class="recordNotFoundContent">
+        <ul class="page-title">
+            <li>
+                <h1>Ya done messed up, A-A-ron...</h1>
+                <h3>Record not found</h3>
+                <p>More than likely, there's a NULL value which is not being accounted for yet.</p>
+            </li>
+        </ul>
+        <img src="~/img/page-rip-hole.jpg" alt="Error Image" />
+        <p><a asp-area="" asp-controller="Constituent" asp-action="ConstituentEmailList">Back to List</a></p>
+    </div>
+}
+
+<!-- Popover - Title: Legend -->
+<div id="popover-legend-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    <span>Status Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Legend -->
+<div id="popover-legend-content" class="popover hide">
+    <div class="">
+        <table id="historyPerFieldTable" class="table historyData table-striped">
+            <thead>
+                <tr class="tableHeader">
+                    <th>Status:</th>
+                    <th>Description:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="changedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-pen-square" data-toggle="tooltip" title="Changed Data"></i> Changed Data</td>
+                    <td data-header="Meaning">This data was manually modified by a Data Steward</td>
+                </tr>
+                <tr class="goodDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-check-square" data-toggle="tooltip" title="Valid Data"></i> Valid Data</td>
+                    <td data-header="Date">This data is valid</td>
+                </tr>
+                <tr class="enrichedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-cog" data-toggle="tooltip" title="Enriched Data"></i> Enriched Data</td>
+                    <td data-header="Date">This data was enriched by the Integration Framework</td>
+                </tr>
+                <tr class="badDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-ban" data-toggle="tooltip" title="Invalid Data"></i> Invalid Data</td>
+                    <td data-header="Date">This data is invalid</td>
+                </tr>
+                <tr class="notProvidedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Data not applicable"></i> N/A</td>
+                    <td data-header="Date">This data is not appliciable</td>
+                </tr>
+                <tr class="sourceDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-server" data-toggle="tooltip" title="Source Data"></i> Source Data</td>
+                    <td data-header="Date">Original data provided by the Source System</td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Info -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    @*<a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>*@
+    <span>Field Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Info -->
+<div id="popover-info-content" class="popover hide">
+    <ul class="triangle">
+        <li>
+            <span><strong>Business Glossary Name:</strong> <span id="popover-info-content-name">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Business Glossary Description:</strong> <span id="popover-info-content-description">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source System:</strong> <span id="popover-info-content-source">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source Field Id:</strong> <span id="popover-info-content-sourcefieldid">[No Data Provided]</span></span>
+        </li>
+    </ul>
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Field History -->
+<div id="popover-history-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    Field History:
+</div><!-- /.popover (title) -->
+<!-- Modal - Content: ConstituentMasterId History -->
+<div class="modal fade" id="ConstituentEmailConstituentMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="ConstituentEmailConstituentMasterIdHistoryModal ConstituentEmailConstituentMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ConstituentEmailConstituentMasterIdHistoryModalLabel">@Model.ConstituentMasterId_BusinessName History: @Model.ConstituentMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="ConstituentEmailConstituentMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped ConstituentEmail childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="accordion-toggle collapsed @Model.HistoryData[i].ConstituentMasterId_Status.GetHistoryFieldStatusClass()"
+                                            data-toggle="collapse"
+                                            data-target="#@i-ConstituentEmailConstituentMasterIdHistoryDataPerField"
+                                            data-parent="#ConstituentEmailConstituentMasterIdHistoryDataPerFieldTable"
+                                            aria-expanded="false"
+                                            aria-controls="@i-ConstituentEmailConstituentMasterIdHistoryDataPerField">
+                                            <td colspan="4">
+                                                <span title="@Model.HistoryData[i].ConstituentMasterId_Status">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="hiddenRow">
+                                                <div id="@i-ConstituentEmailConstituentMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                    <table class="table table-striped ConstituentEmail childRowTableChild">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field:</th>
+                                                                <th>Current Value:</th>
+                                                                <th>Original Value:</th>
+                                                                <th>Source Field Id:</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- ConstituentSourceSystemRecordId -->
+                                                            <tr class="@Model.HistoryData[i].ConstituentSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Constituent Source System Record Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].ConstituentSourceSystemRecordId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].ConstituentSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].ConstituentSourceSystemRecordId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.ConstituentSourceSystemRecordId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].ConstituentSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentSourceSystemRecordId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- FirstName -->
+                                                            <tr class="@Model.HistoryData[i].FirstName_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    First Name
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].FirstName_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].FirstName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].FirstName
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.FirstName_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].FirstName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.FirstName_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- LastName -->
+                                                            <tr class="@Model.HistoryData[i].LastName_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Last Name
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].LastName_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].LastName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].LastName
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.LastName_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].LastName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.LastName_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- UAPersonId -->
+                                                            <tr class="@Model.HistoryData[i].UAPersonId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    UAPersonId
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].UAPersonId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].UAPersonId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].UAPersonId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.UAPersonId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].UAPersonId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.UAPersonId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- ConstituentMasterId -->
+                                                            <tr class="@Model.HistoryData[i].ConstituentMasterId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Constituent Master Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].ConstituentMasterId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].ConstituentMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].ConstituentMasterId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.ConstituentMasterId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].ConstituentMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentMasterId_Source))
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (ConstituentMasterId) -->
+<!-- Modal - Content: EmailAddressMasterId History -->
+<div class="modal fade" id="constituentEmailEmailAddressMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentEmailEmailAddressMasterIdHistoryModal constituentEmailEmailAddressMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentEmailEmailAddressMasterIdHistoryModalLabel">@Model.EmailAddressMasterId_BusinessName History: @Model.EmailAddressMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="EmailAddressMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Current Value: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.EmailAddressMasterId_Source ?? " Not Provided in " + @Model.System)"></i></th>
+                                        <th class="all original">Original Value:</th>
+                                        <th class="all source">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].EmailAddress_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Current Value">
+                                                <i role="img" class="fas @Model.HistoryData[i].EmailAddress_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].EmailAddress_Status">
+                                                    @Model.HistoryData[i].EmailAddress
+                                                </span>
+                                            </td>
+                                            <td data-header="Original Value">
+                                                <span>
+                                                    @Model.EmailAddress_OriginalValue
+                                                </span>
+                                            </td>
+                                            <td data-header="Source Field Id">
+                                                <span>
+                                                    @(Model.EmailAddress_Source == "Not Provided" ? Html.Raw("Not Provided") : Html.DisplayFor(m => m.EmailAddress_Source))
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (EmailAddressMasterId) -->
+<!-- Modal - Content: EmailAddressUseTypeMasterId History -->
+<div class="modal fade" id="constituentEmailEmailAddressUseTypeMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentEmailEmailAddressUseTypeMasterIdHistoryModal constituentEmailEmailAddressUseTypeMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentEmailEmailAddressUseTypeMasterIdHistoryModalLabel">@Model.EmailAddressUseTypeMasterId_BusinessName History: @Model.EmailAddressUseTypeMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped constituentEmail childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="accordion-toggle collapsed @Model.HistoryData[i].EmailAddressUseTypeMasterId_Status.GetHistoryFieldStatusClass()"
+                                            data-toggle="collapse"
+                                            data-target="#@i-constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerField"
+                                            data-parent="#constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerFieldTable"
+                                            aria-expanded="false"
+                                            aria-controls="@i-constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerField">
+                                            <td colspan="4">
+                                                <span title="@Model.HistoryData[i].EmailAddressUseTypeMasterId_Status">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="hiddenRow">
+                                                <div id="@i-constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                    <table class="table table-striped constituentEmail childRowTableChild">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field:</th>
+                                                                <th>Current Value:</th>
+                                                                <th>Original Value:</th>
+                                                                <th>Source Field Id:</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- EmailAddressUseType -->
+                                                            <tr class="@Model.HistoryData[i].EmailAddressUseType_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Email Address Use Type
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].EmailAddressUseType_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].EmailAddressUseType_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].EmailAddressUseType
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.EmailAddressUseType_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].EmailAddressUseType_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.EmailAddressUseType_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- EmailAddressUseTypeSourceSystemRecordId -->
+                                                            <tr class="@Model.HistoryData[i].EmailAddressUseTypeSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Email Address Use Type Source System Record Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].EmailAddressUseTypeSourceSystemRecordId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].EmailAddressUseTypeSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].EmailAddressUseTypeSourceSystemRecordId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.EmailAddressUseTypeSourceSystemRecordId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].EmailAddressUseTypeSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.EmailAddressUseTypeSourceSystemRecordId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- EmailAddressUseTypeMasterId -->
+                                                            <tr class="@Model.HistoryData[i].EmailAddressUseTypeMasterId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Email Address Use Type Master Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].EmailAddressUseTypeMasterId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].EmailAddressUseTypeMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].EmailAddressUseTypeMasterId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.EmailAddressUseTypeMasterId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].EmailAddressUseTypeMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.EmailAddressUseTypeMasterId_Source))
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (EmailAddressUseTypeMasterId) -->
+<!-- Modal - Source Data -->
+<div class="modal fade" id="ConstituentEmailSourceDataModal" tabindex="-1" role="dialog" aria-labelledby="ConstituentEmailSourceDataModal ConstituentEmailSourceDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ConstituentEmailSourceDataModalLabel">Record Source Data:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History/Source Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="ConstituentEmailSourceDataPerRecordTable" class="table responsive sourceDataContainer table-striped ConstituentEmail childRowTableParent">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <!-- ConstituentMasterId -->
+                                    <tr class="accordion-toggle collapsed @Model.ConstituentMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#ConstituentEmailConstituentMasterIdHistoryDataPerField"
+                                        aria-expanded="false"
+                                        aria-controls="ConstituentEmailConstituentMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.ConstituentMasterId_Status">
+                                                @Model.ConstituentMasterId_BusinessName:
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="ConstituentEmailConstituentMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped ConstituentEmail childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- ConstituentSourceSystemRecordId -->
+                                                        <tr class="@Model.ConstituentSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Constituent Source System Record Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.ConstituentSourceSystemRecordId_Status">
+                                                                    <i role="img" class="fas @Model.ConstituentSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.ConstituentSourceSystemRecordId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.ConstituentSourceSystemRecordId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.ConstituentSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentSourceSystemRecordId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- FirstName -->
+                                                        <tr class="@Model.FirstName_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                First Name
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.FirstName_Status">
+                                                                    <i role="img" class="fas @Model.FirstName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.FirstName
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.FirstName_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.FirstName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.FirstName_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- LastName -->
+                                                        <tr class="@Model.LastName_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Last Name
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.LastName_Status">
+                                                                    <i role="img" class="fas @Model.LastName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.LastName
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.LastName_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.LastName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.LastName_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- UAPersonId -->
+                                                        <tr class="@Model.UAPersonId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                UAPersonId
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.UAPersonId_Status">
+                                                                    <i role="img" class="fas @Model.UAPersonId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.UAPersonId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.UAPersonId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.UAPersonId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.UAPersonId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- ConstituentMasterId -->
+                                                        <tr class="@Model.ConstituentMasterId_Status.GetHistoryFieldStatusClass() last">
+                                                            <td data-header="Field">
+                                                                Constituent Master Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.ConstituentMasterId_Status">
+                                                                    <i role="img" class="fas @Model.ConstituentMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.ConstituentMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.ConstituentMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.ConstituentMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="@Model.EmailAddress_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.EmailAddress_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.EmailAddress_Status">
+                                                <i role="img" class="fas @Model.EmailAddress_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.EmailAddress
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="EmailAddress_OriginalValue" />
+                                            <span title="Original Value">@(Model.EmailAddress_OriginalValue != null ? Html.Raw(Model.EmailAddress_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.EmailAddress_Source == "" || Model.EmailAddress_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.EmailAddress_Source
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <!-- EmailAddressUseTypeMasterId -->
+                                    <tr class="accordion-toggle collapsed @Model.EmailAddressUseTypeMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerField"
+                                        aria-expanded="false"
+                                        aria-controls="constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.EmailAddressUseTypeMasterId_Status">
+                                                @Model.EmailAddressUseTypeMasterId_BusinessName:
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="constituentEmailEmailAddressUseTypeMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped constituentEmail childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- EmailAddressUseType -->
+                                                        <tr class="@Model.EmailAddressUseType_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Email Address Use Type
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.EmailAddressUseType_Status">
+                                                                    <i role="img" class="fas @Model.EmailAddressUseType_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.EmailAddressUseType
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.EmailAddressUseType_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.EmailAddressUseType_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.EmailAddressUseType_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- EmailAddressUseTypeSourceSystemRecordId -->
+                                                        <tr class="@Model.EmailAddressUseTypeSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Email Address Use Type Source System Record Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.EmailAddressUseTypeSourceSystemRecordId_Status">
+                                                                    <i role="img" class="fas @Model.EmailAddressUseTypeSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.EmailAddressUseTypeSourceSystemRecordId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.EmailAddressUseTypeSourceSystemRecordId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.EmailAddressUseTypeSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.EmailAddressUseTypeSourceSystemRecordId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- EmailAddressUseTypeMasterId -->
+                                                        <tr class="@Model.EmailAddressUseTypeMasterId_Status.GetHistoryFieldStatusClass() last">
+                                                            <td data-header="Field">
+                                                                Email Address Use Type Master Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.EmailAddressUseTypeMasterId_Status">
+                                                                    <i role="img" class="fas @Model.EmailAddressUseTypeMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.EmailAddressUseTypeMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.EmailAddressUseTypeMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.EmailAddressUseTypeMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.EmailAddressUseTypeMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Source Data) -->
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // ConstituentMasterId ---
+            var ConstituentMasterIdDropDown = $('select#ConstituentMasterId');
+            var personMethod = '@Html.Raw(Url.Action("GetConstituents", "DropDowns"))';
+
+            $(ConstituentMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true,
+                width: '100%',
+                ajax: {
+                    delay: 250,
+                    url: personMethod,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: function (params) {
+                        var queryParams = {
+                            term: params.term, // search term
+                            _type: 'query_append',
+                            selected: true,
+                            page: params.page || 1
+                        }
+                        return queryParams;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                            pagination: {
+                                more: (params.page * 5) < data.length
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: '-- Choose Constituent --',
+                minimumInputLength: 3,
+                //minimumResultsForSearch: 5,
+                templateResult: function (data) {
+                    var $result = $("<span></span>");
+                    $result.text(data.text);
+                    return $result;
+                },
+                templateSelection: function (data) {
+                    return data.text;
+                }
+            });
+
+            // Initialize select2 with Current Value
+            var savedValue = '@(string.Format("{0}{1}{2}", (string.IsNullOrEmpty(Model.LastName) ? string.Empty : $"{Model.LastName}, "), Model.FirstName, (string.IsNullOrEmpty(Model.UAPersonId) ? string.Empty : $" ({Model.UAPersonId})")))'
+            console.log('Selected Constituent value: ' + savedValue);
+
+            var masterId = @(Html.Raw(string.IsNullOrEmpty(Model.ConstituentMasterId) ? "null" : $"'{Model.ConstituentMasterId}'"));
+
+            if (masterId != null) {
+                var savedOption = new Option(savedValue, masterId, true);
+                $(ConstituentMasterIdDropDown).append(savedOption).trigger('change');
+            };
+
+            // Get/Set Current Drop-Down Value:
+            $(ConstituentMasterIdDropDown).on('change', function () {
+
+                var currentConstituentMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentConstituentMasterIdSelectListValue == null || currentConstituentMasterIdSelectListValue == "") {
+                    $('#FirstName').val(null);
+                    $('#LastName').val(null);
+                    $('#UAPersonId').val(null);
+                    $('#ConstituentSourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetConstituent", "Constituent"))' + '/' + currentConstituentMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#FirstName').val(data.firstName);
+                        $('#LastName').val(data.lastName);
+                        $('#UAPersonId').val(data.uaPersonId);
+                        $('#ConstituentSourceSystemRecordId').val(data.constituentSourceSystemRecordId);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // EmailAddress ---
+            var EmailAddressInput = $('input#EmailAddress');
+            $(EmailAddressInput).on('keyup change propertychange paste input', function () {
+
+                $('#EmailAddressMasterId').val(null);
+                
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // EmailAddressUseTypeMasterId ---
+            var EmailAddressUseTypeMasterIdDropDown = $('select#EmailAddressUseTypeMasterId');
+            $(EmailAddressUseTypeMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true,
+                placeholder: '-- Choose Use Type --',
+                width: '100%'
+            });
+
+            var clearButtonClicked = false;
+            var clearButton = $('.select2-selection__clear');
+            $(clearButton).on('click', function () {
+                clearButtonClicked = true;
+                console.log('clearButton clicked, and its value is ' + clearButtonClicked);
+                $(this).parents('.form-group').find('.form-control').val(null).trigger('change');
+                $('#EmailAddressUseType').val(null);
+                $('#EmailAddressUseTypeSourceSystemRecordId').val(null);
+            });
+
+            // Get/Set Current Drop-Down Value:
+            $(EmailAddressUseTypeMasterIdDropDown).on('change', function () {
+
+                var currentEmailAddressUseTypeMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentEmailAddressUseTypeMasterIdSelectListValue == "" || currentEmailAddressUseTypeMasterIdSelectListValue == null) {
+                    $('#EmailAddressUseType').val(null);
+                    $('#EmailAddressUseTypeSourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetEmailUseType", "Constituent"))' + '/' + currentEmailAddressUseTypeMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#EmailAddressUseType').val(data.emailAddressUseType);
+                        $('#EmailAddressUseTypeSourceSystemRecordId').val(data.emailAddressUseTypeSourceSystemRecordId);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // For use in the external javascript file (site.js) ::
+            var systemVariableName = '@Model.System';
+            window.systemVariableName = '@Model.System';
+            console.log("Source System: " + window.systemVariableName);
+
+
+            // --------------------------------------------------------------
+
+
+
+            var form = $('.content-container > form');
+            var formGroup = $(':input').parent('.form-group');
+            var editedClass = 'fa-pen-square';
+
+            // Get Current Form Field Value:
+            // -------------------------------------------------
+            $(form).on('keyup change paste', ':input', function () {
+
+                var formField = $(this);
+                var thisFormFieldsValue = $(this).val();
+                //console.log('form field value: ' + thisFormFieldsValue);
+
+                return (thisFormFieldsValue);
+                console.log(thisFormFieldsValue);
+
+            });
+
+
+            var dfOptions = {
+                denoteDirtyForm: true,
+                denoteDirtyOptions: true,
+                dirtyOptionClass: "dirtyChoice",
+                trimText: true,
+                textboxContext: 'parent',
+
+                preFieldChangeCallback: function (originalValue) {
+                    //$("#callbackBox").html("[preFieldChangeCallback] Original value of field '" + $(this).attr("name") + "' is: " + originalValue + "<br />");
+                },
+                fieldChangeCallback: function (originalValue, result) {
+                    //$("#callbackBox").append("[fieldChange callback] Original value of field  '" + $(this).attr("name") + "' is: " + originalValue + ".  Dirty status is " + result + "<br />");
+                },
+                formChangeCallback: function (result, dirtyFieldsArray) {
+                    //var recordName = "@Model.EmailAddress";
+                    var dirtyFieldParentPanelTitle = $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert');
+                    var cleanFieldParentPanelTitle = $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert');
+                    if (result) { // Dirty
+                        //$("#callbackBox").append("[formChangeCallback] Form is dirty. Dirty fields are: " + dirtyFieldsArray + "<br />");
+                        $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                        $(this).find("#btnResolve").removeAttr("disabled");
+                        //$(dirtyFieldParentPanelTitle).removeClass("hide").html("*" + recordName + "'s record has been modified*");
+                        $(dirtyFieldParentPanelTitle).removeClass("hide").html("*Save your changes*");
+                        $('#btnSavePartial').removeAttr('disabled');
+                        $('#IsChanged').val(true);
+
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                            $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert').removeClass("hide").html("*Save your changes*");
+                        });
+                    }
+                    else { // Clean
+                        //$("#callbackBox").append("[formChangeCallback] Form is clean.<br />");
+                        $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                        $(this).find("#btnSavePartial").attr("disabled", "disabled");
+                        $('#IsChanged').val(false);
+
+                        $(cleanFieldParentPanelTitle).addClass("hide").html("");
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                            $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert').addClass("hide").html("");
+                        });
+                    }
+                    //Scrolls the logging div to the bottom
+                    //var objDiv = document.getElementById("callbackBox");
+                    //objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            };
+
+            $(form).dirtyFields(dfOptions);
+
+
+        });
+    </script>
+
+}

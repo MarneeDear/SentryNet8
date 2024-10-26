@@ -1,0 +1,251 @@
+﻿@model Sentry.WebApp.ViewModels.GiftTransmittal.Distribution
+
+@{
+    var index = ViewData["index"] as int?;
+    var organization = ViewData["organization"] as string;
+    var placeholder = (organization == "uaf" ? "99-99-9999" : "Designation Name");
+    var formNumber = ViewData["formnumber"] as string;
+    var distributionCount = ViewData["distributionCount"] as int?;
+}
+
+<tr id="mainDataRow_@index">
+    <td hidden>
+        <input value="@Model.Id" type="hidden" id='@($"Distributions_{index}__Id")' name='@($"Distributions[{index}].Id")' />
+        <input value="@Model.ItemId" type="hidden" id='@($"Distributions_{index}__ItemId")' name='@($"Distributions[{index}].ItemId")' />
+        <input value="@Model.DateAdded" type="hidden" id='@($"Distributions_{index}__DateAdded")' name='@($"Distributions[{index}].DateAdded")' />
+        <input asp-for="@Model.IsNewFund" type="hidden" id='@($"Distributions_{index}__IsNewFund")' name='@($"Distributions[{index}].IsNewFund")' />
+        <input asp-for="@Model.IsDeleted" type="hidden" id='@($"Distributions_{index}__IsDeleted")' name='@($"Distributions[{index}].IsDeleted")' />
+    </td>
+    <td id="designationDiv_@index">
+        <fieldset>
+            <div class="col-md-1 @(distributionCount <= 1 ? "d-none" : "") removeDistributionItemSection">
+                <button type="button"
+                        onclick="RemoveDistribution(this)"
+                        data-index="@index">
+                    <i class="fa fa-trash-can" title="trash-icon"></i> Delete
+                </button>
+            </div>
+            <div class="col-md-11">
+                <div class="col-lg-7">
+                    <div class="form-group">
+                        <label class="control-label">Designation</label>
+
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control"
+                                   placeholder=@placeholder
+                                   aria-label="Designation"
+                                   aria-describedby="expandButton_@index"
+                                   id='@($"Distributions_{index}__FundAccountName")'
+                                   name='@($"Distributions[{index}].FundAccountName")'
+                                   onblur="getFundDesc(this.value, @index, '@organization')"
+                                   onchange="getFundDesc(this.value, @index,  '@organization')">
+
+                            <input type="hidden" value="@Model.FundAccount" id='@($"Distributions_{index}__FundAccount")' name='@($"Distributions[{index}].FundAccount")' />
+
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-blue" type="button" id="expandButton_@index" value="Find Designation"
+                                        onclick="showUAFundSearch(@index)">
+                                    Find Designation
+                                </button>
+                            </div>
+                            <div class="ml-2">
+                                @if (Model.IsNewFund)
+                                {
+                                    <div id="newFundMessageDiv_@index" class="text-danger" style="@(!Model.IsNewFund ? " display: none;" : "" )">
+                                        <b>New Designation</b>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div id="selectUAProject" class="dropPanel" style="display: none">
+                            <div id="college" class="dropPanelDiv">
+                                <div class="row">
+                                    <div class="col-md-12 form-group mt-2">
+                                        <label class="control-label">Division</label>
+                                        <select id="College_code_@index" class="form-control dropPanelControl"
+                                                onchange="getDepartments(this.value, @index)"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="dept" class="dropPanelDiv">
+                                <div class="row">
+                                    <div class="col-md-12 form-group">
+                                        <label class="control-label">Department</label>
+                                        <select id="Dept_code_@index" class="form-control dropPanelControl"
+                                                onchange="getProjects(this.value, @index)"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="UAproject" class="dropPanelDiv">
+                                <div class="row">
+                                    <div class="col-md-12 form-group">
+                                        <label class="control-label">Designation</label>
+                                        <select id="UAFundID_@index" class="form-control dropPanelControl"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-light dropPanelButton"
+                                        onclick="cancelUAFundSearch(@index)">
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn btn-blue dropPanelButton"
+                                        onclick="acceptUAFundSearch(@index)">
+                                    Select
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+
+                </div>
+            </div>
+            <div class="@(distributionCount > 1 ? "col-md-11 pull-right" : "col-md-12") distributionItemAmountSection">
+                <div class="form-group col-md-2">
+                    <label class="control-label">Amount</label>
+                    <input asp-for="@Model.Amount" 
+                           id='@($"Distributions_{index}__Amount")'
+                           name='@($"Distributions[{index}].Amount")'
+                           class="form-control amount"
+                           placeholder="0.00" onchange="calcAllAmounts(@index, true)" />
+                </div>
+                @if (!formNumber.StartsWith("GU"))
+                {
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Gift Object Code</label>
+                        <input asp-for="@Model.ObjectCode_Amount"
+                               id='@($"Distributions_{index}__ObjectCode_Amount")'
+                               name='@($"Distributions[{index}].ObjectCode_Amount")'
+                               class="form-control" />
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="@Model.ObjectCode_Amount"
+                           id='@($"Distributions_{index}__ObjectCode_Amount")'
+                           name='@($"Distributions[{index}].ObjectCode_Amount")' class="form-control" type="hidden" />
+                }
+
+                <div class="form-group col-md-2">
+                    <label class="control-label">Benefit Amount</label>
+                    <input asp-for="@Model.BenefitAmount"
+                           id='@($"Distributions_{index}__BenefitAmount")'
+                           name='@($"Distributions[{index}].BenefitAmount")'
+                           class="form-control amount" placeholder="0.00"
+                           onchange="calcAllAmounts(@index, true)" />
+                </div>
+                @if (!formNumber.StartsWith("GU"))
+                {
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Benefit Object Code</label>
+                        <input asp-for="@Model.ObjectCode_Benefit"
+                               id='@($"Distributions_{index}__ObjectCode_Benefit")'
+                               name='@($"Distributions[{index}].ObjectCode_Benefit")' class="form-control" />
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="@Model.ObjectCode_Benefit"
+                           id='@($"Distributions_{index}__ObjectCode_Benefit")'
+                           name='@($"Distributions[{index}].ObjectCode_Benefit")' class="form-control" type="hidden" />
+                }
+
+                <div class="form-group col-md-2">
+                    <label class="control-label">Pledge Payment?</label>
+                    <div>
+                        <input type="checkbox" 
+                               asp-for="@Model.IsPledge"
+                               id='@($"Distributions_{index}__IsPledge")'
+                               name='@($"Distributions[{index}].IsPledge")'
+                               class="checkbox" />
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">UDF Exempt?</label>
+                    <div>
+                        <input type="checkbox" 
+                               asp-for="@Model.IsUdfExempt"
+                               id='@($"Distributions_{index}__IsUdfExempt")'
+                               name='@($"Distributions[{index}].IsUdfExempt")'
+                               class="checkbox"
+                               onchange="handleUdf(this.checked, @index, true)" />
+                    </div>
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">UDF Exemption Reason</label>
+                    <select asp-for="@Model.UdfFeeExemptionId"
+                            id='@($"Distributions_{index}__UdfFeeExemptionId")'
+                            name='@($"Distributions[{index}].UdfFeeExemptionId")'
+                            class="form-control"
+                            asp-items="Html.GetEnumSelectList<Sentry.WebApp.ViewModels.GiftTransmittal.UdfFeeExemptionTypes>()"
+                            style="display:none; "
+                            onchange="handleUdfOther(this.options[this.options.selectedIndex].text, @index)">
+                        <option value="">Select</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label">UDF Other</label>
+                    <input asp-for="@Model.UdfFeeExemptionOtherDesc"
+                           id='@($"Distributions_{index}__UdfFeeExemptionOtherDesc")'
+                           name='@($"Distributions[{index}].UdfFeeExemptionOtherDesc")'
+                           class="form-control" style="display:none; " />
+                </div>
+                <div class="form-group col-md-12">
+                    <label class="control-label">Line Item Description</label>
+                    <input asp-for="@Model.LineItemDescription"
+                           id='@($"Distributions_{index}__LineItemDescription")'
+                           name='@($"Distributions[{index}].LineItemDescription")' class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Receipt Amount</label>
+                    <input asp-for="@Model.ReceiptAmount"
+                           id='@($"Distributions_{index}__ReceiptAmount")'
+                           name='@($"Distributions[{index}].ReceiptAmount")'
+                           class="form-control amount" readonly tabindex="-1"
+                           onchange="calcAllAmounts(@index, true)" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">UDF Amount</label>
+                    <input asp-for="@Model.UdfFeeAmount"
+                           id='@($"Distributions_{index}__UdfFeeAmount")'
+                           name='@($"Distributions[{index}].UdfFeeAmount")'
+                           class="form-control amount" tabindex="-1"
+                           onchange="SetManualUdfAmount(this)" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">UDF - Development</label>
+                    <input asp-for="@Model.UdfFeeDevelopment"
+                           id='@($"Distributions_{index}__UdfFeeDevelopment")'
+                           name='@($"Distributions[{index}].UdfFeeDevelopment")'
+                           class="form-control amount" tabindex="-1"
+                           onchange="SetManualUdfAmount(this)" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">UDF - President</label>
+                    <input asp-for="@Model.UdfFeePresident"
+                           id='@($"Distributions_{index}__UdfFeePresident")'
+                           name='@($"Distributions[{index}].UdfFeePresident")'
+                           class="form-control amount" tabindex="-1"
+                           onchange="SetManualUdfAmount(this)" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">UDF - Dean</label>
+                    <input asp-for="@Model.UdfFeeDean"
+                           id='@($"Distributions_{index}__UdfFeeDean")'
+                           name='@($"Distributions[{index}].UdfFeeDean")'
+                           class="form-control amount" tabindex="-1"
+                           onchange="SetManualUdfAmount(this)" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label class="control-label">Dean's UDF Project</label>
+                    <input asp-for="@Model.UdfDeanProject"
+                           id='@($"Distributions_{index}__UdfDeanProject")'
+                           name='@($"Distributions[{index}].UdfDeanProject")'
+                           class="form-control" tabindex="-1" />
+                </div>
+            </div>
+        </fieldset>
+
+    </td>
+</tr>

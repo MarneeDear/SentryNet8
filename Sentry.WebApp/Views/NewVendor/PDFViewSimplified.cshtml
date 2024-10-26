@@ -1,0 +1,169 @@
+﻿@using Sentry.WebApp.ViewModels.NewVendor
+@using Sentry.Domain.AccountsPayable.Entities
+@model Sentry.WebApp.ViewModels.NewVendor.PDFViewModelSimplified
+
+@{
+    Layout = "_PDFLayout";
+
+}
+
+<div id="content-container" class="content-container" role="main">
+    <div class="panel panel-secondary review-page">
+        <div class="panel-heading">
+            <h3 class="panel-title">Form number: <span class="record-text h3">@Model.FormNumber</span></h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-12 col-md-12 panel-container">
+                <div class="panel panel-secondary">
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <table id="" class="table details-table center">
+                                    <caption class="sr-only center">Prepared By</caption>
+                                    <thead class="theader">
+                                        <tr>
+                                            <th class="col-md-4">Name</th>
+                                            <th class ="col-md-2">Email</th>
+                                            <td class="col-md-2">Phone</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PreparedByName</td>
+                                            <td>@Model.PreparedByEmail</td>
+                                            <td>@Model.PreparedByPhone</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+                 </div>
+                <div class="panel panel-secondary">
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <table id="" class="table details-table center" >
+                                    <caption class="sr-only center">Vendor/Payee Details</caption>
+                                    <thead class="theader">
+                                        <tr>
+                                            <th class="col-md-2">Vendor Name</th>
+                                            <th class="col-md-2" style="margin-left:auto">Vendor Type</th>
+                                            <th class="col-md-4">Address</th>
+                                            <th class="col-md-2">City</th>
+                                            <th class="col-md-2">State</th>
+                                            <th class="col-md-2">ZipCode</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.VendorName</td>
+                                            <td style="margin-left:20px;">
+                                                @Model.VendorType
+                                            </td>
+                                            <td>@Model.VendorStreetAddress</td>
+                                            <td>@Model.VendorCity</td>
+                                            <td>@Model.VendorState</td>
+                                            <td>@Model.VendorZip</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>                            
+                        </fieldset>
+                       
+                            <fieldset>
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <table id="" class="table details-table center">
+                                    <caption class="sr-only center" style="margin-left:auto; margin-right:auto;">Other Contact Methods</caption>
+                                        <thead class="theader">
+                                            <tr>
+                                                <th class="col-md-4">Home</th>
+                                                <th class="col-md-4">Business</th>
+                                                <th class="col-md-4">Cell</th>
+                                                <th class="col-md-4">Email</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>@Model.HomeContactMethod</td>
+                                                <td>
+                                                    @Model.BusinessContactMethod
+                                                </td>
+                                                <td>@Model.CellularContactMethod </td>
+                                                <td>@Model.EmailContactMethod</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        
+                        
+                            <fieldset>
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                <table id="" class="table additionalInfo-table center">
+                                    <caption class="sr-only">Additional Information</caption>
+                                        <thead class="theader">
+                                            <tr>
+                                                <th class="col-md-2">Payee Type</th>
+                                                <th class="col-md-1">ICA Year</th>
+                                                <th class="col-md-1">W9 Year</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding-left:3px; padding-right:6px;">@Model.PayeeType</td>
+                                                <td>@Model.ICAYear</td>
+                                                <td>@Model.W9Year</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+
+
+
+
+                        <fieldset>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                @* <h3>Account Information:</h3> *@
+                                @* <table id="" class="table accountInfo-table center">
+                                    <caption class="sr-only">Account Information</caption>
+
+                                    <thead class="theader">
+                                        <tr>
+                                            <th class="col-md-2">Payment Type</th>                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PaymentType</td>                                           
+                                        </tr>
+                                    </tbody>
+                                </table> *@
+                                <label>Account Information: @Model.PaymentType</label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend class="sr-only">Supporting Documents</legend>
+                            <hr />
+                            <div class="col-xs-12 col-md-12">
+                                <ul>
+                                    @foreach (var doc in Model.SupportingDocuments)
+                                    {
+                                        <li>@doc</li>
+                                    }
+                                </ul>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div> <!-- END .panel-container-->
+        </div> <!--END .panel-body -->
+
+
+    </div> <!--END PANEL SECONDARY-->
+
+
+</div>
+

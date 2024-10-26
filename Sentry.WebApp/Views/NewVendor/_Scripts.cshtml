@@ -1,0 +1,13 @@
+﻿@using Sentry.WebApp.ViewModels
+@{
+    var modelHelper = new ModelHelper(Context);
+}
+
+<script>
+    var GetNewVendorRequetsURL = '@Url.Action("Edit", "NewVendor")';
+    var uploadSupportingDocumentURL = '@Url.Action("UploadSupportingDocument")';
+    var deleteSupportingDocumentURL = '@Url.Action("DeleteSupportingDocument")';
+    var getSupportingDocumentsURL = "@Url.Action("GetSupportingDocuments")";
+    var viewSupportingDocumentURL = "@Url.Action("ViewSupportingDocument")";
+</script>
+<script type="text/javascript" src="@Url.Content($"~/js/NewVendorRequest.js?version={modelHelper.Version}")"></script>

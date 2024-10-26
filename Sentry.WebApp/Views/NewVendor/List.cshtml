@@ -1,0 +1,68 @@
+﻿@model Sentry.WebApp.ViewModels.NewVendor.NewVendorRequestListViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="NewVendor" asp-action="Index">New Vendor Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="table-responsive">       
+        <table id="newVendorRequestTable" class="table table-hover table-striped newVendorRequest recordList">
+            <caption class="sr-only">@ViewData["Title"]</caption>
+            <thead>
+                <tr class="tableHeader">
+                    <th style="visibility: collapse">Id</th>
+                    <th>Form Number:</th>
+                    <th style="visibility: collapse">Prepared by</th>
+                    <th>Vendor Name:</th>
+                    <th>Address:</th>
+                    <th>City:</th>
+                    <th>State:</th>
+                    <th>Zip:</th>
+                    <th>Payment Type:</th>
+                    <th>Processing Error:</th>
+                    <th>Date Created:</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var newVendorRequest in Model.NewVendorRequests)
+                {
+                    <tr class="@(newVendorRequest.ProcessingError == null ? "" : "rejectedStatus")">
+                        <td style="visibility: collapse">@newVendorRequest.Id</td>                        
+                        <td>@newVendorRequest.FormNumber</td>
+                        <td style="visibility: collapse">@newVendorRequest.PrepardedBy</td>
+                        <td>@newVendorRequest.VendorName</td>
+                        <td>@newVendorRequest.VendorStreetAddress</td>
+                        <td>@newVendorRequest.VendorCity</td>
+                        <td>@newVendorRequest.VendorState</td>
+                        <td>@newVendorRequest.VendorZip</td>
+                        <td>@newVendorRequest.PaymentType</td>
+                        <td>@newVendorRequest.ProcessingError</td>
+                        <td>@newVendorRequest.SubmittedForApprovalOn</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section scripts{
+    @await Html.PartialAsync("_Scripts")
+}
+
+

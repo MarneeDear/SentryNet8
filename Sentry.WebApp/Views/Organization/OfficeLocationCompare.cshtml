@@ -1,0 +1,121 @@
+﻿@model Sentry.WebApp.ViewModels.OfficeLocationCompareViewModel
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="officeLocationMatchCompareModalLabel">Compare Records for: <span class="record-text h3">@Model.Name</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="panel-toolbar">
+        <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.IntegrationDate)</span>
+        <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+    </div>
+    <div class="row matching">
+        <div class="col-sm-12 col-md-6">
+            <h5><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId)</h5>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Integration Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>Name:</dt>
+                        <dd>@Html.DisplayFor(m => m.Name)</dd>
+                        <dt>Building Code:</dt>
+                        <dd>@Html.DisplayFor(m => m.BuildingCode)</dd>
+                        <dt>Address 1:</dt>
+                        <dd>@Html.DisplayFor(m => m.Address1)</dd>
+                        <dt>Address 2:</dt>
+                        <dd>@Html.DisplayFor(m => m.Address2)</dd>
+                        <dt>City:</dt>
+                        <dd>@Html.DisplayFor(m => m.City)</dd>
+                        <dt>State:</dt>
+                        <dd>@Html.DisplayFor(m => m.State)</dd>
+                        <dt>Postal Code:</dt>
+                        <dd>@Html.DisplayFor(m => m.PostalCode)</dd>
+                        <dt>Country:</dt>
+                        <dd>@Html.DisplayFor(m => m.Country)</dd>
+                    </dl>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-6">
+            <h5><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId_Compare)</h5>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Compare Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>Name:</dt>
+                        <dd>@Html.DisplayFor(m => m.Name_Compare)</dd>
+                        <dt>Building Code:</dt>
+                        <dd>@Html.DisplayFor(m => m.BuildingCode_Compare)</dd>
+                        <dt>Address 1:</dt>
+                        <dd>@Html.DisplayFor(m => m.Address1_Compare)</dd>
+                        <dt>Address 2:</dt>
+                        <dd>@Html.DisplayFor(m => m.Address2_Compare)</dd>
+                        <dt>City:</dt>
+                        <dd>@Html.DisplayFor(m => m.City_Compare)</dd>
+                        <dt>State:</dt>
+                        <dd>@Html.DisplayFor(m => m.State_Compare)</dd>
+                        <dt>Postal Code:</dt>
+                        <dd>@Html.DisplayFor(m => m.PostalCode_Compare)</dd>
+                        <dt>Country:</dt>
+                        <dd>@Html.DisplayFor(m => m.Country_Compare)</dd>
+                    </dl>
+                </div><!-- /.panel-body -->
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-link no-match text-left" data-toggle="modal" data-dismiss="modal" title="Not a Match"><i role="img" class="fas fa-times">&nbsp;</i> Not a Match</button>
+                    <button type="submit" class="btn btn-primary match pull-right" title="Match this Record" formaction="@Url.Action("OfficeLocationManualMatch", "Organization", new { Id = Model.Id, IntegrationId = Model.IntegrationId, SystemId = Model.SystemId, MasterId = Model.MasterId })"><i role="img" class="fas fa-check">&nbsp;</i> Match Record</button>
+                </div><!-- /.panel-footer -->
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    @*<button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>*@
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Tooltips [Regular]
+            //----------------------------------------------------
+
+            var elButton = $('button');
+            $(elButton).each(function (i, obj) {
+                $(this).tooltip({
+                    title: $(this).attr("title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+            });
+            $(elButton).each(function (i, obj) {
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+            });
+
+        });
+    </script>
+}

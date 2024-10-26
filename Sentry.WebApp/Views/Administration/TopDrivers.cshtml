@@ -1,0 +1,52 @@
+﻿@using Sentry.WebApp.ViewModels
+@model TopDriversViewModel
+
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<br />
+
+<h2>@Model.Title</h2>
+
+<br />
+
+<div class="form-inline font-weight-bold">
+    <strong>Time Frame</strong>
+    <select class="form-control" id="TimeFrame" name="TimeFrame">
+        <option value=@((int)Sentry.WebApp.ViewModels.TimeFrame.None)>-- Choose Time Frame --</option>
+        <option value=@((int)Sentry.WebApp.ViewModels.TimeFrame.Last7Days)>Last 7 Days</option>
+        <option value=@((int)Sentry.WebApp.ViewModels.TimeFrame.ThisMonth)>This Month</option>
+        <option value=@((int)Sentry.WebApp.ViewModels.TimeFrame.Last30Days)>Last 30 Days</option>
+        <option value=@((int)Sentry.WebApp.ViewModels.TimeFrame.YearToDate)>Year to Date</option>
+        <option value=@((int)Sentry.WebApp.ViewModels.TimeFrame.All)>All</option>
+    </select>
+</div>
+
+<br />
+
+<div id="TopDriversDiv"></div>
+
+
+<script>
+
+    $(function () {
+        $('#TimeFrame').change(function () {
+            if (this.value > 0) {
+                $.get('TopDriversTableData/' + this.value, function (data) {
+                    $('#TopDriversDiv').replaceWith(data);
+                });
+            }
+            else {
+                $('#TopDriversDiv').empty();
+            }
+        });
+        $('#TimeFrame').val(@((int)Sentry.WebApp.ViewModels.TimeFrame.Last30Days));
+        $('#TimeFrame').trigger('change');
+    });
+
+</script>

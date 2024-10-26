@@ -1,0 +1,2119 @@
+﻿@model Sentry.WebApp.ViewModels.ConstituentPhoneViewModel
+@using Sentry.WebApp.Extensions;
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@if (Model != null)
+{
+    <ul class="page-title">
+        <li>
+            <h2>
+                Date:
+                <span title="Date of Integration: @Model.IntegrationDate"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source:
+                <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source Record Id:
+                @if (Model.System == "Lynx")
+                {
+                    <a href="@Model.SourceRecordUrl" title="View this record in @Model.System" class="" target="_blank">
+                        <span>@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                    </a>
+                }
+                else
+                {
+                    @*<span title="Source System Record Id">@(Model.SourceRecordId != "" || Model.SourceRecordId != null ? Html.Raw(Model.SourceRecordId) : Html.Raw("N/A"))</span>*@
+                    <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                }
+            </h2>
+        </li>
+    </ul>
+
+    <ol class="breadcrumb">
+        <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+        <li><a asp-area="" asp-controller="Constituent" asp-action="Index">Constituent Dashboard</a></li>
+        <li><a asp-area="" asp-controller="Constituent" asp-action="ConstituentPhoneList">Record List</a></li>
+        <li class="active">Record Details</li>
+    </ol>
+
+    <div id="content-container" class="content-container" role="main">
+        <form asp-action="ConstituentPhoneEdit" id="ConstituentPhoneEditForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SystemId" />
+            <input type="hidden" asp-for="System" />
+            <input type="hidden" asp-for="SourceRecordId" />
+            <input type="hidden" asp-for="IntegrationId" />
+            <input type="hidden" asp-for="Integration" />
+            <input type="hidden" asp-for="CreatedOnDT" />
+            <input type="hidden" asp-for="IsChanged" />
+            @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+            {
+                @Html.HiddenFor(m => m.HistoryData[i].HistoryDate)
+            }
+
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.Title for: <span class="record-text h3">@Model.PhoneNumber / @Model.Extension / @Model.PhoneLineType</span> <span class="updatedFormAlert label label-warning hide">Modified</span></h3>
+                <div class="panel-toolbar">
+                    <a href="#constituentPhoneSourceDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Phone Details:</h4>
+                            <div class="panel-toolbar">
+                                <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <fieldset>
+                                <legend class="sr-only">Degree Details:</legend>
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- ConstituentMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.ConstituentMasterId_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="ConstituentMasterId_BusinessName" />
+                                            <input type="hidden" asp-for="ConstituentMasterId_BusinessDescription" />
+                                            <input type="hidden" asp-for="ConstituentMasterId_Source" />
+                                            <input type="hidden" asp-for="ConstituentMasterId_Status" />
+                                            <input type="hidden" asp-for="ConstituentSourceSystemRecordId" />
+                                            <input type="hidden" asp-for="FirstName" />
+                                            <input type="hidden" asp-for="LastName" />
+                                            <input type="hidden" asp-for="UAPersonId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.ConstituentMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.ConstituentMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.ConstituentMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentPhoneConstituentMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].ConstituentMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].ConstituentMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="ConstituentMasterId">@Model.ConstituentMasterId_BusinessName: </label>
+                                        <select asp-for="ConstituentMasterId" class="form-control" placeholder="@Model.ConstituentMasterId_BusinessName" data-disabled="@(Model.ConstituentMasterId_IsReadOnly.ToString())"></select>
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.ConstituentMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="ConstituentMasterId" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- PhoneNumber -->
+                                    <div class='form-group @string.Format("status{0}", Model.PhoneNumber_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="PhoneNumber_BusinessName" />
+                                            <input type="hidden" asp-for="PhoneNumber_BusinessDescription" />
+                                            <input type="hidden" asp-for="PhoneNumber_Source" />
+                                            <input type="hidden" asp-for="PhoneNumber_Status" />
+                                            <input type="hidden" asp-for="PhoneMasterId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.PhoneNumber_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.PhoneNumber_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.PhoneNumber_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentPhonePhoneNumberHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].PhoneNumber_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].PhoneNumber)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="PhoneMasterId">@Model.PhoneNumber_BusinessName: </label>
+                                        <input asp-for="PhoneNumber" class="form-control" placeholder="@Model.PhoneMasterId_BusinessName" data-disabled="@(Model.PhoneNumber_IsReadOnly.ToString())" />
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.PhoneNumber_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="PhoneNumber" class="text-danger help-block"></span>
+                                                                                <div class="lg-12">
+                                        <div class="form-group">
+                                                <div class="checkbox checkbox-primary flex-firstchild">
+                                                    <input type="checkbox" asp-for="TempPhoneIsPrimary">
+                                                    <label for="TempPhoneIsPrimary">Primary Phone</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- Extension -->
+                                    <div class='form-group @string.Format("status{0}", Model.Extension_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="Extension_BusinessName" />
+                                            <input type="hidden" asp-for="Extension_BusinessDescription" />
+                                            <input type="hidden" asp-for="Extension_Source" />
+                                            <input type="hidden" asp-for="Extension_Status" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.Extension_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.Extension_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.Extension_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentPhoneExtensionHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].Extension_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].Extension)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="Extension">@Model.Extension_BusinessName: </label>
+                                        <input asp-for="Extension" class="form-control numeric" placeholder="@Model.Extension_BusinessName" data-disabled="@(Model.Extension_IsReadOnly.ToString())" />
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.Extension_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="Extension" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- CountryMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.CountryMasterId_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="CountryMasterId_BusinessName" />
+                                            <input type="hidden" asp-for="CountryMasterId_BusinessDescription" />
+                                            <input type="hidden" asp-for="CountryMasterId_Source" />
+                                            <input type="hidden" asp-for="CountryMasterId_Status" />
+                                            <input type="hidden" asp-for="CountrySourceSystemRecordId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.CountryMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.CountryMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.CountryMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentPhoneCountryMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].CountryMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].CountryMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="CountryMasterId">@Model.CountryMasterId_BusinessName Code: </label>
+                                        @Html.DropDownListFor(
+                                            m => m.CountryMasterId,
+                                            Model.CountryList,
+                                            htmlAttributes: new { @class = "form-control", @data_disabled = (Model.CountryMasterId_IsReadOnly.ToString()) }
+                                        )
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.CountryMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="CountryMasterId" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- PhoneLineTypeMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.PhoneLineTypeMasterId_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="PhoneLineTypeMasterId_BusinessName" />
+                                            <input type="hidden" asp-for="PhoneLineTypeMasterId_BusinessDescription" />
+                                            <input type="hidden" asp-for="PhoneLineTypeMasterId_Source" />
+                                            <input type="hidden" asp-for="PhoneLineTypeMasterId_Status" />
+                                            <input type="hidden" asp-for="PhoneLineType" />
+                                            <input type="hidden" asp-for="PhoneLineTypeSourceSystemRecordId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.PhoneLineTypeMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.PhoneLineTypeMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.PhoneLineTypeMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentPhonePhoneLineTypeMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].PhoneLineTypeMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].PhoneLineTypeMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="PhoneLineTypeMasterId">@Model.PhoneLineTypeMasterId_BusinessName: </label>
+                                        @Html.DropDownListFor(
+                                            m => m.PhoneLineTypeMasterId,
+                                            Model.PhoneLineTypeList,
+                                            htmlAttributes: new { @class = "form-control", @data_disabled = (Model.PhoneLineTypeMasterId_IsReadOnly.ToString()) }
+                                        )
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.PhoneLineTypeMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="PhoneLineTypeMasterId" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-xs-12 col-sm-6 col-lg-4">
+                                    <!-- PhoneUseTypeMasterId -->
+                                    <div class='form-group @string.Format("status{0}", Model.PhoneUseTypeMasterId_Status)'>
+                                        <div class="pull-right">
+                                            <input type="hidden" asp-for="PhoneUseTypeMasterId_BusinessName" />
+                                            <input type="hidden" asp-for="PhoneUseTypeMasterId_BusinessDescription" />
+                                            <input type="hidden" asp-for="PhoneUseTypeMasterId_Source" />
+                                            <input type="hidden" asp-for="PhoneUseTypeMasterId_Status" />
+                                            <input type="hidden" asp-for="PhoneUseType" />
+                                            <input type="hidden" asp-for="PhoneUseTypeSourceSystemRecordId" />
+                                            <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                    data-info-content-name="@Html.DisplayFor(m => m.PhoneUseTypeMasterId_BusinessName)"
+                                                    data-info-content-description="@Html.DisplayFor(m => m.PhoneUseTypeMasterId_BusinessDescription)"
+                                                    data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                    data-info-content-sourcefieldid="@Html.DisplayFor(m => m.PhoneUseTypeMasterId_Source)">
+                                                <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#constituentPhonePhoneUseTypeMasterIdHistoryModal" tabindex="-1"
+                                                    data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].PhoneUseTypeMasterId_Status)"
+                                                    data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                    data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].PhoneUseTypeMasterId)">
+                                                <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                            </button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                        </div>
+                                        <label class="control-label" for="PhoneUseTypeMasterId">@Model.PhoneUseTypeMasterId_BusinessName: </label>
+                                        @Html.DropDownListFor(
+                                            m => m.PhoneUseTypeMasterId,
+                                            Model.PhoneUseTypeList,
+                                            htmlAttributes: new { @class = "form-control", @data_disabled = (Model.PhoneUseTypeMasterId_IsReadOnly.ToString()) }
+                                        )
+                                        <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                        @Html.Raw(Model.PhoneUseTypeMasterId_IsReadOnly ? $"<span class='fa fa-exclamation-triangle form-control-feedback' aria-hidden='true' title='Not Provided in {Model.System}'></span>" : "")
+                                        <span asp-validation-for="PhoneUseTypeMasterId" class="text-danger help-block"></span>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+            <div class="panel-footer" style="height: 100px">
+                <button type="button" class="btn btn-link @(Model.PhoneNumber_Status == "Bad" ? "" : "d-none")" title="Deactivate in @Model.System" data-toggle="modal" data-target="#warningSourceModal">
+                        <i role="img" class="fas fa-trash-alt">&nbsp;</i>Deactivate in @Model.System
+                </button>
+                <button type="submit" id="btnResolve" class="btn btn-primary pull-right" title="Re-Validate Record" data-toggle="tooltip" formaction="@Url.Action("ConstituentPhoneRevalidate", "Constituent")/">
+                    <i role="img" class="fas fa-check">&nbsp;</i>Resolve Record
+                </button>
+                <button type="submit" id="btnSavePartial" class="btn btn-info pull-right" title="Save Partial Record" data-toggle="tooltip" formaction="@Url.Action("ConstituentPhoneSave", "Constituent")/" disabled="disabled">
+                    <i role="img" class="fas fa-save">&nbsp;</i>Save Partial Record
+                </button>
+                <a asp-area="" asp-controller="Constituent" asp-action="ConstituentPhoneList" class="btn btn-link pull-right" title="Cancel Changes" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Discard</a>
+            </div><!-- /.panel-footer -->
+            <!-- Modal - Remove/Archive -->
+            <div class="modal fade" id="removeArchiveRecordModal" tabindex="-1" role="dialog" aria-labelledby="removeArchiveRecordModal removeArchiveRecordModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="removeArchiveRecordModalLabel">Remove This @Model.Integration Record?</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <p>Are you sure you want to remove this @Model.Integration record?</p>
+                                    <ul>
+                                        <li>Phone Number: <strong>@Model.PhoneNumber</strong></li>
+                                        <li>Country Code: <strong>@Model.CountrySourceSystemRecordId</strong></li>
+                                        <li>Extension: <strong>@Model.Extension</strong></li>
+                                        <li>Line Type: <strong>@Model.PhoneLineType</strong></li>
+                                        <li>Use Type: <strong>@Model.PhoneUseType</strong></li>
+                                    </ul>
+                                </div><!-- /.col-* -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Keep Record"><i role="img" class="fas fa-ban">&nbsp;</i> Cancel</button>
+                            <button type="submit" class="btn btn-primary" title="Remove/Archive" formaction='@Url.Action("ConstituentPhoneIgnore", "Constituent", new { SystemId = Model.SystemId, IntegrationId = Model.IntegrationId, Id = Model.Id })'><i role="img" class="fas fa-trash-alt">&nbsp;</i> Remove/Archive</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal (Remove/Archive) -->
+            <!-- Warning Source Modal -->
+            <div class="modal fade" id="warningSourceModal"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="warningSourceModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="warningSourceModalLabel">Warning</h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <span id="warningSourceMessage" style="color:firebrick;">Are you sure you want to deactivate this @Model.Integration primary phone number record in @Model.System?</span>
+                                <ul>
+                                    <li>Phone Number: <strong>@Model.PhoneNumber</strong></li>
+                                    <li>Country Code: <strong>@Model.CountrySourceSystemRecordId</strong></li>
+                                    <li>Extension: <strong>@Model.Extension</strong></li>
+                                    <li>Line Type: <strong>@Model.PhoneLineType</strong></li>
+                                    <li>Use Type: <strong>@Model.PhoneUseType</strong></li>
+                                </ul>
+                            </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Keep Record"><i role="img" class="fas fa-ban">&nbsp;</i> Cancel</button>
+                                <button type="submit" class="btn btn-primary" title="Deactivate in @Model.System" formaction='@Url.Action("ConstituentPhoneRemoveSource", "Constituent", new { SoureRecordId = Model.SourceRecordId })'><i role="img" class="fas fa-trash-alt">&nbsp;</i> Deactivate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div><!-- /.panel-secondary -->
+        </form>
+    </div><!-- /.content-container -->
+
+    <div id="callbackBox"></div>
+
+}
+else
+{
+    // Temporary: Record Not Found Content
+    // TODO: Implement error handling
+    <div class="recordNotFoundContent">
+        <ul class="page-title">
+            <li>
+                <h1>Ya done messed up, A-A-ron...</h1>
+                <h3>Record not found</h3>
+                <p>More than likely, there's a NULL value which is not being accounted for yet.</p>
+            </li>
+        </ul>
+        <img src="~/img/page-rip-hole.jpg" alt="Error Image" />
+        <p><a asp-area="" asp-controller="Constituent" asp-action="ConstituentPhoneList">Back to List</a></p>
+    </div>
+}
+
+<!-- Popover - Title: Legend -->
+<div id="popover-legend-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    <span>Status Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Legend -->
+<div id="popover-legend-content" class="popover hide">
+    <div class="">
+        <table id="historyPerFieldTable" class="table historyData table-striped">
+            <thead>
+                <tr class="tableHeader">
+                    <th>Status:</th>
+                    <th>Description:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="changedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-pen-square" data-toggle="tooltip" title="Changed Data"></i> Changed Data</td>
+                    <td data-header="Meaning">This data was manually modified by a Data Steward</td>
+                </tr>
+                <tr class="goodDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-check-square" data-toggle="tooltip" title="Valid Data"></i> Valid Data</td>
+                    <td data-header="Date">This data is valid</td>
+                </tr>
+                <tr class="enrichedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-cog" data-toggle="tooltip" title="Enriched Data"></i> Enriched Data</td>
+                    <td data-header="Date">This data was enriched by the Integration Framework</td>
+                </tr>
+                <tr class="badDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-ban" data-toggle="tooltip" title="Invalid Data"></i> Invalid Data</td>
+                    <td data-header="Date">This data is invalid</td>
+                </tr>
+                <tr class="notProvidedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Data not applicable"></i> N/A</td>
+                    <td data-header="Date">This data is not appliciable</td>
+                </tr>
+                <tr class="sourceDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-server" data-toggle="tooltip" title="Source Data"></i> Source Data</td>
+                    <td data-header="Date">Original data provided by the Source System</td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Info -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    @*<a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>*@
+    <span>Field Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Info -->
+<div id="popover-info-content" class="popover hide">
+    <ul class="triangle">
+        <li>
+            <span><strong>Business Glossary Name:</strong> <span id="popover-info-content-name">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Business Glossary Description:</strong> <span id="popover-info-content-description">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source System:</strong> <span id="popover-info-content-source">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source Field Id:</strong> <span id="popover-info-content-sourcefieldid">[No Data Provided]</span></span>
+        </li>
+    </ul>
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Field History -->
+<div id="popover-history-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    Field History:
+</div><!-- /.popover (title) -->
+<!-- Modal - Content: ConstituentMasterId History -->
+<div class="modal fade" id="constituentPhoneConstituentMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhoneConstituentMasterIdHistoryModal constituentPhoneConstituentMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhoneConstituentMasterIdHistoryModalLabel">@Model.ConstituentMasterId_BusinessName History: @Model.ConstituentMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="constituentPhoneConstituentMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped constituentPhone childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="accordion-toggle collapsed @Model.HistoryData[i].ConstituentMasterId_Status.GetHistoryFieldStatusClass()"
+                                            data-toggle="collapse"
+                                            data-target="#@i-constituentPhoneConstituentMasterIdHistoryDataPerField"
+                                            data-parent="#constituentPhoneConstituentMasterIdHistoryDataPerFieldTable"
+                                            aria-expanded="false"
+                                            aria-controls="@i-constituentPhoneConstituentMasterIdHistoryDataPerField">
+                                            <td colspan="4">
+                                                <span title="@Model.HistoryData[i].ConstituentMasterId_Status">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="hiddenRow">
+                                                <div id="@i-constituentPhoneConstituentMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                    <table class="table table-striped constituentPhone childRowTableChild">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field:</th>
+                                                                <th>Current Value:</th>
+                                                                <th>Original Value:</th>
+                                                                <th>Source Field Id:</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- ConstituentSourceSystemRecordId -->
+                                                            <tr class="@Model.HistoryData[i].ConstituentSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Constituent Source System Record Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].ConstituentSourceSystemRecordId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].ConstituentSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].ConstituentSourceSystemRecordId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.ConstituentSourceSystemRecordId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].ConstituentSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentSourceSystemRecordId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- FirstName -->
+                                                            <tr class="@Model.HistoryData[i].FirstName_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    First Name
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].FirstName_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].FirstName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].FirstName
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.FirstName_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].FirstName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.FirstName_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- LastName -->
+                                                            <tr class="@Model.HistoryData[i].LastName_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Last Name
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].LastName_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].LastName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].LastName
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.LastName_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].LastName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.LastName_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- UAPersonId -->
+                                                            <tr class="@Model.HistoryData[i].UAPersonId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    UAPersonId
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].UAPersonId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].UAPersonId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].UAPersonId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.UAPersonId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].UAPersonId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.UAPersonId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- ConstituentMasterId -->
+                                                            <tr class="@Model.HistoryData[i].ConstituentMasterId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Constituent Master Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].ConstituentMasterId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].ConstituentMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].ConstituentMasterId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.ConstituentMasterId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].ConstituentMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentMasterId_Source))
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (ConstituentMasterId) -->
+<!-- Modal - Content: PhoneNumber History -->
+<div class="modal fade" id="constituentPhonePhoneNumberHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhonePhoneNumberHistoryModal constituentPhonePhoneNumberHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhonePhoneNumberHistoryModalLabel">@Model.PhoneNumber_BusinessName History: @Model.PhoneNumber</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="PhoneMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Current Value: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.PhoneNumber_Source ?? " Not Provided in " + @Model.System)"></i></th>
+                                        <th class="all original">Original Value:</th>
+                                        <th class="all source">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].PhoneNumber_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Current Value">
+                                                <i role="img" class="fas @Model.HistoryData[i].PhoneNumber_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneNumber_Status">
+                                                    @Model.HistoryData[i].PhoneNumber
+                                                </span>
+                                            </td>
+                                            <td data-header="Original Value">
+                                                <span class="">
+                                                    @Model.PhoneNumber_OriginalValue
+                                                </span>
+                                            </td>
+                                            <td data-header="Source Field Id">
+                                                <span>
+                                                    @(Model.PhoneNumber_Source == "Not Provided" ? Html.Raw("Not Provided") : Html.DisplayFor(m => m.PhoneNumber_Source))
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (PhoneNumber) -->
+<!-- Modal - Content: Extension History -->
+<div class="modal fade" id="constituentPhoneExtensionHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhoneExtensionHistoryModal constituentPhoneExtensionHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhoneExtensionHistoryModalLabel">@Model.Extension_BusinessName History: @Model.Extension</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="ExtensionHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Current Value: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.Extension_Source ?? " Not Provided in " + @Model.System)"></i></th>
+                                        <th class="all original">Original Value:</th>
+                                        <th class="all source">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="@Model.HistoryData[i].Extension_Status.GetHistoryFieldStatusClass()">
+                                            <td data-header="Date">
+                                                @Model.HistoryData[i].HistoryDate
+                                            </td>
+                                            <td data-header="Current Value">
+                                                <i role="img" class="fas @Model.HistoryData[i].Extension_Status.GetHistoryFieldIconClass()"></i>
+                                                <span data-toggle="tooltip" title="@Model.HistoryData[i].Extension_Status">
+                                                    @Model.HistoryData[i].Extension
+                                                </span>
+                                            </td>
+                                            <td data-header="Original Value">
+                                                <span>
+                                                    @Model.Extension_OriginalValue
+                                                </span>
+                                            </td>
+                                            <td data-header="Source Field Id">
+                                                <span>
+                                                    @(Model.Extension_Source == "Not Provided" ? Html.Raw("Not Provided") : Html.DisplayFor(m => m.Extension_Source))
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Extension) -->
+<!-- Modal - Content: CountryMasterId History -->
+<div class="modal fade" id="constituentPhoneCountryMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhoneCountryMasterIdHistoryModal constituentPhoneCountryMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhoneCountryMasterIdHistoryModalLabel">@Model.CountryMasterId_BusinessName History: @Model.CountryMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="constituentPhoneCountryMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped constituentPhone childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="accordion-toggle collapsed @Model.HistoryData[i].CountryMasterId_Status.GetHistoryFieldStatusClass()"
+                                            data-toggle="collapse"
+                                            data-target="#@i-constituentPhoneCountryMasterIdHistoryDataPerField"
+                                            data-parent="#constituentPhoneCountryMasterIdHistoryDataPerFieldTable"
+                                            aria-expanded="false"
+                                            aria-controls="@i-constituentPhoneCountryMasterIdHistoryDataPerField">
+                                            <td colspan="4">
+                                                <span title="@Model.HistoryData[i].CountryMasterId_Status">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="hiddenRow">
+                                                <div id="@i-constituentPhoneCountryMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                    <table class="table table-striped constituentPhone childRowTableChild">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field:</th>
+                                                                <th>Current Value:</th>
+                                                                <th>Original Value:</th>
+                                                                <th>Source Field Id:</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- Country -->
+                                                            <tr class="@Model.HistoryData[i].Country_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Country
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].Country_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].Country_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].Country
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.Country_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].Country_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.Country_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- CountrySourceSystemRecordId -->
+                                                            <tr class="@Model.HistoryData[i].CountrySourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Country Source System Record Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].CountrySourceSystemRecordId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].CountrySourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].CountrySourceSystemRecordId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.CountrySourceSystemRecordId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].CountrySourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.CountrySourceSystemRecordId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- CountryMasterId -->
+                                                            <tr class="@Model.HistoryData[i].CountryMasterId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Country Master Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].CountryMasterId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].CountryMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].CountryMasterId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.CountryMasterId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].CountryMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.CountryMasterId_Source))
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (CountryMasterId) -->
+<!-- Modal - Content: PhoneLineTypeMasterId History -->
+<div class="modal fade" id="constituentPhonePhoneLineTypeMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhonePhoneLineTypeMasterIdHistoryModal constituentPhonePhoneLineTypeMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhonePhoneLineTypeMasterIdHistoryModalLabel">@Model.PhoneLineTypeMasterId_BusinessName History: @Model.PhoneLineTypeMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="constituentPhonePhoneLineTypeMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped constituentPhone childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="accordion-toggle collapsed @Model.HistoryData[i].PhoneLineTypeMasterId_Status.GetHistoryFieldStatusClass()"
+                                            data-toggle="collapse"
+                                            data-target="#@i-constituentPhonePhoneLineTypeMasterIdHistoryDataPerField"
+                                            data-parent="#constituentPhonePhoneLineTypeMasterIdHistoryDataPerFieldTable"
+                                            aria-expanded="false"
+                                            aria-controls="@i-constituentPhonePhoneLineTypeMasterIdHistoryDataPerField">
+                                            <td colspan="4">
+                                                <span title="@Model.HistoryData[i].PhoneLineTypeMasterId_Status">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="hiddenRow">
+                                                <div id="@i-constituentPhonePhoneLineTypeMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                    <table class="table table-striped constituentPhone childRowTableChild">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field:</th>
+                                                                <th>Current Value:</th>
+                                                                <th>Original Value:</th>
+                                                                <th>Source Field Id:</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- PhoneLineType -->
+                                                            <tr class="@Model.HistoryData[i].PhoneLineType_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Phone Line Type
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneLineType_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].PhoneLineType_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].PhoneLineType
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.PhoneLineType_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].PhoneLineType_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneLineType_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- PhoneLineTypeSourceSystemRecordId -->
+                                                            <tr class="@Model.HistoryData[i].PhoneLineTypeSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Phone Line Type Source System Record Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneLineTypeSourceSystemRecordId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].PhoneLineTypeSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].PhoneLineTypeSourceSystemRecordId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.PhoneLineTypeSourceSystemRecordId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].PhoneLineTypeSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneLineTypeSourceSystemRecordId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- PhoneLineTypeMasterId -->
+                                                            <tr class="@Model.HistoryData[i].PhoneLineTypeMasterId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Phone Line Type Master Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneLineTypeMasterId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].PhoneLineTypeMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].PhoneLineTypeMasterId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.PhoneLineTypeMasterId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].PhoneLineTypeMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneLineTypeMasterId_Source))
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (PhoneLineTypeMasterId) -->
+<!-- Modal - Content: PhoneUseTypeMasterId History -->
+<div class="modal fade" id="constituentPhonePhoneUseTypeMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhonePhoneUseTypeMasterIdHistoryModal constituentPhonePhoneUseTypeMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhonePhoneUseTypeMasterIdHistoryModalLabel">@Model.PhoneUseTypeMasterId_BusinessName History: @Model.PhoneUseTypeMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-toolbar pull-right">
+                    <a class="btn btn-sm btn-link collapsed" role="button">
+                        <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                        <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+                    </a>
+                </div>
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Model.IntegrationDate
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="constituentPhonePhoneUseTypeMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped constituentPhone childRowTableParent">
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        <tr class="accordion-toggle collapsed @Model.HistoryData[i].PhoneUseTypeMasterId_Status.GetHistoryFieldStatusClass()"
+                                            data-toggle="collapse"
+                                            data-target="#@i-constituentPhonePhoneUseTypeMasterIdHistoryDataPerField"
+                                            data-parent="#constituentPhonePhoneUseTypeMasterIdHistoryDataPerFieldTable"
+                                            aria-expanded="false"
+                                            aria-controls="@i-constituentPhonePhoneUseTypeMasterIdHistoryDataPerField">
+                                            <td colspan="4">
+                                                <span title="@Model.HistoryData[i].PhoneUseTypeMasterId_Status">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="hiddenRow">
+                                                <div id="@i-constituentPhonePhoneUseTypeMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                    <table class="table table-striped constituentPhone childRowTableChild">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field:</th>
+                                                                <th>Current Value:</th>
+                                                                <th>Original Value:</th>
+                                                                <th>Source Field Id:</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <!-- PhoneUseTypeMasterId -->
+                                                            <tr class="@Model.HistoryData[i].PhoneUseType_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Phone Use Type
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneUseType_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].PhoneUseType_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].PhoneUseType
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.PhoneUseType_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].PhoneUseType_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneUseType_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- PhoneUseTypeSourceSystemRecordId -->
+                                                            <tr class="@Model.HistoryData[i].PhoneUseTypeSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Phone Use Type Source System Record Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneUseTypeSourceSystemRecordId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].PhoneUseTypeSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].PhoneUseTypeSourceSystemRecordId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.PhoneUseTypeSourceSystemRecordId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].PhoneUseTypeSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneUseTypeSourceSystemRecordId_Source))
+                                                                </td>
+                                                            </tr>
+                                                            <!-- PhoneUseTypeMasterId -->
+                                                            <tr class="@Model.HistoryData[i].PhoneUseTypeMasterId_Status.GetHistoryFieldStatusClass()">
+                                                                <td data-header="Field">
+                                                                    Phone Use Type Master Id
+                                                                </td>
+                                                                <td data-header="Current Value">
+                                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].PhoneUseTypeMasterId_Status">
+                                                                        <i role="img" class="fas @Model.HistoryData[i].PhoneUseTypeMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                        @Model.HistoryData[i].PhoneUseTypeMasterId
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Original Value">
+                                                                    <span data-toggle="tooltip" title="Original Value">
+                                                                        @Model.PhoneUseTypeMasterId_OriginalValue
+                                                                    </span>
+                                                                </td>
+                                                                <td data-header="Source Field Id">
+                                                                    @(Model.HistoryData[i].PhoneUseTypeMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneUseTypeMasterId_Source))
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (PhoneUseTypeMasterId) -->
+<!-- Modal - Source Data -->
+<div class="modal fade" id="constituentPhoneSourceDataModal" tabindex="-1" role="dialog" aria-labelledby="constituentPhoneSourceDataModal constituentPhoneSourceDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="constituentPhoneSourceDataModalLabel">Record Source Data:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History/Source Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="ConstituentPhoneSourceDataPerRecordTable" class="table responsive sourceDataContainer table-striped constituentPhone childRowTableParent">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <!-- ConstituentMasterId -->
+                                    <tr class="accordion-toggle collapsed @Model.ConstituentMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#constituentPhoneConstituentMasterIdHistoryDataPerField"
+                                        aria-expanded="false"
+                                        aria-controls="constituentPhoneConstituentMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.ConstituentMasterId_Status">
+                                                @Model.ConstituentMasterId_BusinessName:
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="constituentPhoneConstituentMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped constituentPhone childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- ConstituentSourceSystemRecordId -->
+                                                        <tr class="@Model.ConstituentSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Constituent Source System Record Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.ConstituentSourceSystemRecordId_Status">
+                                                                    <i role="img" class="fas @Model.ConstituentSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.ConstituentSourceSystemRecordId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.ConstituentSourceSystemRecordId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.ConstituentSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentSourceSystemRecordId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- FirstName -->
+                                                        <tr class="@Model.FirstName_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                First Name
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.FirstName_Status">
+                                                                    <i role="img" class="fas @Model.FirstName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.FirstName
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.FirstName_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.FirstName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.FirstName_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- LastName -->
+                                                        <tr class="@Model.LastName_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Last Name
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.LastName_Status">
+                                                                    <i role="img" class="fas @Model.LastName_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.LastName
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.LastName_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.LastName_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.LastName_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- UAPersonId -->
+                                                        <tr class="@Model.UAPersonId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                UAPersonId
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.UAPersonId_Status">
+                                                                    <i role="img" class="fas @Model.UAPersonId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.UAPersonId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.UAPersonId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.UAPersonId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.UAPersonId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- ConstituentMasterId -->
+                                                        <tr class="@Model.ConstituentMasterId_Status.GetHistoryFieldStatusClass() last">
+                                                            <td data-header="Field">
+                                                                Constituent Master Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.ConstituentMasterId_Status">
+                                                                    <i role="img" class="fas @Model.ConstituentMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.ConstituentMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.ConstituentMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.ConstituentMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.ConstituentMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="@Model.PhoneMasterId_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.PhoneMasterId_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.PhoneMasterId_Status">
+                                                <i role="img" class="fas @Model.PhoneMasterId_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                <span class="">@Model.PhoneNumber</span>
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="PhoneMasterId_OriginalValue" />
+                                            <span title="Original Value">@(Model.PhoneMasterId_OriginalValue != null ? Html.Raw(Model.PhoneMasterId_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.PhoneMasterId_Source == "" || Model.PhoneMasterId_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.PhoneMasterId_Source
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <tr class="@Model.Extension_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.Extension_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.Extension_Status">
+                                                <i role="img" class="fas @Model.Extension_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.Extension
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="Extension_OriginalValue" />
+                                            <span title="Original Value">@(Model.Extension_OriginalValue != null ? Html.Raw(Model.Extension_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.Extension_Source == "" || Model.Extension_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.Extension_Source
+                                            }
+                                        </td>
+                                    </tr>
+
+                                    <!-- CountryMasterId -->
+                                    <tr class="accordion-toggle collapsed @Model.CountryMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#constituentPhoneCountryMasterIdHistoryDataPerField"
+                                        aria-expanded="false"
+                                        aria-controls="constituentPhoneCountryMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.CountryMasterId_Status">
+                                                @Model.CountryMasterId_BusinessName:
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="constituentPhoneCountryMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped constituentPhone childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- Country -->
+                                                        <tr class="@Model.Country_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Country
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.Country_Status">
+                                                                    <i role="img" class="fas @Model.Country_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.Country
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.Country_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.Country_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.Country_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- CountrySourceSystemRecordId -->
+                                                        <tr class="@Model.CountrySourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Country Source System Record Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.CountrySourceSystemRecordId_Status">
+                                                                    <i role="img" class="fas @Model.CountrySourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.CountrySourceSystemRecordId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.CountrySourceSystemRecordId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.CountrySourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.CountrySourceSystemRecordId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- CountryMasterId -->
+                                                        <tr class="@Model.CountryMasterId_Status.GetHistoryFieldStatusClass() last">
+                                                            <td data-header="Field">
+                                                                Country Master Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.CountryMasterId_Status">
+                                                                    <i role="img" class="fas @Model.CountryMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.CountryMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.CountryMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.CountryMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.CountryMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- PhoneLineTypeMasterId -->
+                                    <tr class="accordion-toggle collapsed @Model.PhoneLineTypeMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#constituentPhonePhoneLineTypeMasterIdHistoryDataPerField"
+                                        aria-expanded="false"
+                                        aria-controls="constituentPhonePhoneLineTypeMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.PhoneLineTypeMasterId_Status">
+                                                @Model.PhoneLineTypeMasterId_BusinessName:
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="constituentPhonePhoneLineTypeMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped constituentPhone childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- PhoneLineType -->
+                                                        <tr class="@Model.PhoneLineType_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                PhoneLineType
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.PhoneLineType_Status">
+                                                                    <i role="img" class="fas @Model.PhoneLineType_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.PhoneLineType
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.PhoneLineType_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.PhoneLineType_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneLineType_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- PhoneLineTypeSourceSystemRecordId -->
+                                                        <tr class="@Model.PhoneLineTypeSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Phone Line Type Source System Record Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.PhoneLineTypeSourceSystemRecordId_Status">
+                                                                    <i role="img" class="fas @Model.PhoneLineTypeSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.PhoneLineTypeSourceSystemRecordId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.PhoneLineTypeSourceSystemRecordId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.PhoneLineTypeSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneLineTypeSourceSystemRecordId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- PhoneLineTypeMasterId -->
+                                                        <tr class="@Model.PhoneLineTypeMasterId_Status.GetHistoryFieldStatusClass() last">
+                                                            <td data-header="Field">
+                                                                Phone Line Type Master Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.PhoneLineTypeMasterId_Status">
+                                                                    <i role="img" class="fas @Model.PhoneLineTypeMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.PhoneLineTypeMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.PhoneLineTypeMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.PhoneLineTypeMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneLineTypeMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- PhoneUseTypeMasterId -->
+                                    <tr class="accordion-toggle collapsed @Model.PhoneUseTypeMasterId_Status.GetHistoryFieldStatusClass()"
+                                        data-toggle="collapse"
+                                        data-target="#constituentPhonePhoneUseTypeMasterIdHistoryDataPerField"
+                                        aria-expanded="false"
+                                        aria-controls="constituentPhonePhoneUseTypeMasterIdHistoryDataPerField">
+                                        <td colspan="4">
+                                            <span title="@Model.PhoneUseTypeMasterId_Status">
+                                                @Model.PhoneUseTypeMasterId_BusinessName:
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="hiddenRow">
+                                            <div id="constituentPhonePhoneUseTypeMasterIdHistoryDataPerField" class="accordian-body collapse">
+                                                <table class="table table-striped constituentPhone childRowTableChild">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Field:</th>
+                                                            <th>Current Value:</th>
+                                                            <th>Original Value:</th>
+                                                            <th>Source Field Id:</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- PhoneUseType -->
+                                                        <tr class="@Model.PhoneUseType_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Phone Use Type
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.PhoneUseType_Status">
+                                                                    <i role="img" class="fas @Model.PhoneUseType_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.PhoneUseType
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.PhoneUseType_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.PhoneUseType_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneUseType_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- PhoneUseTypeSourceSystemRecordId -->
+                                                        <tr class="@Model.PhoneUseTypeSourceSystemRecordId_Status.GetHistoryFieldStatusClass()">
+                                                            <td data-header="Field">
+                                                                Phone Use Type Source System Record Id
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.PhoneUseTypeSourceSystemRecordId_Status">
+                                                                    <i role="img" class="fas @Model.PhoneUseTypeSourceSystemRecordId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.PhoneUseTypeSourceSystemRecordId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.PhoneUseTypeSourceSystemRecordId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.PhoneUseTypeSourceSystemRecordId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneUseTypeSourceSystemRecordId_Source))
+                                                            </td>
+                                                        </tr>
+                                                        <!-- PhoneUseTypeMasterId -->
+                                                        <tr class="@Model.PhoneUseTypeMasterId_Status.GetHistoryFieldStatusClass() last">
+                                                            <td data-header="Field">
+                                                                PhoneUseTypeMasterId
+                                                            </td>
+                                                            <td data-header="Current Value">
+                                                                <span data-toggle="tooltip" title="@Model.PhoneUseTypeMasterId_Status">
+                                                                    <i role="img" class="fas @Model.PhoneUseTypeMasterId_Status.GetHistoryFieldIconClass()">&nbsp;</i>
+                                                                    @Model.PhoneUseTypeMasterId
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Original Value">
+                                                                <span data-toggle="tooltip" title="Original Value">
+                                                                    @Model.PhoneUseTypeMasterId_OriginalValue
+                                                                </span>
+                                                            </td>
+                                                            <td data-header="Source Field Id">
+                                                                @(Model.PhoneUseTypeMasterId_Status == "Not Provided" ? Html.Raw("<i role='img' class='fas fa-exclamation-triangle'></i> Not Provided in " + @Model.System) : Html.DisplayFor(m => m.PhoneUseTypeMasterId_Source))
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Source Data) -->
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // ConstituentMasterId ---
+            var ConstituentMasterIdDropDown = $('select#ConstituentMasterId');
+            var personMethod = '@Html.Raw(Url.Action("GetConstituents", "DropDowns"))';
+
+            $(ConstituentMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true,
+                width: '100%',
+                ajax: {
+                    delay: 250,
+                    url: personMethod,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: function (params) {
+                        var queryParams = {
+                            term: params.term, // search term
+                            _type: 'query_append',
+                            selected: true,
+                            page: params.page || 1
+                        }
+                        return queryParams;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data,
+                            pagination: {
+                                more: (params.page * 5) < data.length
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: '-- Choose Constituent --',
+                minimumInputLength: 3,
+                //minimumResultsForSearch: 5,
+                templateResult: function (data) {
+                    var $result = $("<span></span>");
+                    $result.text(data.text);
+                    return $result;
+                },
+                templateSelection: function (data) {
+                    return data.text;
+                }
+            });
+
+            // Initialize select2 with Current Value
+            var savedValue = '@(string.Format("{0}{1}{2}", (string.IsNullOrEmpty(Model.LastName) ? string.Empty : $"{Model.LastName}, "), Model.FirstName, (string.IsNullOrEmpty(Model.UAPersonId) ? string.Empty : $" ({Model.UAPersonId})")))'
+            console.log('Selected Constituent value: ' + savedValue);
+
+            var masterId = @(Html.Raw(string.IsNullOrEmpty(Model.ConstituentMasterId) ? "null" : $"'{Model.ConstituentMasterId}'"));
+
+            if (masterId != null) {
+                var savedOption = new Option(savedValue, masterId, true);
+                $(ConstituentMasterIdDropDown).append(savedOption).trigger('change');
+            };
+
+            // Get/Set Current Drop-Down Value:
+            $(ConstituentMasterIdDropDown).on('change', function () {
+
+                var currentConstituentMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentConstituentMasterIdSelectListValue == null || currentConstituentMasterIdSelectListValue == "") {
+                    $('#FirstName').val(null);
+                    $('#LastName').val(null);
+                    $('#UAPersonId').val(null);
+                    $('#ConstituentSourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetConstituent", "Constituent"))' + '/' + currentConstituentMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#FirstName').val(data.firstName);
+                        $('#LastName').val(data.lastName);
+                        $('#UAPersonId').val(data.uaPersonId);
+                        $('#ConstituentSourceSystemRecordId').val(data.constituentSourceSystemRecordId);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // PhoneNumber ---
+            var PhoneNumberInput = $('input#PhoneNumber');
+            $(PhoneNumberInput).on('keyup change propertychange paste input', function () {
+
+                $('#PhoneMasterId').val(null);
+
+                //var currentPhoneMasterIdValue = $(this).val();
+
+                //if (currentPhoneMasterIdValue == "" || currentPhoneMasterIdValue == null) {
+                //    $('#PhoneNumber').val(null);
+                //} else {
+                //    $('#PhoneNumber').val(data.countrySourceSystemRecordId);
+                //};
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // CountryMasterId ---
+            var CountryMasterIdDropDown = $('select#CountryMasterId');
+            $(CountryMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true,
+                width: '100%',
+                placeholder: '-- Choose Country Code --',
+            });
+
+            var clearButtonClicked = false;
+            var clearButton = $('.select2-selection__clear');
+            $(clearButton).on('click', function () {
+                clearButtonClicked = true;
+                console.log('clearButton clicked, and its value is ' + clearButtonClicked);
+                $(this).parents('.form-group').find('.form-control').val(null).trigger('change');
+                $('#CountrySourceSystemRecordId').val(null);
+            });
+
+            // Get/Set Current Drop-Down Value:
+            $(CountryMasterIdDropDown).on('change', function () {
+
+                var currentCountryMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentCountryMasterIdSelectListValue == "" || currentCountryMasterIdSelectListValue == null) {
+                    $('#CountrySourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetCountryDialingCode", "Constituent"))' + '/' + currentCountryMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#CountrySourceSystemRecordId').val(data.countrySourceSystemRecordId);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // PhoneLineTypeMasterId ---
+            var PhoneLineTypeMasterIdDropDown = $('select#PhoneLineTypeMasterId');
+            $(PhoneLineTypeMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true,
+                placeholder: '-- Choose Line Type --',
+                width: '100%'
+            });
+
+            var clearButtonClicked = false;
+            var clearButton = $('.select2-selection__clear');
+            $(clearButton).on('click', function () {
+                clearButtonClicked = true;
+                console.log('clearButton clicked, and its value is ' + clearButtonClicked);
+                $(this).parents('.form-group').find('.form-control').val(null).trigger('change');
+                $('#PhoneLineTypeSourceSystemRecordId').val(null);
+            });
+
+            // Get/Set Current Drop-Down Value:
+            $(PhoneLineTypeMasterIdDropDown).on('change', function () {
+
+                var currentPhoneLineTypeMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentPhoneLineTypeMasterIdSelectListValue == "" || currentPhoneLineTypeMasterIdSelectListValue == null) {
+                    $('#PhoneLineType').val(null);
+                    $('#PhoneLineTypeSourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetPhoneLineType", "Constituent"))' + '/' + currentPhoneLineTypeMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#PhoneLineType').val(data.lineType);
+                        $('#PhoneLineTypeSourceSystemRecordId').val(data.phoneLineTypeSourceSystemRecordId);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // PhoneUseTypeMasterId ---
+            var PhoneUseTypeMasterIdDropDown = $('select#PhoneUseTypeMasterId');
+            $(PhoneUseTypeMasterIdDropDown).select2({
+                selectOnClose: false, // select currently highlighted option when menu is closed
+                closeOnSelect: true, // close menu once item is selected
+                allowClear: true,
+                placeholder: '-- Choose Use Type --',
+                width: '100%'
+            });
+
+            var clearButtonClicked = false;
+            var clearButton = $('.select2-selection__clear');
+            $(clearButton).on('click', function () {
+                clearButtonClicked = true;
+                console.log('clearButton clicked, and its value is ' + clearButtonClicked);
+                $(this).parents('.form-group').find('.form-control').val(null).trigger('change');
+                $('#PhoneUseTypeSourceSystemRecordId').val(null);
+            });
+
+            // Get/Set Current Drop-Down Value:
+            $(PhoneUseTypeMasterIdDropDown).on('change', function () {
+
+                var currentPhoneUseTypeMasterIdSelectListValue = $(this).find(":selected").val();
+
+                if (currentPhoneUseTypeMasterIdSelectListValue == "" || currentPhoneUseTypeMasterIdSelectListValue == null) {
+                    $('#PhoneUseType').val(null);
+                    $('#PhoneUseTypeSourceSystemRecordId').val(null);
+                } else {
+                    var url = '@Html.Raw(Url.Action("GetPhoneUseType", "Constituent"))' + '/' + currentPhoneUseTypeMasterIdSelectListValue;
+                    $.getJSON(url, function (data) {
+                        console.log(data);
+                        console.log("success");
+                        $('#PhoneUseType').val(data.useType);
+                        $('#PhoneUseTypeSourceSystemRecordId').val(data.phoneUseTypeSourceSystemRecordId);
+                    });
+                };
+            });
+
+
+            ////////////////////////////////////////////////////////////////////////////
+
+
+            // For use in the external javascript file (site.js) ::
+            var systemVariableName = '@Model.System';
+            window.systemVariableName = '@Model.System';
+            console.log("Source System: " + window.systemVariableName);
+
+
+            // --------------------------------------------------------------
+
+
+
+            var form = $('.content-container > form');
+            var formGroup = $(':input').parent('.form-group');
+            var editedClass = 'fa-pen-square';
+
+            // Get Current Form Field Value:
+            // -------------------------------------------------
+            $(form).on('keyup change paste', ':input', function () {
+
+                var formField = $(this);
+                var thisFormFieldsValue = $(this).val();
+                //console.log('form field value: ' + thisFormFieldsValue);
+
+                return (thisFormFieldsValue);
+                console.log(thisFormFieldsValue);
+
+            });
+
+
+            var dfOptions = {
+                denoteDirtyForm: true,
+                denoteDirtyOptions: true,
+                dirtyOptionClass: "dirtyChoice",
+                trimText: true,
+                textboxContext: 'parent',
+
+                preFieldChangeCallback: function (originalValue) {
+                    //$("#callbackBox").html("[preFieldChangeCallback] Original value of field '" + $(this).attr("name") + "' is: " + originalValue + "<br />");
+                },
+                fieldChangeCallback: function (originalValue, result) {
+                    //$("#callbackBox").append("[fieldChange callback] Original value of field  '" + $(this).attr("name") + "' is: " + originalValue + ".  Dirty status is " + result + "<br />");
+                },
+                formChangeCallback: function (result, dirtyFieldsArray) {
+                    //var recordName = "@Model.PhoneNumber";
+                    var dirtyFieldParentPanelTitle = $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert');
+                    var cleanFieldParentPanelTitle = $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert');
+                    if (result) { // Dirty
+                        //$("#callbackBox").append("[formChangeCallback] Form is dirty. Dirty fields are: " + dirtyFieldsArray + "<br />");
+                        $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                        $(this).find("#btnResolve").removeAttr("disabled");
+                        //$(dirtyFieldParentPanelTitle).removeClass("hide").html("*" + recordName + "'s record has been modified*");
+                        $(dirtyFieldParentPanelTitle).removeClass("hide").html("*Save your changes*");
+                        $('#btnSavePartial').removeAttr('disabled');
+                        $('#IsChanged').val(true);
+
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                            $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert').removeClass("hide").html("*Save your changes*");
+                        });
+                    }
+                    else { // Clean
+                        //$("#callbackBox").append("[formChangeCallback] Form is clean.<br />");
+                        $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                        $(this).find("#btnSavePartial").attr("disabled", "disabled");
+                        $('#IsChanged').val(false);
+
+                        $(cleanFieldParentPanelTitle).addClass("hide").html("");
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                            $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert').addClass("hide").html("");
+                        });
+                    }
+                    //Scrolls the logging div to the bottom
+                    //var objDiv = document.getElementById("callbackBox");
+                    //objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            };
+
+            $(form).dirtyFields(dfOptions);
+
+
+        });
+    </script>
+
+}

@@ -1,0 +1,303 @@
+﻿@using Sentry.WebApp.ViewModels.GiftDisbursements
+@using Sentry.Domain.AccountsPayable.Entities
+@model Sentry.WebApp.ViewModels.Invoices.PDFViewModelSimplified
+
+@{
+    Layout = "_PDFLayout";
+
+}
+
+<div id="content-container" class="content-container" role="main">
+    <div class="panel panel-secondary review-page">
+        <div class="panel-heading">
+            <h3 class="panel-title">Form number: <span class="record-text h3">@Model.FormNumber</span></h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-12 col-md-12 panel-container">
+                <div class="panel panel-secondary">
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <table id="" class="table details-table">
+                                    <thead class="theader">
+                                        <tr>
+                                            <th class="col-md-1">PreparedBy</th>
+                                            <th class="col-md-1">Prepared Date</th>
+                                            <th class="col-md-2">Division</th>
+                                            <th class="col-md-2">Department</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PreparedByFirstName @Model.PreparedByLastName</td>
+                                            <td>
+                                                @Model.CreatedOn
+                                            </td>
+                                            <td>@Model.DisbursementFrom.CollegeCode - @Model.DisbursementFrom.CollegeName</td>
+                                            <td>@Model.DisbursementFrom.DepartmentCode - @Model.DisbursementFrom.DepartmentName</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <label>U of A Business-Related Purpose</label>
+                                <br />
+                                <p>@Model.DisbursementFrom.Purpose</p>
+                            </div>
+                        </fieldset>
+                        @if (Model.Type == Constants.EMForm)
+                        {
+                            <fieldset>
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <table id="" class="table details-table">
+                                        <caption class="sr-only">Payee Details</caption>
+                                        <thead class="theader">
+                                            <tr>
+                                                <th class="col-md-1">UA Employee</th>
+                                                <th class="col-md-1">Payee Name</th>
+                                                <th class="col-md-2">Address</th>
+                                                <th class="col-md-1">Payment Type</th>
+                                                <th class="col-md-1">Special Instructions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>@Model.DisbursementTo.Payee.UAEmployee</td>
+                                                <td>
+                                                    @Model.DisbursementTo.Payee.PayeeName
+                                                </td>
+                                                <td>@Model.DisbursementTo.Payee.PayeeAddress1 <br /> @Model.DisbursementTo.Payee.PayeeCity <br /> @Model.DisbursementTo.Payee.PayeeState</td>
+                                                <td>@Model.DisbursementTo.Payee.PayeePaymentType</td>
+                                                <td>@Model.DisbursementTo.Payee.PayeeSpecialInstructions</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+                        }
+                        @if (Model.Type == Constants.EMForm)
+                        {
+                            <fieldset>
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <h3>1099 Information:</h3>
+                                    <table id="" class="table 1099-table">
+                                        <thead class="theader">
+                                            <tr>
+                                                <th class="col-md-2">Rents Amount</th>
+                                                <th class="col-md-1">Other Income Amount</th>
+                                                <th class="col-md-1">Nonemployee Compensation</th>
+                                                <th class="col-md-2">Gross proceeds paid to an attorney</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>@(Model.RentsAmount.HasValue ? Model.RentsAmount.Value.ToString("C") : 0.ToString("C"))</td>
+                                                <td>@(Model.OtherIncomeAmount.HasValue ? Model.OtherIncomeAmount.Value.ToString("C") : 0.ToString("C"))</td>
+                                                <td>@(Model.NonemployeeCompensationAmount.HasValue ? Model.NonemployeeCompensationAmount.Value.ToString("C") : 0.ToString("C"))</td>
+                                                <td>@(Model.GrossProceedsPaidToAttorneyAmount.HasValue ? Model.GrossProceedsPaidToAttorneyAmount.Value.ToString("C") : 0.ToString("C"))</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </fieldset>
+
+
+                        }
+
+                        <fieldset>
+                            <legend class="sr-only">Transaction Details</legend>
+                            <div class="col-xs-12 col-md-12">
+                                <hr />
+                                @*<h3>Transaction</h3>*@
+                                <!-- Ted's Temp Table -->
+                                @foreach (var project in Model.GiftDisbursementProjects)
+                                {
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <!--For each project create a table for it-->
+
+                                        <table id="" class="table transaction-table">
+                                            @*<caption class="sr-only">Transaction Details</caption>*@
+                                            <thead class="theader">
+                                                <tr>
+                                                    <th colspan="4">
+                                                        @*<a href="@project.BlackbaudProjectUrl" target="_blank">@project.ProjectId - @project.ProjectName</a>*@
+                                                        <span>@project.ProjectId - @project.ProjectName</span>
+                                                    </th>
+                                                    <th>
+                                                        <span class="project-balance pull-right" title="Project: @project.ProjectId">Balance: </span>
+                                                    </th>
+                                                    <th><span id="projectBalance" title="Project Balance for @project.ProjectId - @project.ProjectName" class="@(project.ProjectBalance < 0 ? "text-danger" : "")">@project.ProjectBalance.ToString("C")</span></th>
+                                                </tr>
+                                            </thead>
+                                            <thead>
+                                                <tr>
+                                                    @if (Model.Type != Constants.EMForm)
+                                                    {
+                                                        <th class="col-md-2">UA KFS Account</th>
+                                                    }
+                                                    <th class="@(Model.Type == Constants.STForm ? "col-md-3" : "col-md-2")" style="font-size: 13px">UA Object Code</th>
+                                                    <th class="col-md-2" style="font-size: 13px">UA Sub-account</th>
+                                                    <th class="col-md-2" style="font-size: 13px">UA Project Code</th>
+                                                    @if (Model.Type == Constants.EMForm)
+                                                    {
+                                                        <th class="col-md-1" style="font-size: 13px">Fundraising</th>
+
+                                                    }
+                                                    <th class="col-md-2" style="font-size: 13px">Debit Account #</th>
+                                                    <th class="col-md-2" style="font-size: 13px">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- for each project item put in the details-->
+                                                @foreach (var item in project.ProjectItems)
+                                                {
+                                                    <tr>
+                                                        @if (Model.Type != Constants.EMForm)
+                                                        {
+                                                            <td>
+                                                                @if (item.UaAccount.StartsWith("2") || item.UaAccount.StartsWith("7"))
+                                                                {
+                                                                    <span id="UAKFSAccount" name="UAKFSAccount" class=""><mark style="background-color: #FCF3CF; color: #000000 ">@item.UaAccount</mark></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span id="UAKFSAccount" name="UAKFSAccount" class="">@item.UaAccount</span>
+                                                                }
+
+                                                            </td>
+                                                        }
+                                                        <td>
+                                                            <span class="">@item.ObjectCode</span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="">@item.SubAccountCode</span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="">@item.ProjectCode</span>
+                                                        </td>
+                                                        @if (Model.Type == Constants.EMForm)
+                                                        {
+                                                            <td>
+                                                                <span class="">@item.FundraisingExpense</span>
+                                                            </td>
+
+                                                        }
+                                                        <td>
+                                                            <span class="">@item.DebitAccountNumber</span>
+                                                        </td>
+                                                        <td>
+                                                            <span id="Amount" name="Amount" class="">@item.Amount.ToString("C")</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="col-md-2 text-right pr-2 label-top">Line Item Description</td>
+                                                        <td colspan="5">
+                                                            <span class="">@item.Description</span>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    @{
+                                                        var balance = project.ProjectBalance - project.ProjectItems.Sum(x => x.Amount);
+                                                        var amntClass = String.Empty;
+                                                        if (balance < 0)
+                                                        {
+                                                            amntClass = "text-danger";
+                                                        }
+                                                    }
+                                                    <td colspan="5" class="text-right">Project Total:</td>
+                                                    <td class="@amntClass">@project.ProjectItems.Sum(x => x.Amount).ToString("C")</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="sr-only">Supporting Documents</legend>
+                            <hr />
+                            <div class="col-xs-12 col-md-12">
+                                <ul>
+                                    @foreach (var doc in Model.SupportingDocuments)
+                                    {
+                                        <li>@doc</li>
+                                    }
+                                </ul>                             
+
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="sr-only">Approver History</legend>
+                            <hr />
+                            <div class="col-xs-12 col-md-12">
+                                <table id="ApprovalHistoryTable" class="table approvers">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-md-2">Approver</th>
+                                            <th class="col-md-2">Approver Type</th>
+                                            <th class="col-md-2">Approved On</th>
+                                            <th class="col-md-6">Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var approver in Model.ApprovalHistory)
+                                        {
+                                            <tr>
+                                                <td>@approver.Name</td>
+                                                <td>@approver.Type</td>
+                                                @if (approver.ApprovedOn == DateTime.MinValue)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    if (approver.Approved == true)
+                                                    {
+                                                        <td><i class="fa fa-circle-check" title="Approved by @approver.Name, on @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")"></i> @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")</td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td><i class="rejectedStatus fa fa-exclamation-triangle text-danger" title="Rejected by @approver.Name, on @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")"></i> @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")</td>
+
+                                                    }
+                                                }
+                                                <td>@approver.Comments</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend class="sr-only">Post Date</legend>
+                            <hr />
+                            <div class="col-xs-12 col-md-12">
+
+                                <div class="form-group col-md-3">
+                                    <label class="control-label" for="PostDate">@Model.PostDate</label>
+
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                    </div>
+                </div>
+            </div> <!-- END .panel-container-->
+        </div> <!--END .panel-body -->
+
+
+    </div> <!--END PANEL SECONDARY-->
+
+
+</div>
+

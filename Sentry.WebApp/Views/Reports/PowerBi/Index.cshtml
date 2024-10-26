@@ -1,0 +1,31 @@
+﻿@model Sentry.WebApp.ViewModels.Reports.PowerBiReportViewModel
+
+<link rel="stylesheet" type="text/css" href="~/css/powerbi-reports.css" />
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard (Report Listing)</a></li>
+    <li class="active">@Model.ReportDisplayName Report</li>
+</ol>
+<div id="content-container" class="content-container" role="main">
+    <!--Power BI Report-->   
+
+    <div class="container">
+        <section id="report-container" class="embed-container">
+        </section>
+
+        <!-- Used to display report embed error messages -->
+        <section class="error-container">
+        </section>
+    </div>
+    
+</div>
+
+@section scripts {
+    <script>
+        var ReportId = "@Model.ReportId";
+        var FilterTable = "@Model.FilterTable";
+        var FilterColumn = "@Model.FilterColumn";
+        var FilterValue = "@Model.FilterValue";
+    </script>
+    @await Html.PartialAsync("PowerBI/_Scripts")
+}

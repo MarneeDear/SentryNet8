@@ -1,0 +1,33 @@
+﻿@model Sentry.WebApp.ViewModels.Reports.ReportViewModel
+
+<div id="content-container" class="content-container" role="main">
+    <!--Tableau Report-->
+    @* <div class="table-responsive">
+        <div class="container-fluid">
+            <a href="@Url.Action("ViewReportGuide", "Reports", new { reportType = @Model.ReportType } )" target="_blank">Click here to view the report guide.</a>
+        </div> *@
+
+        <div class="container">
+            <div id="result_grid">
+                <div class="tableauPlaceholder" style="width: @Model.Width; height: @Model.Height;">
+                <tableau-viz id="tableau-viz"
+                         src="https://uafdn-@Model.Environment-tab19.concoursehost.com/views/@Model.ReportName"
+                         width="@Model.Width"
+                         height="@Model.Height"
+                         hide-tabs
+                         toolbar="bottom">
+                        <viz-filter field="EmployeeFilter"
+                                    value="@Model.TableauId.ToUpper()">
+                        </viz-filter>
+                    <custom-parameter name=":showShareOptions" value="false"></custom-parameter>
+                    <custom-parameter name=":showAppBanner" value="false"></custom-parameter>
+                </tableau-viz>
+                </div>
+            </div>
+        </div>
+    </div>
+@* </div> *@
+
+@section scripts {
+    @await Html.PartialAsync("_Scripts")
+}

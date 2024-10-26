@@ -1,0 +1,164 @@
+﻿@model Sentry.WebApp.ViewModels.Administration.IntegrationHealthViewModel
+    <head>
+        <link rel="stylesheet" href="https://cdn.uadigital.arizona.edu/lib/ua-bootstrap/v1.0.0-beta.26/ua-bootstrap.min.css">
+    </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<hr class="clearfix">
+<h3>Integration Health</h3>
+<p>
+    <div id="collapsebutton" class="nodisp expandcollapse btn btn-small btn-success no-print" style="margin: 10px 0px; float: right;"><i class="glyphicon glyphicon-minus"></i> Collapse All</div>
+    <div id="expandbutton" class="disp expandcollapse btn btn-small btn-success no-print" style="margin: 10px 0px;float:right;"><i class="glyphicon glyphicon-plus"></i> Expand All</div>
+</p>
+<p><span style="color: #01C222"><b>Green</b></span> means good: All Insert triggers ON, and zero unprocessed records.<br /><span style="color: #FE0321"><b>Red</b></span> means bad: At least one Insert trigger turned OFF, and/or some unprocessed records.</p> 
+<p>Click to expand the integration title bar to see more detail.</p>
+
+<div style="margin-left: 10px; margin-right: 10px;">
+    @foreach (var entity in Model.Entities)
+    {
+        @foreach (var category in entity.Categories)
+        {
+            <div class="row">
+                <div class="table-responsive accordion-toggle">
+                    <table id="integrationStatus" class="table statusTable table-striped childRowTableParent">
+                        <tbody>
+                            <tr class="accordion-toggle goodDataHistory" id="master_@category.Id" data-toggle="collapse" data-target="#collapseStudent_@category.Id" aria-expanded="false" aria-controls="collapseStudent_@category.Id">
+                                <td colspan="6" class="headStart">
+                                    <i role="img" class="fas">&#xA0;</i>  @entity.Name &gt; @category.DisplayName
+                                </td>
+                            </tr>
+                            <tr class="accordian-body collapse" id="collapseStudent_@category.Id">
+                                <td colspan="6">
+                                    <table class="table table-striped student childRowTableChild generatedTable" id="categoryTable_@category.Id">
+                                        <thead>
+                                            <tr>
+                                                <th> </th>
+                                                <th> </th>
+                                                <th colspan="4" class="triggerLeft"><center>Trigger Status</center></th>
+                                            </tr>
+                                            <tr id="integrationStateHed">
+                                                <th scope="col">System</th>
+                                                <th scope="col">Unprocessed Records</th>
+                                                <th scope="col" class="triggerLeft"><center>History</center></th>
+                                                <th scope="col"><center>Stage</center></th>
+                                                <th scope="col"><center>Good</center></th>
+                                                <th scope="col"><center>Bad</center></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="statusItems">
+                                            @foreach (var sourcesystem in category.SourceSystems)
+                                            {
+                                                var statusRowId = $"statusRow_{sourcesystem.SystemId}_{sourcesystem.IntegrationId}";
+                                                <tr class="statusRow" id="@statusRowId">
+                                                    <td class="dataField" id="sourceSystem">@sourcesystem.DisplayName</td>
+                                                    <td class="dataField" id="unprocessed">Loading data ...</td>
+                                                    <td class="dataField" id="historyTrigger"></td>
+                                                    <td class="dataField" id="stageTrigger"></td>
+                                                    <td class="dataField" id="goodTrigger"></td>
+                                                    <td class="dataField" id="badTrigger"></td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script type="text/javascript">
+
+    function updateIntegrationState(systemId, integrationId, categoryId) {
+        var statusRowId = '#statusRow' + '_' + systemId + '_' + integrationId;
+        var masterRowId = '#master' + '_' + categoryId;
+        var statusRow = $(statusRowId);
+        var masterRow = $(masterRowId);
+
+        $.getJSON({
+            url: "@Html.Raw(Url.Action("LoadIntegrationHealth", "Administration"))",
+            type: "GET",
+            data: {
+                "systemId": systemId,
+                "integrationId": integrationId
+            },
+            dataType: "json"
+      })
+            .fail(function (jqXHR, err) {
+                var errorMsg = '';
+                if (jqXHR.status != 200) {
+                    statusRow.find("#unprocessed").text("Error retrieving integration state.");
+                    toggleMasterRowClass(false, masterRow);
+                }
+                if (jqXHR.status == 500) {
+                    errorMsg = 'Internal Server Error. [500]';
+                    console.log(errorMsg);
+                }
+           })
+
+        .done(function (data, textStatus, jqXHR) {
+            statusRow.find("#historyTrigger").text(data.historyInsertTriggerEnabled);
+            statusRow.find("#stageTrigger").text(data.stageInsertTriggerEnabled);
+            statusRow.find("#goodTrigger").text(data.goodInsertTriggerEnabled);
+            statusRow.find("#badTrigger").text(data.badInsertTriggerEnabled);
+
+            if (!data.historyInsertTriggerEnabled) {
+                statusRow.find("#historyTrigger").addClass('statusRed');
+                toggleMasterRowClass(false, masterRow);
+            }
+            else {
+                statusRow.find("#historyTrigger").addClass('statusGreen');
+            }
+            if (!data.stageInsertTriggerEnabled) {
+                statusRow.find("#stageTrigger").addClass('statusRed');
+                toggleMasterRowClass(false, masterRow);
+            }
+            else {
+                statusRow.find("#stageTrigger").addClass('statusGreen');
+            }
+
+            if (!data.goodInsertTriggerEnabled) {
+                statusRow.find("#goodTrigger").addClass('statusRed');
+                toggleMasterRowClass(false, masterRow);
+            }
+            else {
+                statusRow.find("#goodTrigger").addClass('statusGreen');
+            }
+
+            if (!data.badInsertTriggerEnabled) {
+                statusRow.find("#badTrigger").addClass('statusRed');
+                toggleMasterRowClass(false, masterRow);
+            }
+            else {
+                statusRow.find("#badTrigger").addClass('statusGreen');
+            }
+        })
+    };
+
+    function toggleMasterRowClass(isGood, masterRow) {
+        if (!isGood) {
+            masterRow.addClass("badDataHistory");
+            masterRow.removeClass("goodDataHistory");
+        }
+    };
+
+    $(document).ready(function () {
+
+        var entities = @Html.Raw(Json.Serialize(Model.Entities));
+
+        entities.forEach(function (entity, index) {
+            //var categories = entity.categories;
+            entity.categories.forEach(function (cat, index) {
+                cat.sourceSystems.forEach(function (sys, index) {
+                    updateIntegrationState(sys.systemId, sys.integrationId, cat.id);
+                });
+            });
+        });        
+
+    });
+
+</script>

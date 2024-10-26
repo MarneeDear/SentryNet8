@@ -1,0 +1,19 @@
+﻿@using Sentry.WebApp.ViewModels;
+@{
+    var modelHelper = new ModelHelper(Context);
+}
+
+
+<script>
+    //var Organization = "UAF";
+    var GetGiftDisbursementsURL = '@Url.Action("Review", "GiftDisbursements")';
+    var processDisbursementURL ='@Url.Action("Process", "GiftDisbursements")';
+    var getDepartmentsURL = '@Url.Action("getDepartments", "GiftDisbursements")';
+    var getProjectsURL = '@Url.Action("GetProjects", "GiftDisbursements")';
+    var getProjectPurposeURL = '@Url.Action("GetProjectPurpose", "GiftDisbursements")';
+    var uploadSupportingDocumentURL = '@Url.Action("UploadSupportingDocument")';
+    var deleteSupportingDocumentURL = '@Url.Action("DeleteSupportingDocument")';
+    var addItemURL = '@Url.Action("AddItem")';
+    var viewSupportingDocumentURL = "@Url.Action("ViewSupportingDocument")";
+</script>
+<script type="text/javascript" src="@Url.Content($"~/js/GiftDisbursement.js?version={modelHelper.Version}")"></script>

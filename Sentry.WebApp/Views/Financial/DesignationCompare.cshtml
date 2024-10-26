@@ -1,0 +1,113 @@
+﻿@model Sentry.WebApp.ViewModels.DesignationCompareViewModel
+
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="designationMatchCompareModalLabel">Compare Records for: <span class="record-text h3">@Model.DesignationName</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="panel-toolbar">
+        <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.IntegrationDate)</span>
+        <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+    </div>
+    <div class="row matching">
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@Html.Raw(Model.System ?? " Source " + @Model.System) Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt data-different="@(Model.DesignationId_IsDifferent.ToString())">@Model.DesignationId_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationId_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationId)</dd>
+                        <dt data-different="@(Model.DesignationName_IsDifferent.ToString())">@Model.DesignationName_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationName_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationName)</dd>
+                        <dt data-different="@(Model.DesignationTypeName_IsDifferent.ToString())">@Model.DesignationTypeName_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationTypeName_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationTypeName)</dd>
+                        <dt data-different="@(Model.StartDate_IsDifferent.ToString())">@Model.StartDate_BusinessName:</dt>
+                        <dd data-different="@(Model.StartDate_IsDifferent.ToString())">@Html.DisplayFor(m => m.StartDate)</dd>
+                        <dt data-different="@(Model.EndDate_IsDifferent.ToString())">@Model.EndDate_BusinessName:</dt>
+                        <dd data-different="@(Model.EndDate_IsDifferent.ToString())">@Html.DisplayFor(m => m.EndDate)</dd>
+                        <dt data-different="@(Model.KFSAccountCode_IsDifferent.ToString())">@Model.KFSAccountCode_BusinessName:</dt>
+                        <dd data-different="@(Model.KFSAccountCode_IsDifferent.ToString())">@Html.DisplayFor(m => m.KFSAccountCode)</dd>
+                        <dt data-different="@(Model.VSECategoryName_IsDifferent.ToString())">@Model.VSECategoryName_BusinessName:</dt>
+                        <dd data-different="@(Model.VSECategoryName_IsDifferent.ToString())">@Html.DisplayFor(m => m.VSECategoryName)</dd>
+                        <dt data-different="@(Model.GLOrganizationName_IsDifferent.ToString())">@Model.GLOrganizationName_BusinessName:</dt>
+                        <dd data-different="@(Model.GLOrganizationName_IsDifferent.ToString())">@Html.DisplayFor(m => m.GLOrganizationName)</dd>
+                        <dt data-different="@(Model.DesignationUseTypeName_IsDifferent.ToString())">@Model.DesignationUseTypeName_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationUseTypeName_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationUseTypeName)</dd>
+                        <dt data-different="@(Model.OrganizationalUnit_IsDifferent.ToString())">@Model.OrganizationalUnit_BusinessName:</dt>
+                        <dd data-different="@(Model.OrganizationalUnit_IsDifferent.ToString())">@Html.DisplayFor(m => m.OrganizationalUnit)</dd>
+                    </dl>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">MDS Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt data-different="@(Model.DesignationId_IsDifferent.ToString())">@Model.DesignationId_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationId_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationId_Compare)</dd>
+                        <dt data-different="@(Model.DesignationName_IsDifferent.ToString())">@Model.DesignationName_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationName_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationName_Compare)</dd>
+                        <dt data-different="@(Model.DesignationTypeName_IsDifferent.ToString())">@Model.DesignationTypeName_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationTypeName_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationTypeName_Compare)</dd>
+                        <dt data-different="@(Model.StartDate_IsDifferent.ToString())">@Model.StartDate_BusinessName:</dt>
+                        <dd data-different="@(Model.StartDate_IsDifferent.ToString())">@Html.DisplayFor(m => m.StartDate_Compare)</dd>
+                        <dt data-different="@(Model.EndDate_IsDifferent.ToString())">@Model.EndDate_BusinessName:</dt>
+                        <dd data-different="@(Model.EndDate_IsDifferent.ToString())">@Html.DisplayFor(m => m.EndDate_Compare)</dd>
+                        <dt data-different="@(Model.KFSAccountCode_IsDifferent.ToString())">@Model.KFSAccountCode_BusinessName:</dt>
+                        <dd data-different="@(Model.KFSAccountCode_IsDifferent.ToString())">@Html.DisplayFor(m => m.KFSAccountCode_Compare)</dd>
+                        <dt data-different="@(Model.VSECategoryName_IsDifferent.ToString())">@Model.VSECategoryName_BusinessName:</dt>
+                        <dd data-different="@(Model.VSECategoryName_IsDifferent.ToString())">@Html.DisplayFor(m => m.VSECategoryName_Compare)</dd>
+                        <dt data-different="@(Model.GLOrganizationName_IsDifferent.ToString())">@Model.GLOrganizationName_BusinessName:</dt>
+                        <dd data-different="@(Model.GLOrganizationName_IsDifferent.ToString())">@Html.DisplayFor(m => m.GLOrganizationName_Compare)</dd>
+                        <dt data-different="@(Model.DesignationUseTypeName_IsDifferent.ToString())">@Model.DesignationUseTypeName_BusinessName:</dt>
+                        <dd data-different="@(Model.DesignationUseTypeName_IsDifferent.ToString())">@Html.DisplayFor(m => m.DesignationUseTypeName_Compare)</dd>
+                        <dt data-different="@(Model.OrganizationalUnit_IsDifferent.ToString())">@Model.OrganizationalUnit_BusinessName:</dt>
+                        <dd data-different="@(Model.OrganizationalUnit_IsDifferent.ToString())">@Html.DisplayFor(m => m.OrganizationalUnit_Compare)</dd>
+                    </dl>
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-link no-match text-left" data-dismiss="modal" data-toggle="tooltip" title="Not a Match"><i role="img" class="fas fa-not-equal">&nbsp;</i> Not a Match</button>
+                    <button type="submit" class="btn btn-primary match pull-right" title="Match this Record" formaction="@Url.Action("DesignationManualMatch", "Financial", new { Id = Model.Id, IntegrationId = Model.IntegrationId, SystemId = Model.SystemId, MasterId = Model.MasterId })"><i role="img" class="fas fa-check">&nbsp;</i> Match!</button>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    @*<button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>*@
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

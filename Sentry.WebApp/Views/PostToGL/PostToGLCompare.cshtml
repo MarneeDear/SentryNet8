@@ -1,0 +1,111 @@
+﻿@model Sentry.WebApp.ViewModels.PostToGLCompareViewModel
+
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="officeLocationMatchCompareModalLabel">Compare Records for: <span class="record-text h3">@Model.DesignationName</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="panel-toolbar">
+        <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.IntegrationDate)</span>
+        <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+    </div>
+    <div class="row matching">
+        <div class="col-sm-12 col-md-6">
+            <h5><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId)</h5>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Integration Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Model.DesignationId_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationId)</dd>
+                        <dt>@Model.DesignationName_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationName)</dd>
+                        <dt>@Model.UADepartment_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.UADepartment)</dd>
+                        <dt>@Model.DesignationType_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationType)</dd>
+                        <dt>@Model.DesignationSubtype_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationSubtype)</dd>
+                        <dt>@Model.DesignationStatus_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationStatus)</dd>
+                        <dt>@Model.StartDate_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.StartDate)</dd>
+                        <dt>@Model.EndDate_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.EndDate)</dd>
+                        <dt>@Model.DesignationState_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationState)</dd>
+                    </dl>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-6">
+            <h5><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId_Compare)</h5>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Compare Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Model.DesignationId_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationId_Compare)</dd>
+                        <dt>@Model.DesignationName_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationName_Compare)</dd>
+                        <dt>@Model.UADepartment_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.UADepartment_Compare)</dd>
+                        <dt>@Model.DesignationType_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationType_Compare)</dd>
+                        <dt>@Model.DesignationSubtype_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationSubtype_Compare)</dd>
+                        <dt>@Model.DesignationStatus_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationStatus_Compare)</dd>
+                        <dt>@Model.StartDate_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.StartDate_Compare)</dd>
+                        <dt>@Model.EndDate_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.EndDate_Compare)</dd>
+                        <dt>@Model.DesignationState_BusinessName:</dt>
+                        <dd>@Html.DisplayFor(m => m.DesignationState_Compare)</dd>
+                    </dl>
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-link no-match text-left" data-dismiss="modal" data-toggle="tooltip" title="Not a Match"><i role="img" class="fas fa-times">&nbsp;</i> Not a Match</button>
+                    <button type="submit" class="btn btn-primary match pull-right" title="Match this Record" formaction="@Url.Action("PostToGLManualMatch", "PostToGL", new { Id = Model.Id, IntegrationId = Model.IntegrationId, SystemId = Model.SystemId, MasterId = Model.MasterId })"><i role="img" class="fas fa-check">&nbsp;</i> Match!</button>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    @*<button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>*@
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

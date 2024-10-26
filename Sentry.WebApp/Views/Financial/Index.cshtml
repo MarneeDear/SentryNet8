@@ -1,0 +1,92 @@
+﻿@model Sentry.WebApp.ViewModels.Reports.ReportListViewModel
+
+<ul class="page-title">
+    <li>
+        <h1>
+            Welcome to Your @Model.Title Dashboard
+        </h1>
+    </li>
+</ul>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="row">
+        <div class="col-sm-12">
+            @*<p class="lead">Welcome to your @Model.Title Dashboard!</p>*@
+            <p>Here is where you'll remediate any @Model.Title records which have failed the business' validation rules in the Data Integration Framework<sup>&#174;</sup><sup>&trade;</sup></p>
+            <p>The @Model.Title Integration is made up of several smaller integrations as indicated by the sub-menu items listed below the @Model.Title heading.</p>
+            <p>Select one of the smaller Integrations on the left to begin the remediation process.</p>
+        </div>
+
+
+    </div><!-- /.row -->
+
+    <div class="row">
+        
+        <div class="col-sm-12">
+            <div>
+                <h1>Power BI Reports</h1>
+            </div>
+            <div id="submenu_nav">
+                <ul style="list-style-type: none;margin-left:-20px;">
+                    @foreach (var report in Model.PowerBiItems)
+                    {
+                        <li>
+                            <a href="@Url.Action("PowerBi", "Reports", new { reportId = report.Report } )">@report.DisplayName</a>
+                            <p>Click <a href="@Url.Action("ViewReportGuide", "Reports", new { reportType = report.ReportGuideId } )" target="_blank">here</a> to view the report guide.</p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <h1>Tableau Reports</h1>
+            </div>
+            <div id="submenu_nav">
+                <ul style="list-style-type: none;margin-left:-20px;">
+                    @foreach(var report in Model.ReportItems)
+                    {
+                        <li>
+                                <a href="@Url.Action("Index", "Reports", new { reportType = report.ReportGuideId } )">@report.DisplayName</a>
+                                <p>Click <a href="@Url.Action("ViewReportGuide", "Reports", new { reportType = report.ReportGuideId } )" target="_blank">here</a> to view the report guide.</p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /.content-container -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Color Variables
+            const colors = {
+                primaryBlue: '#0C234B',
+                primarySkyBlue: '#81D3EB',
+                primaryOasisBlue: '#378DBD',
+                primaryAzuriteBlue: '#1E5288',
+                primaryMidnightBlue: '#001C48',
+
+                primaryRed: '#AB0520',
+                primaryRedBloom: '#EF4056',
+                primaryRedChili: '#8B0015',
+
+                neutralCoolGray: '#E2E9EB',
+                neutralWarmGray: '#F4EDE5',
+
+                secondaryLeaf: '#70B865',
+                secondaryRiver: '#007D84',
+                secondarySilver: '#9EABAE',
+                secondaryMesa: '#a95c42',
+
+                legacyDarkSilver: '#49595E',
+            };
+        });
+    </script>
+}

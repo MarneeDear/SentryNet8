@@ -1,0 +1,55 @@
+﻿@model Sentry.WebApp.ViewModels.IntegrationsStatusesViewModel
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/bootstrap-toggle.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap-toggle.css" />
+    <style>
+        .btn {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<div id="IntegrationStatusesDiv">
+    <table class="table table-bordered table-condensed" id="integrationTable">
+        <thead>
+            <tr>
+                <th style="text-align:center;">@Model.IterateOver</th>
+                <th style="text-align:center;">Staging Table Trigger <br /> <input id="AllStagingTriggersDisable" type="button" class="btn btn-red btn-sm" value="Disable All">&nbsp;<input id="AllStagingTriggersEnable" type="button" class="btn btn-blue btn-sm" value="Enable All"></th>
+                <th style="text-align:center;">Good Table Trigger <br /> <input id="AllGoodTriggersDisable" type="button" class="btn btn-red btn-sm" value="Disable All">&nbsp;<input id="AllGoodTriggersEnable" type="button" class="btn btn-blue btn-sm" value="Enable All"></th>
+                <th style="text-align:center;">Bad Table Trigger <br /> <input id="AllBadTriggersDisable" type="button" class="btn btn-red btn-sm" value="Disable All">&nbsp;<input id="AllBadTriggersEnable" type="button" class="btn btn-blue btn-sm" value="Enable All"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.IntegrationStatuses != null)
+                {
+                    foreach (var integrationStatus in Model.IntegrationStatuses)
+                    {
+                <tr>
+                    @{ if (@Model.IterateOver == "Integration")
+                        {
+                            <td style="text-align: center">@Html.DisplayFor(m => integrationStatus.IntegrationName)</td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center">@Html.DisplayFor(m => integrationStatus.SystemName)</td>
+                        }
+                    }
+                    <td style="text-align: center">
+                        <input id=@Html.DisplayFor(m => integrationStatus.StagingTableTrigger.Table) type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" checked="@integrationStatus.StagingTableTrigger.IsChecked">
+                    </td>
+                    <td style="text-align: center">
+                        <input id=@Html.DisplayFor(m => integrationStatus.GoodTableTrigger.Table) type="checkbox" data-toggle="toggle" width="200" data-on="Enabled" data-off="Disabled" checked="@integrationStatus.GoodTableTrigger.IsChecked">
+                    </td>
+                    <td style="text-align: center">
+                        <input id=@Html.DisplayFor(m => integrationStatus.BadTableTrigger.Table) type="checkbox" data-toggle="toggle" width="200" data-on="Enabled" data-off="Disabled" checked="@integrationStatus.BadTableTrigger.IsChecked">
+                    </td>
+                </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

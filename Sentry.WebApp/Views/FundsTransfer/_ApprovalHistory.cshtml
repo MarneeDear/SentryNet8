@@ -1,0 +1,41 @@
+﻿@model Sentry.WebApp.ViewModels.FundsTransfer.FundsTransferViewModel
+
+<table id="ApprovalHistoryTable" class="table approvers">
+    <thead>
+        <tr>
+            <th class="col-md-2">Approver</th>
+            <th class="col-md-2">Approver Type</th>
+            <th class="col-md-2">Approved On</th>
+            <th class="col-md-6">Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var approver in Model.ApprovalHistory)
+        {
+            <tr>
+                <td>@approver.FirstName @approver.LastName</td>
+                <td>@approver.Type</td>
+                @if (approver.ApprovedOn == DateTime.MinValue)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    if (approver.Approved == true)
+                    {
+                        <td><i class="fa fa-circle-check" title="Approved by @approver.FirstName @approver.LastName, on @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")"></i> @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")</td>
+
+                    }
+                    else
+                    {
+                        <td><i class="rejectedStatus fa fa-exclamation-triangle text-danger" title="Rejected by @approver.FirstName @approver.LastName, on @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")"></i> @approver.ApprovedOn.ToString("MM/dd/yyyy HH:mm tt")</td>
+
+                    }
+                }
+                <td>@approver.Comments</td>
+            </tr>
+        }
+
+    </tbody>
+</table>

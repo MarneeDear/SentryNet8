@@ -1,0 +1,41 @@
+﻿@model Sentry.WebApp.ViewModels.FundsTransfer.FundsTransferItem
+
+@{
+    var i = ViewData["projectItemIndex"] as int?;
+}
+
+<tr id="@($"TransferToItemDetails_{i}")" style="border-top: 1px solid #ddd;">
+    <td>
+        <input type="hidden" value="@Model.Id" id='@($"Items_{i}__Id")' name='@($"Items[{i}].Id")' class="form-control" />
+        <input type="hidden" value="@Model.FundsTransferId" id='@($"Items_{i}__FundsTransferId")' name='@($"Items[{i}].FundsTransferId")' class="form-control" />
+        <button type="button"
+                onclick="RemoveTransferTo(this)"
+                data-index="@i"
+                class="btn btn-red @(i == 0 ? "d-none" : "")">
+            <i class="fa fa-trash-can" title="Delete Transaction"></i>
+        </button>
+        <input type="hidden" value="@(Model.Deleted ? "true" : "false")" id='@($"Items_{i}__Deleted")' name='@($"Items[{i}].Deleted")' />
+    </td>
+    <td class="text-right">
+        <b>TO</b>
+        <button type="button"
+                id="projectPurposeButton"
+                class="btn btn-sm btn-primary mb-1"
+                style="padding: .20em; height:26px;"
+                onclick="getToProjectPurpose('@i')">
+            <i role="img" class="fas fa-circle-info" title="View Project Purpose"></i>
+        </button>
+    </td>
+    <td>
+        <input value="@Model.ProjectId" id='@($"Items_{i}__ProjectId")' name='@($"Items[{i}].ProjectId")' class="form-control required" onblur="setToProjectDescription(this, @i)" />
+    </td>
+    <td>
+        <input value="@Model.ProjectDescription" id='@($"Items_{i}__ProjectDescription")' name='@($"Items[{i}].ProjectDescription")' class="form-control" readonly="readonly" />
+    </td>
+    <td>
+        <input value="@Model.AccountNumber" id='@($"Items_{i}__AccountNumber")' name='@($"Items[{i}].AccountNumber")' class="form-control" maxlength="8" />
+    </td>
+    <td>
+        <input asp-for="Amount" id='@($"Items_{i}__Amount")' name='@($"Items[{i}].Amount")' class="form-control required" onchange="setTotalProjectToAmount(this)" />
+    </td>
+</tr>

@@ -1,0 +1,354 @@
+﻿@model Sentry.WebApp.ViewModels.PostToGLMatchViewModel
+
+@{
+    ViewData["Title"] = Model.DesignationName + " | " + Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h2>
+            Date:
+            <span title="Date of Integration: @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source:
+            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source Record Id:
+            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+        </h2>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-area="" asp-controller="PostToGL" asp-action="PostToGLList">Record List</a></li>
+    <li class="active">Record Details</li>
+</ol>
+
+<form asp-action="PostToGLEdit" id="postToGLEditForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div id="content-container" class="content-container matching" role="main">
+
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Model.Title for: <span class="record-text h3">@Model.DesignationName</span></h3>
+                <div class="panel-toolbar">
+                    @*<a href="#officeLocationDataDetailSourceDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>*@
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Match Criteria:</h4>
+                            <div class="panel-toolbar">
+                                <a class="btn btn-sm btn-link collapsed" role="button" data-toggle="collapse" href="#displayOnlyMore" aria-expanded="false" aria-controls="displayOnlyMore">
+                                    <span class="if-collapsed"><i role="img" class="fas fa-caret-down fa-sm">&nbsp;</i> Expand Full Record</span>
+                                    <span class="if-not-collapsed"><i role="img" class="fas fa-caret-up fa-sm">&nbsp;</i> Collapse Full Record</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="col-sm-12">
+                                <dl class="dl-horizontal displayOnly">
+                                    <dt>@Model.DesignationId_BusinessName:</dt>
+                                    <dd><span title="Match Weight: @Model.DesignationId_Weight">@Html.DisplayFor(m => m.DesignationId)</span></dd>
+                                    <dt>@Model.DesignationName_BusinessName:</dt>
+                                    <dd><span title="Match Weight: @Model.DesignationName_Weight">@Html.DisplayFor(m => m.DesignationName)</span></dd>
+                                </dl>
+                            </div>
+
+                            <div class="col-sm-12 collapse" id="displayOnlyMore">
+                                <dl class="dl-horizontal displayOnly">
+                                    <dt>@Html.DisplayFor(m => m.UADepartment_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.UADepartment)</dd>
+                                    <dt>@Html.DisplayFor(m => m.DesignationType_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.DesignationType)</dd>
+                                    <dt>@Html.DisplayFor(m => m.DesignationSubtype_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.DesignationSubtype)</dd>
+                                    <dt>@Html.DisplayFor(m => m.DesignationStatus_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.DesignationStatus)</dd>
+                                    <dt>@Html.DisplayFor(m => m.DesignationState_BusinessName):</dt>
+                                    <dd>@Html.DisplayFor(m => m.DesignationState)</dd>
+                                    <dt>@Html.DisplayFor(m => m.StartDate_BusinessName):</dt>
+                                    <dd>@Html.Raw(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("MM/dd/yyyy") : "N/A")</dd>
+                                    <dt>@Html.DisplayFor(m => m.EndDate_BusinessName):</dt>
+                                    <dd>@Html.Raw(Model.EndDate.HasValue ? Model.EndDate.Value.ToString("MM/dd/yyyy") : "N/A")</dd>
+                                </dl>
+                            </div>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+
+                    <div class="panel panel-secondary matching">
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Possible Matches:</h4>
+                            <div class="panel-toolbar">
+                                @*<input type="checkbox" id="one" name="one" checked />
+                                    <label for="one">Enable Buttons</label>*@
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <fieldset>
+                                <legend class="sr-only">List of Possible Matches:</legend>
+                                <div class="col-sm-12">
+                                    <div class="table-responsive">
+                                        <table id="postToGLPossibleMatchTable" class="table table-hover table-striped postToGL recordList">
+                                            <thead>
+                                                <tr class="tableHeader">
+                                                    <th class="hide">Id</th>
+                                                    <th>Select</th>
+                                                    <th>Match Confidence:</th>
+                                                    <th>@Model.DesignationName_BusinessName:</th>
+                                                    <th>@Model.DesignationId_BusinessName:</th>
+                                                    <th class="none">None</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i <= Model.PossibleMatches.Count - 1; i++)
+                                                {
+                                                    <tr class="@Model.PossibleMatches[i].Selected">
+                                                        <td data-header="Id" class="hide">@Model.PossibleMatches[i].MasterId</td>
+                                                        <td data-header="Check">
+                                                            <div class="checkbox checkbox-primary">
+
+                                                            </div>
+                                                        </td>
+                                                        <td data-header="Match Confidence">@Html.DisplayFor(m => m.PossibleMatches[i].MatchConfidence)%</td>
+                                                        <td data-header="Name">@Html.DisplayFor(m => m.PossibleMatches[i].DesignationName)</td>
+                                                        <td data-header="Building Code">@Html.DisplayFor(m => m.PossibleMatches[i].DesignationId)</td>
+                                                        <td data-header="None" class="hide">&nbsp;</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div><!-- /.panel-body -->
+
+                        <div class="panel-footer text-right">
+                            <a asp-area="" asp-controller="PostToGL" asp-action="PostToGLList" class="btn btn-link pull-left" title="Cancel Matching, Back to Listing" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Cancel</a>
+                            <button type="button" id="noMatchButton" class="btn btn-info" title="Submit as New Record" data-toggle="tooltip"><i role="img" class="fas fa-ban">&nbsp;</i>No Matching Records</button>
+                            <button type="button" id="compareButton" class="btn btn-default" title="Compare records" data-toggle="modal" data-target="#postToGLMatchCompareModal" disabled="disabled"><i role="img" class="fal fa-columns">&nbsp;</i>Compare Records</button>
+                            <button type="button" id="matchButton" class="btn btn-primary" title="Match this record" data-toggle="tooltip" disabled="disabled"><i role="img" class="fas fa-check">&nbsp;</i>Match Record</button>
+                        </div><!-- /.panel-footer -->
+
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+        </div><!-- /.panel-secondary -->
+    </div><!-- /.content-container -->
+    <!-- Modal - Compare Record -->
+    <div class="modal fade" id="postToGLMatchCompareModal" tabindex="-1" role="dialog" aria-labelledby="postToGLMatchCompareModal postToGLMatchCompareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div id="postToGLMatchCompareModalLabel" class="modal-content">
+                <div class="center-block text-center" style="background-color: #fff; border: 5px solid #ccc;">
+                    <img alt="Image" title="Loading..." src="~/img/throbber.gif" /> Loading...
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</form>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Data Table Variables
+            // ------------------------------------------------------------
+            var postToGLPossibleMatchTable = $('#postToGLPossibleMatchTable');
+            var pageLength = 5;
+            var pageLegthChanger = "l";
+            var paginationControlVisibility = "p";
+
+            var postToGLCount = @Model.PossibleMatches.Count;
+            //console.log("# of Office Location Records: " + officeLocationCount);
+
+            if (postToGLCount <= pageLength) {
+                pageLegthChanger = ""; // hides pagination
+                paginationControlVisibility = ""; // hides pagination
+            };
+
+            // Data Table Definition
+            // ------------------------------------------------------------
+            $(postToGLPossibleMatchTable).DataTable({
+                paging: true,
+                pageLength: pageLength,
+                "lengthMenu": [5, 10],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'B' + pageLegthChanger + 'frti' + paginationControlVisibility,
+                language: {
+                    loadingRecords: '&nbsp;',
+                    processing: 'Processing... <div class="spinner"></div>',
+                    search: 'Filter'
+                },
+                'columnDefs': [ // Checkboxes: https://www.gyrocode.com/projects/jquery-datatables-checkboxes/ ::
+                    {
+                        'targets': 1,
+                        'render': function (data, type, row, meta) {
+                            if (type === 'display') {
+                                data = '<div class="checkbox checkbox-primary"><input id="someid" type="checkbox" class="dt-checkboxes" data-rowid="' + row.id + '" name="rowSelect" value="' + row.id + '" /><label for="someid">Select</label></div>';
+                            }
+                            return data;
+                        },
+                        'checkboxes': {
+                            'selectRow': true,
+                            'selectAllRender': '<div class="checkbox checkbox-primary"><input type="checkbox" class="dt-checkboxes" /><label>Choose</label></div>',
+                            'selectAll': false
+                        }
+                    },
+                    { // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                        targets: 3 //  Column # (Zero-based)
+                        , render: $.fn.dataTable.render.ellipsis(50, true)
+                    }
+                ],
+                'select': 'single',
+                'order': [[2, 'desc']],
+                buttons: [
+                    'excel', 'pdfHtml5', 'print'
+                ],
+                "columns": [
+                    { "data": "id", "id": "Id", "autoWidth": true },
+                    { "data": "select", "select": "Select", "autoWidth": true },
+                    { "data": "matchConfidence", "matchConfidence": "Match Confidence", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": false, "width": "50%" },
+                    { "data": "buildingCode", "buildingCode": "Building Code", "autoWidth": true },
+                    { "data": "none", "name": "None", "autoWidth": true },
+                ]
+            });
+
+            var postToGLPossibleMatchTableDT = $('#postToGLPossibleMatchTable').DataTable();
+            // get row id
+            //$('#officeLocationPossibleMatchTable').on('click', 'tr', function () {
+            //    //var id = officeLocationPossibleMatchTableDT.row().id();
+            //    //alert('Clicked row id: ' + id);
+
+            //    // if checked/selected, enable match/compare buttons
+            //    var attr = $(this).closest(".panel").find("#matchButton").attr('disabled');
+
+            //    // For some browsers, `attr` is undefined; for others, `attr` is false. Check for both.
+            //    if (typeof attr !== typeof undefined && attr !== false) {
+            //        // Element HAS this attribute
+            //        $(this).closest(".panel").find("#compareButton").removeAttr("disabled");
+            //        $(this).closest(".panel").find("#matchButton").removeAttr("disabled");
+            //    } else { // if not checked/selected, disable match/compare buttons
+            //        // Element does NOT have this attribute
+            //        $(this).closest(".panel").find("#compareButton").attr("disabled", "disabled");
+            //        $(this).closest(".panel").find("#matchButton").attr("disabled", "disabled");
+            //    };
+            //});
+
+
+            // Get RowId on row click:
+            // ------------------------------------------------------------
+            $('#postToGLPossibleMatchTable tbody').on('click', 'tr', function () {
+                var table = $('#postToGLPossibleMatchTable').DataTable();
+                var rowData = table.row(this).data();
+                var rowId = rowData.id;
+
+                $(this).each(function() {
+                    //alert(rowId);
+                    //var rowCheckboxId = rowData.select('value').val();
+                    console.log('Clicked RowId: ' + rowId);
+                    //alert('Clicked Row Checkbox: ' + rowCheckboxId);
+
+                    // Check if Checkbox is already selected:
+                    if ($(this).find('input[type="checkbox"]').prop("checked") == false) {
+                        console.log("Checkbox is unchecked.");
+                        $(this).closest(".panel").find("#compareButton").removeAttr("disabled");
+                        $(this).closest(".panel").find("#matchButton").removeAttr("disabled");
+                    }
+                    else if ($(this).find('input[type="checkbox"]').prop("checked") == true) {
+                        console.log("Checkbox is checked.");
+                        $(this).closest(".panel").find("#compareButton").attr("disabled", "disabled");
+                        $(this).closest(".panel").find("#matchButton").attr("disabled", "disabled");
+                    };
+                });
+
+                window.rowIdValue = rowId;
+            });
+
+            // Match button click event:
+            $('#matchButton').on('click', function () {
+                var rowIdValue = window.rowIdValue;
+
+                var urlMatch = '@Html.Raw((Url.Action("PostToGLManualMatch", "PostToGL") + string.Format("/{0}/?IntegrationId={1}&SystemId={2}&MasterId=", Model.Id, Model.IntegrationId, Model.SystemId)))' + window.rowIdValue;
+
+                window.location.href = urlMatch;
+            });
+
+            // No Match button click event:
+            $('#noMatchButton').on('click', function () {
+                var rowIdValue = window.rowIdValue;
+
+                var urlMatch = '@Html.Raw((Url.Action("PostToGLManualMatch", "PostToGL") + string.Format("/{0}/?IntegrationId={1}&SystemId={2}", Model.Id, Model.IntegrationId, Model.SystemId)))';
+
+                window.location.href = urlMatch;
+            });
+
+            // Compare button click event:
+            $('#compareButton').on('click', function () {
+                var rowIdValue = window.rowIdValue;
+
+                var urlCompare = '@Html.Raw((Url.Action("PostToGLCompare", "PostToGL") + string.Format("/{0}/?SystemId={1}&MasterId=", Model.Id, Model.SystemId)))' + window.rowIdValue
+
+
+                // Load Compare Data into Modal
+                $('#postToGLMatchCompareModal').on('show.bs.modal', function (e) {
+                    @*$.get('@Url.Action("OfficeLocationCompare", "Organization")', function (data) {*@
+                    $.get(urlCompare, function (data) {
+                        $(".modal-content").html(data);
+                        //alert("Load was performed.");
+                    });
+                });
+            });
+
+
+
+
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

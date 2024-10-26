@@ -1,0 +1,132 @@
+﻿@model Sentry.WebApp.ViewModels.OrganizationalHierarchyViewModel
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="orgHierarchyEditModalLabel">Compare Records for: <span class="record-text h3">@Model.OuName (Id: @Model.OuId)</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12">
+            <fieldset>
+                <legend class="sr-only">Name Details:</legend>
+                <div class="col-xs-12 col-sm-6">
+                    <!-- @Model.OuName_BusinessName -->
+                    <div class='form-group @string.Format("status{0}", Model.OuName_Status)'>
+                        <input type="hidden" asp-for="OuName_Status" />
+                        <input type="hidden" asp-for="OuName_Source" />
+                        <label class="control-label" for="OuName">@Model.OuName_BusinessName:</label>
+                        <input asp-for="OuName" class="form-control" placeholder="@Model.OuName_BusinessName" />
+                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Status: Changed"></span>
+                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Status: Good"></span>
+                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Status: Bad"></span>
+                        <span asp-validation-for="OuName" class="text-danger help-block"></span>
+                    </div>
+                </div><!-- /.col-* -->
+                <div class="col-xs-12 col-sm-6">
+                    <!-- @Model.OuCode_BusinessName -->
+                    <div class='form-group displayOnlyInput @string.Format("status{0}", Model.OuCode_Status)'>
+                        <input type="hidden" asp-for="OuCode_Status" />
+                        <input type="hidden" asp-for="OuCode_Source" />
+                        <label class="control-label" for="OuCode">@Model.OuCode_BusinessName:</label>
+                        <input asp-for="OuCode" class="form-control" placeholder="@Model.OuCode_BusinessName" readonly disabled />
+                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Status: Changed"></span>
+                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Status: Good"></span>
+                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Status: Bad"></span>
+                        <span asp-validation-for="OuCode" class="text-danger help-block"></span>
+                    </div>
+                </div><!-- /.col-* -->
+                <div class="col-xs-12 col-sm-6">
+                    <!-- @Model.OrgUnitCode_BusinessName -->
+                    <div class='form-group @string.Format("status{0}", Model.OrgUnitCode_Status)'>
+                        <input type="hidden" asp-for="OrgUnitCode_Status" />
+                        <input type="hidden" asp-for="OrgUnitCode_Source" />
+                        <label class="control-label" for="OuCode">@Model.OrgUnitCode_BusinessName:</label>
+                        <input asp-for="OrgUnitCode" class="form-control" placeholder="@Model.OrgUnitCode_BusinessName" />
+                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Status: Changed"></span>
+                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Status: Good"></span>
+                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Status: Bad"></span>
+                        <span asp-validation-for="OrgUnitCode" class="text-danger help-block"></span>
+                    </div>
+                </div><!-- /.col-* -->
+                <div class="col-xs-12 col-sm-6">
+                    <!-- @Model.OrgUnitType_BusinessName -->
+                    <div class='form-group @string.Format("status{0}", Model.OrgUnitType_Status)'>
+                        <input type="hidden" asp-for="OrgUnitType_Status" />
+                        <input type="hidden" asp-for="OrgUnitType_Source" />
+                        <label class="control-label" for="OuCode">@Model.OrgUnitType_BusinessName:</label>
+                        <input asp-for="OrgUnitType" class="form-control" placeholder="@Model.OrgUnitType_BusinessName" />
+                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Status: Changed"></span>
+                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Status: Good"></span>
+                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Status: Bad"></span>
+                        <span asp-validation-for="OrgUnitType" class="text-danger help-block"></span>
+                    </div>
+                </div><!-- /.col-* -->
+                <div class="col-xs-12 col-sm-6">
+                    <!-- @Model.Org_BusinessName -->
+                    <div class='form-group @string.Format("status{0}", Model.Org_Status)'>
+                        <input type="hidden" asp-for="Org_Status" />
+                        <input type="hidden" asp-for="Org_Source" />
+                        <label class="control-label" for="OuCode">@Model.Org_BusinessName:</label>
+                        <input asp-for="Org" class="form-control" placeholder="@Model.Org_BusinessName" />
+                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Status: Changed"></span>
+                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Status: Good"></span>
+                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Status: Bad"></span>
+                        <span asp-validation-for="Org" class="text-danger help-block"></span>
+                    </div>
+                </div><!-- /.col-* -->
+                <div class="col-xs-12 col-sm-6">
+                    <!-- @Model.ParentOrgUnit_BusinessName -->
+                    <div class='form-group @string.Format("status{0}", Model.ParentOrgUnit_Status)'>
+                        <input type="hidden" asp-for="ParentOrgUnit_Status" />
+                        <input type="hidden" asp-for="ParentOrgUnit_Source" />
+                        <label class="control-label" for="OuCode">@Model.ParentOrgUnit_BusinessName:</label>
+                        <input asp-for="ParentOrgUnit" class="form-control" placeholder="@Model.ParentOrgUnit_BusinessName" />
+                        <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Status: Changed"></span>
+                        <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Status: Good"></span>
+                        <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Status: Bad"></span>
+                        <span asp-validation-for="ParentOrgUnit" class="text-danger help-block"></span>
+                    </div>
+                </div><!-- /.col-* -->
+            </fieldset>
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Save"><i role="img" class="fas fa-check">&nbsp;</i> Update</button>
+</div>
+
+
+<!-- Popover - Title: Info -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    @*<a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>*@
+    <span>Field Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Info -->
+<div id="popover-info-content" class="popover hide">
+    <ul class="triangle">
+        <li>
+            <span><strong>Business Glossary Name:</strong> <span id="popover-info-content-name">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Business Glossary Description:</strong> <span id="popover-info-content-description">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source System:</strong> <span id="popover-info-content-source">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source Field Id:</strong> <span id="popover-info-content-sourcefieldid">[No Data Provided]</span></span>
+        </li>
+    </ul>
+</div><!-- /.popover (content) -->
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+
+
+        });
+    </script>
+}

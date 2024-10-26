@@ -1,0 +1,70 @@
+﻿@model Sentry.WebApp.ViewModels.FundsTransfer.FundsTransferListViewModel
+
+@{
+    ViewData["Title"] = "Ready for Processing | " + Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1>
+            @ViewData["Title"]
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="FundsTransfer" asp-action="Index">Funds Transfer Dashboard</a></li>
+    <li class="active">Record List</li>
+</ol>
+
+<div id="content-container" class="content-container table-responsive" role="main">
+
+    <table id="ProcessTable" class="table table-hover table-striped postToGL recordList">
+        <caption class="sr-only">Funds Transfers</caption>
+        <thead>
+            <tr class="tableHeader">
+                <th style="display: none">fundsTransferId</th>
+                @* <th>
+                    <input type="checkbox" id="selectFundsTransfers" onclick="SelectAllFundsTransfers(this)" class="custom-control-input" />
+                </th> *@
+                <th>Routing Type:</th>
+                <th>Prepared By:</th>
+                <th>Form Number:</th>
+                <th>Total Amount:</th>
+                <th>Processing Error:</th>
+                <th style="display: none">Processing Error:</th>
+                <th>Date Approved:</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fundsTransfer in Model.FundsTransfers)
+            {
+                <tr class="@(fundsTransfer.ProcessingError == null ? "" : "rejectedStatus")">
+                    <td style="display: none">@fundsTransfer.Id</td>
+                    @* <td class="fundsTransferSelect">
+                        <input type="checkbox" class="custom-control-input" />
+                    </td> *@
+                    <td>@fundsTransfer.RoutingType</td>
+                    <td>@fundsTransfer.PreparedByName</td>
+                    <td>@fundsTransfer.FormNumber</td>
+                    <td>@fundsTransfer.Total</td>
+                    <td>@fundsTransfer.ProcessingError</td>
+                    <td style="display: none">@fundsTransfer.ProcessingError</td>
+                    <td>@fundsTransfer.LastApprovedOnDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>  
+
+</div>
+
+@await Html.PartialAsync("_PleaseWaitModal")
+@section scripts{
+    <script>
+        var bulkProcessUrl = "@Url.Action("BulkProcess", "FundsTransfer")"; 
+    </script>
+    @await Html.PartialAsync("_Scripts")
+}

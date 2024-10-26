@@ -1,0 +1,16 @@
+﻿@using Sentry.WebApp.ViewModels
+@{
+    var modelHelper = new ModelHelper(Context);
+}
+
+<script>
+    var GetFundsTransferURL = '@Url.Action($"{ViewBag.GetFundsTransferAction}", "FundsTransfer")';
+    var GetFundsTransferReviewURL = '@Url.Action("Review", "FundsTransfer")';
+    var uploadSupportingDocumentURL = '@Url.Action("UploadSupportingDocument")';
+    var deleteSupportingDocumentURL = '@Url.Action("DeleteSupportingDocument")';
+    var getSupportingDocumentsURL = "@Url.Action("GetSupportingDocuments")";
+    var getProjectPurposeURL = '@Url.Action("GetProjectPurposeByProjectId", "FundsTransfer")';
+    var viewSupportingDocumentURL = "@Url.Action("ViewSupportingDocument")";
+    var processDisbursementURL = '@Url.Action("Process", "GiftDisbursements")';
+</script>
+<script type="text/javascript" src="@Url.Content($"~/js/FundsTransfer.js?version={modelHelper.Version}")"></script>

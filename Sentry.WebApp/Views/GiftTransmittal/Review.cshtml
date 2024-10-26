@@ -1,0 +1,155 @@
+﻿@model Sentry.WebApp.ViewModels.GiftTransmittal.GTInitializeViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h2>
+            Form:
+            <span title="Form Number: @Model.FormNumber"> @Model.FormNumber</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Date:
+            <span title="Date Created: @Model.CreatedOnDT"> @Model.CreatedOnDT</span>
+        </h2>
+    </li>
+    <li>
+        <h2>
+            Source:
+            <span title="Source System">Sentry</span>
+        </h2>
+    </li>
+</ul>
+
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+    <li><a asp-area="" asp-controller="Financial" asp-action="Index">Finance Dashboard</a></li>
+    <li><a asp-area="" asp-controller="GiftTransmittal" asp-action="Index">Gift Transmittals Dashboard</a></li>
+    <li>
+        <a asp-area="" asp-controller="GiftTransmittal"
+           asp-action="Create"
+           asp-route-giftTransmittalId="@Model.GiftTransmittalId"
+           asp-route-giftTransmittalItemId="@Model.GiftTransmittalId"
+           asp-route-organization="@Model.Organization">Edit</a>
+    </li>
+    <li class="active">Record Details</li>
+</ol>
+<div id="content-container" class="content-container" role="main">
+    <form id="submitInitiGT" method="post">
+        <input type="hidden" asp-for="GiftTransmittalId" value="@Model.GiftTransmittalId" />
+        <input type="hidden" asp-for="PreparedByEmployeeId" value="@Model.PreparedByEmployeeId" />
+        <input type="hidden" asp-for="FormNumber" value="@Model.FormNumber" />
+        <input type="hidden" asp-for="Email" value="@Model.Email" />
+        <input type="hidden" asp-for="PreparedByEmployeeId" value="@Model.PreparerName" />
+        <input type="hidden" asp-for="ProjectDistribution.Amount" value="@Model.ProjectDistribution.Amount" />
+
+        <div class="panel panel-secondary">
+            <div class="panel-body">
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">Details</h4>
+                        </div>
+                        <div class="panel-body">
+                            <fieldset>
+                                <legend class="sr-only">Preparer</legend>
+                                <div class="col-xs-12 col-md-6">
+                                    <h3>Preparer</h3>
+                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                        <dl class="dl-horizontal ml-4" style="margin-bottom: 0;">
+                                            <dt><b>Preparer Name:</b></dt>
+                                            <dd id="PreparedByNameText" style="font-weight: 400;">@Model.PreparerName</dd>
+                                            <dt><b>Department:</b></dt>
+                                            <dd id="DepartmentText" style="font-weight: 400;">@Model.DepartmentCode @Model.DepartmentName</dd>
+                                            <dt><b>Job Title:</b></dt>
+                                            <dd id="JobTitleText" style="font-weight: 400;">@Model.JobTitle</dd>
+                                            <dt><b>Email:</b></dt>
+                                            <dd id="EmailText" style="font-weight: 400;">@Model.Email</dd>
+                                            <dt><b>Phone Number:</b></dt>
+                                            <dd id="PhoneNumberText" style="font-weight: 400;">@Model.Phone</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <hr />
+                            <fieldset>
+                                <legend class="sr-only">Constituent</legend>
+                                <div class="col-xs-12 col-md-6">
+                                    <h3>Constituent</h3>
+                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                        <dl class="dl-horizontal ml-4" style="margin-bottom: 0;">
+                                            @if (Model.InitializedConstituent.FirstName.Any())
+                                            {
+                                                <dt><b>Constituent Name:</b></dt>
+                                                <dd style="font-weight: 400;">@Model.InitializedConstituent.FirstName @Model.InitializedConstituent.LastName</dd>
+
+                                            }
+                                            else if (Model.InitializedConstituent.OrganizationName.Any())
+                                            {
+                                                <dt><b>Organization:</b></dt>
+                                                <dd style="font-weight: 400;">@Model.InitializedConstituent.OrganizationName</dd>
+
+                                            }
+                                            else
+                                            {
+                                                <dt><b>No Constituent Specified</b></dt>
+                                            }
+                                        </dl>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <hr />
+                            <fieldset>
+                                <legend class="sr-only">Designation</legend>
+                                <div class="col-xs-12 col-md-12">
+                                    <h3>Designation</h3>
+                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                        <dl class="dl-horizontal ml-4" style="margin-bottom: 0;">
+                                            <dt><b>Designation:</b></dt>
+                                            <dd style="font-weight: 400;">@Model.ProjectDistribution.ProjectId</dd>
+                                            <dt><b>Amount:</b></dt>
+                                            <dd style="font-weight: 400;">@String.Format("{0:C}", Model.ProjectDistribution.Amount)</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend class="sr-only">Supporting Documents</legend>
+                                <hr />
+                                <div class="col-xs-12 col-md-12">
+                                    <h3>Supporting Documents</h3>
+                                    @await Html.PartialAsync("_SupportingDocumentsList", Model.SupportingDocuments)
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer clearfix">
+                <a class="btn btn-primary pull-left ml-3" value="Edit"
+                   asp-controller="GiftTransmittal"
+                   asp-action="Create"
+                   asp-route-giftTransmittalId="@Model.GiftTransmittalId"
+                   asp-route-organization="@Model.Organization">
+                    <i role="img" class="fas fa-check">&nbsp;</i>Edit
+                </a>
+                <button type="submit" class="btn btn-primary pull-right ml-3" value="Submit" asp-action="Submit">
+                    <i role="img" class="fas fa-check">&nbsp;</i>Submit
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+
+</div>
+@section scripts{
+    <script>
+        var preparedByEmployeeId = '@Model.PreparedByEmployeeId'
+    </script>
+    @await Html.PartialAsync("_Scripts")
+}

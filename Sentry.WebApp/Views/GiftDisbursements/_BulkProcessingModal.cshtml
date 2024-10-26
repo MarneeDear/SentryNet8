@@ -1,0 +1,52 @@
+﻿@using System;
+
+<div class="modal fade" id="bulkProcessingModal" tabindex="-1" role="dialog" 
+     aria-labelledby="bulkProcessingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkProcessingModalLabel">Bulk Process Disbursements</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="ua-brand-x" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="disbursements">
+                <div>
+                    <!--Post Date-->
+                    <label class="control-label">Post Date</label>
+                    <div class="input-group date">
+                        <input class="form-control" id="PostDate"
+                               value="@DateTime.Today.ToString("MM/dd/yyyy")" />
+                        <span class="input-group-addon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <h4>Disbursements to Process</h4>
+                    <table id="processDisbursements" class="table mt-3">
+                        <thead>
+                            <tr>
+                                <th style="display:none"></th>
+                                <th>Form Number:</th>
+                            </tr>                           
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button"
+                        class="btn btn-primary pull-right"
+                        value="Process"
+                        data-dismiss="modal"
+                        onclick="BulkProcess()">
+                    <i role="img" class="fas fa-check">&nbsp;</i> Process All
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

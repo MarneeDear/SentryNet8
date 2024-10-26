@@ -1,0 +1,29 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+
+@await Html.PartialAsync("_CurrentRole")
+
+@if (Model.AllowAlternateApprover)
+{
+    <form id="switchView" method="post">
+        <div class="col-md-4 form-group mt-2">
+            @*<input type="hidden" asp-for="CurrentRole" value="@Model.CurrentRole" />*@
+            <label class="control-label" for="CurrentRole">Select approver role</label>
+            <select id="AlternateApprovers"
+                    class="form-control"
+                    asp-for="CurrentRole"
+                    asp-items="@Model.AlternateApprovers">
+            </select>
+            
+        </div>
+        <div class="col-md-pull-4 form-group mt-2">
+            <button type="submit"
+                    class="btn btn-primary pull-right ml-3"
+                    value="SwitchRole"
+                    title="Switch to selected approver role"
+                    asp-action="Index">
+                <i role="img" class="fas fa-check">&nbsp;</i>Switch to Approver Role
+            </button>
+        </div>
+    </form>
+
+}

@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en" class="external-links ua-brand-icons">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" />
+    <title>System Error: 500</title>
+    <!-- Font Awesome stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://pro.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-Bx4pytHkyTDy3aJKjGkGoHPt3tvv6zlwwjc3iqN7ktaiEMLDPqLSZYts2OjKcBx1"
+          crossorigin="anonymous" />
+
+    <!-- Latest icon font stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.uadigital.arizona.edu/lib/ua-brand-icons/latest/ua-brand-icons.css" />
+
+    <!-- Compiled and minified UA Bootstrap CSS, icon font not included -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.uadigital.arizona.edu/lib/ua-bootstrap/v1.0.0-beta.22/ua-bootstrap.min.css" />
+    <!-- Custom stylesheets -->
+    <link rel="stylesheet" type="text/css" href="~/css/site-layout.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/uaf-theme.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/error-500.css" />
+    @*<link rel="stylesheet" type="text/css" href="~/css/error-404.css" />*@
+</head>
+<body>
+
+    <div id="fiveHundred" class="center-block text-center">
+        <h3>Hey, Whaaa' Haaappened!?</h3>
+        <p class="errorcode">500 Error</p>
+        <a href="https://www.youtube.com/watch?v=4xHPzEERuGA" title="I can't do my work!?" target="_blank" class="remove-external-link-icon img">
+            <img alt="I got a real red wagon!" title="Where'd everybody go?" src="~/img/travolta1.gif" />
+        </a>
+        <p class="mb-5">
+            No need to worry, though...<br />
+            Your friendly EAS Team has this issue well in hand...
+        </p>
+        <p>
+            <i role="img" class="fas fa-arrow-left">&nbsp;</i>
+            <a href="#" title="Back to previous page" onclick="history.back();" class="">Go Back to Previous Page</a>
+            //
+            <i role="img" class="fas fa-home">&nbsp;</i>
+            <a asp-area="" asp-controller="Home" asp-action="Index" title="Visit Sentry Dashboard">Go to Dashboard</a>
+        </p>
+    </div>
+
+    <div id="fourHundredFour">
+        <div class="noise"></div>
+        <div class="overlay"></div>
+        <div class="terminal">
+            <h1><i role="img" class="fas fa-exclamation-triangle">&nbsp;</i> Error: <span class="errorcode">404</span></h1>
+            <p class="output">The page you are looking for might have been removed, had its name changed or is temporarily unavailable.</p>
+            <p class="output">Please try to <a href="#" title="Back to previous page" onclick="history.back();" class="">go back</a> or <a asp-area="" asp-controller="Home" asp-action="Index" title="Go to Dashboard">return to the homepage</a>.</p>
+            <p class="output">Good luck on your quest...</p>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/2a4d4ad988.js" crossorigin="anonymous"></script>
+</body>
+</html>
+

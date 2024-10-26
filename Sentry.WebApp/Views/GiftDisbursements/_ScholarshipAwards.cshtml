@@ -1,0 +1,59 @@
+﻿@model Sentry.WebApp.ViewModels.GiftDisbursements.GiftDisbursementsViewModel
+
+<div class="col-sm-12 col-md-12">
+    <h4>Students - Term: @Model.GiftDisbursementStudents.First().TermName</h4>
+    <table id="StudentsTable" class="table review-page table-striped">
+        <thead>
+            <tr>
+                <th hidden>Id</th>
+                <th class="col-md-5">Student Name</th>
+                <th class="col-md-1">Student ID</th>
+                <th class="col-md-5">Scholarship</th>
+                <th class="col-md-1">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.GiftDisbursementStudents.Count(); i++)
+            {
+                <tr>
+                    <td hidden>
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].Id"
+                               value="@Model.GiftDisbursementStudents[i].Id" />
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].Term"
+                               value="@Model.GiftDisbursementStudents[i].Term" />
+                    </td>
+                    <td>
+                        <span>@Model.GiftDisbursementStudents[i].StudentName</span>
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].StudentName" 
+                               value="@Model.GiftDisbursementStudents[i].StudentName" />
+                    </td>
+                    <td>
+                        <span>@Model.GiftDisbursementStudents[i].StudentId</span>
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].StudentId" 
+                               value="@Model.GiftDisbursementStudents[i].StudentId" />
+
+                    </td>
+                    <td>
+                        <span>@Model.GiftDisbursementStudents[i].ScholarshipName</span>
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].ScholarshipName"
+                               value="@Model.GiftDisbursementStudents[i].ScholarshipName" />
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].ScholarshipId"
+                               value="@Model.GiftDisbursementStudents[i].ScholarshipId" />
+
+                    </td>
+                    <td>
+                        <span>@Model.GiftDisbursementStudents[i].Amount.ToString("C")</span>
+                        <input type="hidden" asp-for="GiftDisbursementStudents[i].Amount"
+                               value="@Model.GiftDisbursementStudents[i].Amount" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-right" colspan="3">Total Amount: </td>
+                <td id="scholarshipTotalAmount" class="">@Model.GiftDisbursementStudents.Sum(s => s.Amount).ToString("C")</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

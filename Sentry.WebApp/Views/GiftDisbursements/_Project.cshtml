@@ -1,0 +1,96 @@
+﻿@model Sentry.WebApp.ViewModels.GiftDisbursements.GiftDisbursementProject
+
+@{
+    var p = ViewData["index"] as int?;
+    var disbursementType = ViewData["disbursementType"] as string;
+    var departmentCode = ViewData["departmentCode"] as string;
+}
+
+<div class="col-sm-12 col-md-12 col-lg-12 projectContainer">
+    <table id="transaction_details_@p" class="table transaction-table">
+        <caption class="sr-only">Transaction Details</caption>
+        <thead class="theader">
+            <tr>
+                <th>
+
+                </th>
+                <th colspan="5">
+                    <a href="@Model.BlackbaudProjectUrl" target="_blank">
+                        @Model.ProjectId - @Model.ProjectName
+                    </a>
+                    <input type="hidden" asp-for="ProjectId" id='@($"GiftDisbursementProjects_{p}__ProjectId")' name='@($"GiftDisbursementProjects[{p}].ProjectId")' value="@Model.ProjectId" />
+                    <input type="hidden" asp-for="ProjectName" id='@($"GiftDisbursementProjects_{p}__ProjectName")' name='@($"GiftDisbursementProjects[{p}].ProjectName")' value="@Model.ProjectName" />
+
+                    <button type="button"
+                            id="projectPurposeButton"
+                            class="btn btn-sm btn-primary"
+                            onclick="getProjectPurpose('@Model.ProjectId', '@departmentCode')">
+                        <i role="img" class="fas fa-circle-info" title="View Project Purpose"></i>
+                    </button>
+                </th>
+                <th>
+                    <span class="project-balance pull-right"
+                          title="Project: @Model.ProjectId">Balance:</span>
+                </th>
+                <th>
+                    <span id="projectBalance_@p"
+                          title="Project Balance for @Model.ProjectId - @Model.ProjectName">@Model.ProjectBalance.ToString("C")</span>
+                </th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th></th>
+                @if (disbursementType != "EM")
+                {
+                    <th class="col-md-2">UA KFS Account <span class="required">*</span></th>
+
+                }
+                <th class="col-md-2">UA Object Code<span class="required">*</span></th>
+                <th class="col-md-1">UA Sub-account</th>
+                <th class="col-md-1">UA Project Code</th>
+                <th class="col-md-2">Debit Account #<span class="required">*</span></th>
+                <th class="col-md-2">Debit Account Description</th>
+                @if (disbursementType == "EM")
+                {
+                    <th class="col-md-1">
+                        Fundraising
+                        <i role="img" class="fas fa-circle-info" title="If the expense is related to a donor interaction or event, select the Fundraising checkbox."></i>
+                    </th>
+                }
+                <th class="col-md-2">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ProjectItems.Count(); i++)
+            {
+                @await Html.PartialAsync("_ProjectItem", Model.ProjectItems[i], new ViewDataDictionary(ViewData) { { "projectIndex", p }, { "projectItemIndex", i }, { "type", disbursementType } })
+            }
+        </tbody>
+        <tfoot>
+            <tr class="ProjectTotalSection">
+                @{
+                    var balance = Model.ProjectBalance - Model.ProjectItems.Sum(x => x.Amount);
+                    var amntClass = String.Empty;
+                    if (balance < 0)
+                    {
+                        amntClass = "text-danger";
+                    }
+                }
+                <td colspan="1">
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-index="@Model.ProjectItems.Count()"
+                            onclick="AddProjectItem(this, @p)"
+                            title="Add Transaction">
+                        +
+                    </button>
+                </td>
+                <td class="text-right" colspan="6">Project Total:</td>
+                <td>
+                    <span id="totalProjectAmount_@p" class="@amntClass">@Model.ProjectItems.Sum(a => a.Amount).ToString("C")</span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

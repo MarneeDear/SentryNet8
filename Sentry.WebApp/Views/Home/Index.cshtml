@@ -1,0 +1,231 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<ul class="page-title">
+    <li>
+        <h1 data-html="true" data-placement="bottom" title="A soldier stationed at a place to stand guard and prevent the passage of unauthorized persons, watch for fires, etc.">
+            @Model.Title <span><small>[ <strong>sen</strong>-tree ] <strong>Noun:</strong> A soldier stationed at a place to stand guard...</small></span>
+        </h1>
+    </li>
+</ul>
+
+@*<small class="text-muted">Your last login was yesterday.</small>*@
+<h4 class="last-login">Welcome back, <em>Sentry <span class="user-name">@Model.User</span>!</em> @*<small class="text-muted">Your last login was [14 hours ago].</small>*@</h4>
+
+<div id="content-container" class="content-container" role="main">
+
+    <div class="row">
+
+        @*<div class="col-sm-12">
+            <p class="lead">Welcome to your @Model.Title Dashboard!</p>
+            <p>Here you'll be able to remediate any @Model.Title records that failed validation rules in the Data Integration Framework<sup>&#174;</sup><sup>&trade;</sup></p>
+            <p>@Model.Title Integrations are typically made up of several smaller integrations as indicated by the sub-menu items listed below the headings in the left navigation.</p>
+            <p>Please select one of the Integrations on the left to begin the remediation process.</p>
+            <h2 class="mb-0">Metrics:</h2>
+            <hr />
+        </div>*@
+
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary chart">
+                <div class="panel-heading">
+                    <section class="panel-title" title="(Through @(DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0)).ToShortDateString()))">
+                        Number of Records <span>for Current Year &nbsp;</span> <small>(Through @(DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0)).ToShortDateString()))</small>
+                    </section>
+                </div>
+                <div class="panel-body">
+                    <div class="chartjs-wrapper clearfix">
+                        <div id="throughput" style="height: 400px;"></div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col* -->
+
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary chart">
+                <div class="panel-heading">
+                    <section class="panel-title" title="(Through @(DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0)).ToShortDateString()))">
+                        Data Quality <span>for Current Year &nbsp;</span> <small>(Through @(DateTime.Today.Subtract(new TimeSpan(1, 0, 0, 0)).ToShortDateString()))</small>
+                    </section>
+                </div>
+                <div class="panel-body">
+                    <div class="chartjs-wrapper clearfix">
+                        <div id="dataQuality" style="height: 400px;"></div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col* -->
+
+    </div><!-- /.row -->
+
+</div><!-- /.content-container -->
+
+@section scripts {
+    <script>
+        // Color Variables
+        const colors = {
+            primaryBlue: '#0C234B',
+            primarySkyBlue: '#81D3EB',
+            primaryOasisBlue: '#378DBD',
+            primaryAzuriteBlue: '#1E5288',
+            primaryMidnightBlue: '#001C48',
+
+            primaryRed: '#AB0520',
+            primaryRedBloom: '#EF4056',
+            primaryRedChili: '#8B0015',
+
+            neutralCoolGray: '#E2E9EB',
+            neutralWarmGray: '#F4EDE5',
+
+            secondaryLeaf: '#70B865',
+            secondaryRiver: '#007D84',
+            secondarySilver: '#9EABAE',
+            secondaryMesa: '#a95c42',
+
+            secondaryEnriched: '#ab47bc',
+
+            legacyDarkSilver: '#49595E',
+        }
+
+        function getChart(id) {
+            var allCharts = AmCharts.charts;
+            for (var i = 0; i < allCharts.length; i++) {
+                if (id == allCharts[i].div.id) {
+                    return allCharts[i];
+                }
+            }
+        }
+
+        $(document).ready(function () {
+
+            // Date Selector ---
+            $('.chartSelector').select2({
+                selectOnClose: true,
+                minimumResultsForSearch: Infinity,
+                width: '100%'
+            });
+
+            am4core.ready(function () {
+
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                ///////////////////////////////////////////////////////////////////////////////////
+                // Throughput Chart
+                //---------------------------------------------------------------------------------
+
+                var throughputChart = am4core.create("throughput", am4charts.XYChart);
+                throughputChart.dataSource.url = '@Html.Raw(Url.Action("GetIntegrationThroughputMetrics", "Home"))';
+
+                throughputChart.colors.step = 2;                
+
+                // Create axes
+                var throughputDateAxis = throughputChart.xAxes.push(new am4charts.DateAxis());
+                throughputDateAxis.dataFields.category = "date";
+
+                var throughputValueAxis = throughputChart.yAxes.push(new am4charts.ValueAxis());
+                throughputValueAxis.title.text = "Records";
+
+                // Create series
+                var throughputProcessedSeries = throughputChart.series.push(new am4charts.StepLineSeries());
+                throughputProcessedSeries.dataFields.valueY = "processed";
+                throughputProcessedSeries.dataFields.dateX = "date";
+                throughputProcessedSeries.name = "Processed";
+                throughputProcessedSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+                throughputProcessedSeries.fill = am4core.color(colors.secondaryLeaf);
+                throughputProcessedSeries.stroke = am4core.color(colors.secondaryLeaf);
+                throughputProcessedSeries.bullets.push(new am4charts.CircleBullet());
+
+                var throughputBadSeries = throughputChart.series.push(new am4charts.StepLineSeries());
+                throughputBadSeries.dataFields.valueY = "bad";
+                throughputBadSeries.dataFields.dateX = "date";
+                throughputBadSeries.name = "Bad";
+                throughputBadSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+                throughputBadSeries.fill = am4core.color(colors.primaryRedBloom);
+                throughputBadSeries.stroke = am4core.color(colors.primaryRedBloom);
+                throughputBadSeries.bullets.push(new am4charts.CircleBullet());
+
+                var throughputPossibleSeries = throughputChart.series.push(new am4charts.StepLineSeries());
+                throughputPossibleSeries.dataFields.valueY = "possibleMatch";
+                throughputPossibleSeries.dataFields.dateX = "date";
+                throughputPossibleSeries.name = "Possible Match";
+                throughputPossibleSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+                throughputPossibleSeries.fill = am4core.color(colors.secondaryEnriched);
+                throughputPossibleSeries.stroke = am4core.color(colors.secondaryEnriched);
+                throughputPossibleSeries.bullets.push(new am4charts.CircleBullet());
+
+                // Add legend
+                throughputChart.legend = new am4charts.Legend();
+
+                // Add cursor
+                throughputChart.cursor = new am4charts.XYCursor();
+
+                ///////////////////////////////////////////////////////////////////////////////////
+
+                ///////////////////////////////////////////////////////////////////////////////////
+                // Data Quality Chart
+                //---------------------------------------------------------------------------------
+
+                // Create chart instance
+                var dataqualityChart = am4core.create("dataQuality", am4charts.XYChart);
+                dataqualityChart.dataSource.url = '@Html.Raw(Url.Action("GetDataQualityMetrics", "Home"))';
+
+                dataqualityChart.colors.step = 2;
+
+                // Create axes
+                var dataqualityDateAxis = dataqualityChart.xAxes.push(new am4charts.DateAxis());
+                dataqualityDateAxis.dataFields.category = "date";
+
+                var dataqualityValueAxis = dataqualityChart.yAxes.push(new am4charts.ValueAxis());
+                dataqualityValueAxis.title.text = "Records";
+
+                // Create series
+                var dataqualityEnrichedSeries = dataqualityChart.series.push(new am4charts.ColumnSeries());
+                dataqualityEnrichedSeries.name = "Enriched";
+                dataqualityEnrichedSeries.dataFields.valueY = "enriched";
+                dataqualityEnrichedSeries.dataFields.dateX = "date";
+                dataqualityEnrichedSeries.sequencedInterpolation = true;
+                dataqualityEnrichedSeries.stacked = true;
+                dataqualityEnrichedSeries.columns.template.width = am4core.percent(60);
+                dataqualityEnrichedSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+                dataqualityEnrichedSeries.fill = am4core.color(colors.secondaryLeaf);
+                dataqualityEnrichedSeries.stroke = am4core.color(colors.secondaryLeaf);
+
+                var dataqualityGoodSeries = dataqualityChart.series.push(new am4charts.ColumnSeries());
+                dataqualityGoodSeries.name = "Good";
+                dataqualityGoodSeries.dataFields.valueY = "good";
+                dataqualityGoodSeries.dataFields.dateX = "date";
+                dataqualityGoodSeries.sequencedInterpolation = true;
+                dataqualityGoodSeries.stacked = true;
+                dataqualityGoodSeries.columns.template.width = am4core.percent(60);
+                dataqualityGoodSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+                dataqualityGoodSeries.fill = am4core.color(colors.secondaryEnriched);
+                dataqualityGoodSeries.stroke = am4core.color(colors.secondaryEnriched);
+
+                var dataqualityBadSeries = dataqualityChart.series.push(new am4charts.ColumnSeries());
+                dataqualityBadSeries.name = "Bad";
+                dataqualityBadSeries.dataFields.valueY = "bad";
+                dataqualityBadSeries.dataFields.dateX = "date";
+                dataqualityBadSeries.sequencedInterpolation = true;
+                dataqualityBadSeries.stacked = true;
+                dataqualityBadSeries.columns.template.width = am4core.percent(60);
+                dataqualityBadSeries.tooltipText = "{name}: [bold]{valueY}[/]";
+                dataqualityBadSeries.fill = am4core.color(colors.primaryRedBloom);
+                dataqualityBadSeries.stroke = am4core.color(colors.primaryRedBloom);
+
+                // Legend
+                dataqualityChart.legend = new am4charts.Legend();
+
+                // Add cursor
+                dataqualityChart.cursor = new am4charts.XYCursor();
+
+                ////////////////////////////////////////////////////////////////////////////////////
+            });
+
+        });
+        
+    </script>
+}

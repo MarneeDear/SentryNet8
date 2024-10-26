@@ -1,0 +1,2182 @@
+﻿
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<style type="text/css">
+    .toggle-accordion {
+        float: right;
+        font-size: 16px;
+        color: #6a6c6f;
+    }
+    .toggle-accordion:before {
+        content: "Expand All";
+    }
+
+    .toggle-accordion.active:before {
+        content: "Collapse All";
+    }
+</style>
+
+<ul class="page-title">
+    <li>
+        <h1>
+            UI Utilities
+        </h1>
+    </li>
+</ul>
+
+<ol class="breadcrumb">
+    <li><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li class="active">List of UI Utilities</li>
+</ol>
+
+<div id="content-container" class="content-container" role="main">
+
+    <div id="page-top" class="page-heading">
+        <span>&nbsp;</span>
+        <div class="page-toolbar">
+            <button type="button" class="btn btn-primary btn-print" tabindex="-1" title="Print"><i role="img" class="fas fa-print fa-sm">&nbsp;</i>Print</button>
+        </div><!-- /.page-toolbar -->
+    </div>
+
+    @*  Panels
+        ============================================ *@
+    <section id="utilitiesPanels" class="clearfix">
+
+        <h2>Panels:</h2>
+        <hr class="clearfix" />
+        <p>Panel Primary:</p>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel Title:</h3>
+                <div class="panel-toolbar">
+                    <a href="#employeeDataDetailHistoryModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                    <a href="#employeeDataDetailRawDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Raw Data" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Raw Data</a>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <p>Body Content</p>
+
+                <div class="col-sm-12 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Panel Title:</h3>
+                            <div class="panel-toolbar">
+                                <a href="#employeeDataDetailHistoryModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                                <a href="#employeeDataDetailRawDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Raw Data" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Raw Data</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <p>Body Content</p>
+
+                        </div><!-- /.panel-body -->
+
+                        <div class="panel-footer">
+                            Panel Footer Left
+                        </div><!-- /.panel-footer -->
+
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.col-* -->
+
+                <div class="col-sm-12 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Panel Title:</h3>
+                            <div class="panel-toolbar">
+                                <a href="#employeeDataDetailHistoryModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                                <a href="#employeeDataDetailRawDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Raw Data" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Raw Data</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <p>Body Content</p>
+
+                        </div><!-- /.panel-body -->
+
+                        <div class="panel-footer text-right">
+                            Panel Footer Right
+                        </div><!-- /.panel-footer -->
+
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.col-* -->
+
+            </div><!-- /.panel-body -->
+
+            <div class="panel-footer text-right">
+                <a asp-action="Index" class="btn btn-link" title="Cancel Changes" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Discard</a>
+                <button type="submit" class="btn btn-info" title="Partial Save" data-toggle="tooltip"><i role="img" class="fas fa-save">&nbsp;</i>Partial Save</button>
+                <button type="submit" class="btn btn-primary" title="Save" data-toggle="tooltip"><i role="img" class="fas fa-check">&nbsp;</i>Save</button>
+            </div><!-- /.panel-footer -->
+
+        </div><!-- /.panel-primary -->
+
+        <p>Panel Secondary:</p>
+        <div class="panel panel-secondary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Panel Title:</h3>
+                @*<div class="panel-toolbar">
+                        <button type="button" class="btn btn-link" target="_blank" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i>History</button>
+                        <button type="button" class="btn btn-link" target="_blank" data-toggle="modal" data-target="#employeeDataDetailRawDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-bars sm">&nbsp;</i>Raw Data</button>
+                    </div>*@
+            </div>
+            <div class="panel-body">
+
+                <div class="col-sm-12 col-md-12 panel-container">
+                    <div class="panel panel-secondary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Panel Title:</h3>
+                            <div class="panel-toolbar">
+                                <a href="#employeeDataDetailHistoryModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View History" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i>History</a>
+                                <a href="#employeeDataDetailRawDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Raw Data" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Raw Data</a>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+
+                            <fieldset>
+                                <div class="col-sm-5 col-lg-6">
+                                    <div class="form-group">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="Click to View History - PS: This is now a searchable drop-down select field (still hard-coded, and needs wiring up to DB - View: [MDS_UAF].[mdm].[State])." data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="bd-homeStateSelector" class="control-label">State:</label>
+                                        <select id="bd-homeStateSelector" class="select2 form-control">
+                                            <option value="">-- Select a State --</option>
+                                            <option value="AL">AL</option>
+                                            <option value="AK">AK</option>
+                                            <option value="AR">AR</option>
+                                            <option value="AZ">AZ</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group has-error">
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                            <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                                        </div>
+                                        <label for="bd-homeCountrySelector">Country:</label>
+                                        @*<partial name="~/Views/Shared/_CountryListPartial.cshtml" />*@
+                                        <select id="bd-homeCountrySelector" class="select2 form-control">
+                                            <option value="">-- Choose Country --</option>
+                                            <option value="GB">United Kingdom</option>
+                                            <option value="US" selected>United States of America</option>
+                                            <option value="UM">United States Minor Outlying Islands</option>
+                                        </select>
+                                    </div>
+                                </div><!-- /.col-* -->
+                            </fieldset>
+
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel-primary -->
+                </div><!-- /.panel-container -->
+
+            </div><!-- /.panel-body -->
+
+            <div class="panel-footer text-right">
+                <a asp-action="Index" class="btn btn-link" title="Cancel Changes" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Discard</a>
+                <button type="submit" class="btn btn-info" title="Partial Save" data-toggle="tooltip"><i role="img" class="fas fa-save">&nbsp;</i>Partial Save</button>
+                <button type="submit" class="btn btn-primary" title="Save" data-toggle="tooltip"><i role="img" class="fas fa-check">&nbsp;</i>Save</button>
+            </div><!-- /.panel-footer -->
+
+        </div><!-- /.panel-secondary -->
+
+    </section>
+
+
+    @*  Tables
+        ============================================ *@
+    <section id="utilitiesTables" class="clearfix">
+
+        <h2>Tables:</h2>
+        <hr class="clearfix" />
+
+        @*<a href="javascript:void(0)" class="toggle-accordion" accordion-id="#accordion"></a>
+        <a href="javascript:void(0)" class="btn btn-default openall">open all</a> <a href="javascript:void(0)" class="btn btn-default closeall">close all</a>*@
+        <div class="panel-toolbar pull-right">
+            <a class="btn btn-sm btn-link collapsed" role="button">
+                <span class="if-collapsed"><i role="img" class="fas fa-caret-circle-down">&nbsp;</i> Expand All</span>
+                <span class="if-not-collapsed"><i role="img" class="fas fa-caret-circle-up">&nbsp;</i> Collapse All</span>
+            </a>
+        </div>
+        <table class="table table-hover student childRowTableParent sourceDataContainer" id="accordion" style="border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="accordion-toggle enrichedDataHistory"
+                    data-toggle="collapse"
+                    data-target="#studentScholarshipStudentFieldHistoryDate1"
+                    data-parent="#accordion"
+                    aria-expanded="true"
+                    aria-controls="studentScholarshipStudentFieldHistoryDate1">
+                    <td colspan="4">
+                        <span title="Enriched">
+                            Date: 12/18/2019 -- 3:38:07 PM
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="hiddenRow">
+                        <div id="studentScholarshipStudentFieldHistoryDate1" class="accordian-body collapse in">
+                            <table class="table table-striped student childRowTableChild">
+                                <thead>
+                                    <tr>
+                                        <th>Field:</th>
+                                        <th>Current Value:</th>
+                                        <th>Original Value:</th>
+                                        <th>Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="enrichedDataHistory">
+                                        <td>Student Id</td>
+                                        <td>
+                                            <span class="" title="">
+                                                <i role="img" class="fas fa-cog" title="Enriched">&nbsp;</i> 21687651
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>Name.Field.Id</td>
+                                    </tr>
+                                    <tr class="goodDataHistory">
+                                        <td>Student Code</td>
+                                        <td>
+                                            <span class="" title="">
+                                                <i role="img" class="fas fa-check-square" title="Good">&nbsp;</i> 159435
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>Name.Field.Id2</td>
+                                    </tr>
+                                    <tr class="notProvidedDataHistory">
+                                        <td>Student Master Id</td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="accordion-toggle notProvidedDataHistory"
+                    data-toggle="collapse"
+                    data-target="#studentScholarshipStudentFieldHistoryDate2"
+                    data-parent="#accordion"
+                    aria-expanded="false"
+                    aria-controls="studentScholarshipStudentFieldHistoryDate2">
+                    <td colspan="4">
+                        <span title="Not Provided">
+                            Date: 12/18/2019 -- 3:38:07 PM
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="hiddenRow">
+                        <div id="studentScholarshipStudentFieldHistoryDate2" class="accordian-body collapse">
+                            <table class="table table-striped student childRowTableChild">
+                                <thead>
+                                    <tr>
+                                        <th>Field:</th>
+                                        <th>Current Value:</th>
+                                        <th>Original Value:</th>
+                                        <th>Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="enrichedDataHistory">
+                                        <td>Student Id</td>
+                                        <td>
+                                            <span class="" title="">
+                                                <i role="img" class="fas fa-cog" title="Enriched">&nbsp;</i> 21687651
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>Name.Field.Id</td>
+                                    </tr>
+                                    <tr class="goodDataHistory">
+                                        <td>Student Code</td>
+                                        <td>
+                                            <span class="" title="">
+                                                <i role="img" class="fas fa-check-square" title="Good">&nbsp;</i> 159435
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>Name.Field.Id2</td>
+                                    </tr>
+                                    <tr class="notProvidedDataHistory">
+                                        <td>Student Master Id</td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr class="accordion-toggle badDataHistory"
+                    data-toggle="collapse"
+                    data-target="#studentScholarshipStudentFieldHistoryDate3"
+                    data-parent="#accordion"
+                    aria-expanded="false"
+                    aria-controls="studentScholarshipStudentFieldHistoryDate3">
+                    <td colspan="4">
+                        <span title="Bad">
+                            Date: 12/18/2019 -- 3:38:07 PM
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="hiddenRow"><div id="studentScholarshipStudentFieldHistoryDate3" class="accordian-body collapse">Demo Content3</div></td>
+                </tr>
+
+                <tr class="accordion-toggle goodDataHistory"
+                    data-toggle="collapse"
+                    data-target="#studentScholarshipStudentFieldHistoryDate4"
+                    data-parent="#accordion"
+                    aria-expanded="false"
+                    aria-controls="studentScholarshipStudentFieldHistoryDate4">
+                    <td colspan="4">
+                        <span title="Good">
+                            Date: 12/18/2019 -- 3:38:07 PM
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="hiddenRow"><div id="studentScholarshipStudentFieldHistoryDate4" class="accordian-body collapse">Demo Content4</div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Collapsible Group Item #1
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Collapsible Group Item #2
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="accordionnn" class="panel-group" role="tablist" aria-multiselectable="true">
+            <table>
+                <tbody class="panel panel-default">
+                    <tr class="panel-heading" role="tab" id="headingTedOne">
+                        <td data-toggle="collapse" data-parent="#accordionnn" data-target="#collapseTedOne" aria-expanded="true" aria-controls="collapseTedOne" role="button">
+                            <h4 class="panel-title" role="button">Title 1</h4>
+                        </td>
+                    </tr>
+                    <tr id="collapseTedOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTedOne">
+                        <td class="panel-body">Child Row 1</td>
+                    </tr>
+                </tbody>
+                <tbody class="panel panel-default">
+                    <tr class="panel-heading" role="tab" id="headingTedTwo">
+                        <td data-toggle="collapse" data-parent="#accordionnn" data-target="#collapseTedTwo" aria-expanded="false" aria-controls="collapseTedTwo" role="button">
+                            <h4 class="panel-title" role="button">Title 2</h4>
+                        </td>
+                    </tr>
+                    <tr id="collapseTedTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTedTwo">
+                        <td class="panel-body">Child Row 2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Expandable/Collapsible Table with Child Rows (v2):</h3>
+        <div class="table-responsive" id="accordionn" role="tablist" aria-multiselectable="true">
+            <h4 class="panel-title">Student:</h4>
+            <table id="studentScholarshipTable1" class="table table-striped student childRowTableParent sourceDataContainer">
+                <tbody>
+                    <tr class="accordion-toggle enrichedDataHistory collapsed" role="tab" data-toggle="collapse" data-parent="#accordionn" data-target="#studentScholarshipStudentFieldHistoryDate1" aria-expanded="true" aria-controls="studentScholarshipStudentFieldHistoryDate1">
+                        <td colspan="4">
+                            <span title="Enriched">
+                                <i role="img" class="fas fa-caret-circle-right">&nbsp;</i>
+                                Date: 12/18/2019 -- 3:38:07 PM
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="studentScholarshipStudentFieldHistoryDate1" class="collapse" role="tabpanel" aria-labelledby="FieldHistoryDate1">
+                                <table class="table table-striped student childRowTableChild">
+                                    <thead>
+                                        <tr>
+                                            <th>Field:</th>
+                                            <th>Current Value:</th>
+                                            <th>Original Value:</th>
+                                            <th>Source Field Id:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="enrichedDataHistory">
+                                            <td>Student Id</td>
+                                            <td>
+                                                <span class="" title="">
+                                                    <i role="img" class="fas fa-cog" title="Enriched">&nbsp;</i> 21687651
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>Name.Field.Id</td>
+                                        </tr>
+                                        <tr class="goodDataHistory">
+                                            <td>Student Code</td>
+                                            <td>
+                                                <span class="" title="">
+                                                    <i role="img" class="fas fa-check-square" title="Good">&nbsp;</i> 159435
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>Name.Field.Id2</td>
+                                        </tr>
+                                        <tr class="notProvidedDataHistory">
+                                            <td>Student Master Id</td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="FieldHistoryDate2" class="accordion-toggle badDataHistory collapsed" role="tab" data-toggle="collapse" data-parent="#accordionn" data-target="#studentScholarshipStudentFieldHistoryDate2" aria-expanded="false" aria-controls="studentScholarshipStudentFieldHistoryDate2">
+                        <td colspan="4">
+                            <span title="Bad">
+                                <i role="img" class="fas fa-caret-circle-right">&nbsp;</i>
+                                Date: 12/18/2019 -- 3:30:07 PM
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="studentScholarshipStudentFieldHistoryDate2" class="collapse" role="tabpanel" aria-labelledby="FieldHistoryDate2">
+                                <table class="table table-striped student childRowTableChild">
+                                    <thead>
+                                        <tr>
+                                            <th>Field:</th>
+                                            <th>Current Value:</th>
+                                            <th>Original Value:</th>
+                                            <th>Source Field Id:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="enrichedDataHistory">
+                                            <td>Student Id</td>
+                                            <td>
+                                                <span class="" title="">
+                                                    <i role="img" class="fas fa-cog" title="Enriched">&nbsp;</i> 21687651
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>Name.Field.Id</td>
+                                        </tr>
+                                        <tr class="badDataHistory">
+                                            <td>Student Code</td>
+                                            <td>
+                                                <span class="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Bad">&nbsp;</i> 159435
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>Name.Field.Id2</td>
+                                        </tr>
+                                        <tr class="notProvidedDataHistory">
+                                            <td>Student Master Id</td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="notProvidedDataHistory" data-original-title="" title="">
+                                                    <i role="img" class="fas fa-exclamation-triangle" title="Not Provided">&nbsp;</i> Not Provided in UAIR
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <h3>Expandable/Collapsible Table with Child Rows (v1):</h3>
+        <div class="table-responsive">
+            <table id="studentScholarshipTable" class="table table-striped student childRowTableParent sourceDataContainer">
+                <tbody>
+                    <tr class="accordion-toggle enrichedDataHistory collapsed" data-toggle="collapse" data-target="#collapseStudent">
+                        <td colspan="4"><i role="img" class="fas fa-caret-circle-right">&nbsp;</i> Student</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div id="collapseStudent" class="collapse">
+                                <table class="table table-striped student childRowTableChild">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Current Value</th>
+                                            <th>Original Value</th>
+                                            <th>Source.Field.Id1</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="enrichedDataHistory">
+                                            <td>Ted Graf</td>
+                                            <td><i role="img" class="fas fa-cog">&nbsp;</i> Ted Allen Graf</td>
+                                            <td>Ted Graf</td>
+                                            <td>Name.Field.Id</td>
+                                        </tr>
+                                        <tr class="notProvidedDataHistory">
+                                            <td>Sara Graf</td>
+                                            <td><i role="img" class="fas fa-exclamation-triangle">&nbsp;</i> Sara Emery Graf</td>
+                                            <td>Sara Graf</td>
+                                            <td>Name.Field.Id2</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <h3>Ajax Table:</h3>
+        <div class="table-responsive">
+            <table id="studentTable" class="table table-hover table-striped student recordList">
+                <thead>
+                    <tr class="tableHeader">
+                        <th>Name</th>
+                        <th>Employee ID</th>
+                        <th>Constituent ID</th>
+                        <th>Email</th>
+                        <th>Phone #</th>
+                        <th>Data Source</th>
+                        <th>Errors</th>
+                        <th class="none">None</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-header="Name">Tyler Durden</td>
+                        <td data-header="EmployeeId">420</td>
+                        <td data-header="ConstituentId">3217895</td>
+                        <td id="studentEmail1" data-header="Email"><span>donotdisclose@paperstreetsoapcompany.com</span></td>
+                        <td data-header="Phone#">956-562-524</td>
+                        <td data-header="Data Source">Sage</td>
+                        <td data-header="Errors">99</td>
+                        <td data-header="None">&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Inline-Editable Table:</h3>
+        <div class="table-responsive">
+            <table id="editInlineTable" class="table table-hover table-striped recordList">
+                <thead>
+                    <tr class="tableHeader">
+                        <th>Name</th>
+                        <th>Employee ID</th>
+                        <th>Constituent ID</th>
+                        <th>Email</th>
+                        <th>Phone #</th>
+                        <th>Data Source</th>
+                        <th>Errors</th>
+                        <th class="none">None</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-header="Name">Tyler Durden</td>
+                        <td data-header="EmployeeId">420</td>
+                        <td data-header="ConstituentId">3217895</td>
+                        <td id="studentEmail2" data-header="Email"><span>donotdisclose@paperstreetsoapcompany.com</span></td>
+                        <td data-header="Phone#">956-562-524</td>
+                        <td data-header="Data Source">Sage</td>
+                        <td data-header="Errors">99</td>
+                        <td data-header="None">&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+
+    @*  Forms
+        ============================================ *@
+    <section id="utilitiesForms" class="clearfix">
+
+        <h2>Forms:</h2>
+        <hr class="clearfix" />
+        <form>
+            <div class="col-sm-12 col-md-6">
+                <fieldset>
+                    <legend class="sr-only">Form Legend:</legend>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                            </div>
+                            <label for="FieldName1">Label Name:</label>
+                            <input type="text" class="form-control" id="FieldName1" placeholder="Enter Name" />
+                        </div>
+                    </div><!-- /.col-* -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                            </div>
+                            <label for="FieldName2">Label Name:</label>
+                            <input type="text" class="form-control" id="FieldName2" placeholder="Enter Name" />
+                        </div>
+                    </div><!-- /.col-* -->
+                </fieldset>
+                <fieldset>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                            </div>
+                            <label for="FieldName3">Label Name:</label>
+                            <input type="text" class="form-control" id="FieldName3" placeholder="Enter Name" />
+                        </div>
+                    </div><!-- /.col-* -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                            </div>
+                            <label for="FieldName4">Label Name:</label>
+                            <input type="text" class="form-control" id="FieldName4" placeholder="Enter Name" />
+                        </div>
+                    </div><!-- /.col-* -->
+                    <div class="col-sm-12 col-lg-6">
+                        <div class="form-group">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs comments" rel="popover" title="View Comments" tabindex="-1"><i role="img" class="fas fa-comments-alt fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs history" title="View History" data-toggle="modal" data-target="#employeeDataDetailHistoryModal" tabindex="-1"><i role="img" class="fas fa-history fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs info" title="View Source Data" data-toggle="modal" data-target="#employeeDataDetailSourceDataModal" tabindex="-1"><i role="img" class="fas fa-database fa-sm">&nbsp;</i></button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i></button>
+                            </div>
+                            <label for="ed-datePicker" class="control-label">Date Picker:</label>
+                            <div class="input-group date">
+                                <input type="text" class="form-control" id="ed-datePicker" name="ed-datePicker" placeholder="yyyy/mm/dd" value="" />
+                                <span class="input-group-addon">
+                                    <i role="img" class="fas fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div><!-- /.col-* -->
+                </fieldset>
+            </div><!-- /.col-* -->
+
+            <div class="col-sm-12 col-md-6">
+                <fieldset>
+                    <legend class="sr-only">Checkbox Button Inputs:</legend>
+
+                    <!-- Flexbox Columns (Preferred) -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group flex-parent">
+                            <div class="checkbox checkbox-primary flex-firstchild">
+                                <input id="checkbox2" type="checkbox" checked />
+                                <label for="checkbox2">
+                                    Single Checkbox Button Label
+                                </label>
+                            </div>
+                            <div class="pull-right flex-lastchild">
+                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                        data-info-content-name="UDP Employee"
+                                        data-info-content-description="Is this employee a member of the UDP?"
+                                        data-info-content-source="UAIR"
+                                        data-info-content-sourcefieldid="source_fieldId">
+                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                </button>
+                                <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                        data-history-content-status="Good"
+                                        data-history-content-date="Today"
+                                        data-history-content-value="True">
+                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                </button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flexbox Columns (Preferred) -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group horizontal">
+                            <div class="firstchild" title="FYI: This horizontal format (for multiple selections) will only work for short label names. For longer label names, please use the vertical orientation (as seen below).">
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox99" type="checkbox" checked />
+                                    <label for="checkbox99">
+                                        Eggs
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox100" type="checkbox" />
+                                    <label for="checkbox100">
+                                        Bacon
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox101" type="checkbox" />
+                                    <label for="checkbox101">
+                                        Toast
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="pull-right lastchild">
+                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                        data-info-content-name="UDP Employee"
+                                        data-info-content-description="Is this employee a member of the UDP?"
+                                        data-info-content-source="UAIR"
+                                        data-info-content-sourcefieldid="source_fieldId">
+                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                </button>
+                                <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                        data-history-content-status="Good"
+                                        data-history-content-date="Today"
+                                        data-history-content-value="True">
+                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                </button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flexbox Columns (Preferred) -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group vertical">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                        data-info-content-name="UDP Employee"
+                                        data-info-content-description="Is this employee a member of the UDP?"
+                                        data-info-content-source="UAIR"
+                                        data-info-content-sourcefieldid="source_fieldId">
+                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                </button>
+                                <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                        data-history-content-status="Good"
+                                        data-history-content-date="Today"
+                                        data-history-content-value="True">
+                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                </button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                            </div>
+                            <label class="control-label">Select Options:</label>
+                            <div class="">
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox11" type="checkbox" />
+                                    <label for="checkbox11">
+                                        First Option
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox22" type="checkbox" checked />
+                                    <label for="checkbox22">
+                                        Second Option
+                                    </label>
+                                </div>
+                                <div class="checkbox checkbox-primary">
+                                    <input id="checkbox33" type="checkbox" />
+                                    <label for="checkbox33">
+                                        Third Option
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <legend class="sr-only">Radio Button Inputs:</legend>
+                    <!-- Flexbox Columns (Preferred) -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group horizontal">
+                            <div class="firstchild">
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioSignal1" id="radioStopp" value="option1" />
+                                    <label for="radioStopp">
+                                        Single Radio Button Label
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="pull-right lastchild">
+                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                        data-info-content-name="UDP Employee"
+                                        data-info-content-description="Is this employee a member of the UDP?"
+                                        data-info-content-source="UAIR"
+                                        data-info-content-sourcefieldid="source_fieldId">
+                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                </button>
+                                <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                        data-history-content-status="Good"
+                                        data-history-content-date="Today"
+                                        data-history-content-value="True">
+                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                </button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flexbox Columns (Preferred) -->
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group horizontal">
+                            <div class="firstchild" title="FYI: This horizontal format (for multiple selections) will only work for short label names. For longer label names, please use the vertical orientation (as seen below).">
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioSignal" id="radioStop" value="option1" checked />
+                                    <label for="radioStop">
+                                        Radio 1
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioSignal" id="radioSlow" value="option2" />
+                                    <label for="radioSlow">
+                                        Radio 2
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioSignal" id="radioGo" value="option3" />
+                                    <label for="radioGo">
+                                        Radio 3
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="pull-right lastchild">
+                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                        data-info-content-name="UDP Employee"
+                                        data-info-content-description="Is this employee a member of the UDP?"
+                                        data-info-content-source="UAIR"
+                                        data-info-content-sourcefieldid="source_fieldId">
+                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                </button>
+                                <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                        data-history-content-status="Good"
+                                        data-history-content-date="Today"
+                                        data-history-content-value="True">
+                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                </button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<!-- Bootstrap Columns -->
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-9 col-md-9">
+                                    <div class="checkbox checkbox-primary">
+                                        <input id="checkbox2" type="checkbox" checked="">
+                                        <label for="checkbox2">
+                                            Primary Checkbox
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="pull-right col-sm-3 col-md-3">
+                                    <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                            data-info-content-name="UDP Employee"
+                                            data-info-content-description="Is this employee a member of the UDP?"
+                                            data-info-content-source="UAIR"
+                                            data-info-content-sourcefieldid="source_fieldId">
+                                        <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                    </button>
+                                    <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                            data-history-content-status="Good"
+                                            data-history-content-date="Today"
+                                            data-history-content-value="True">
+                                        <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                    </button>
+                                    <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                </div>
+                            </div><!-- /.form-group -->
+                        </div><!-- /.col-* -->*@
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group vertical">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                        data-info-content-name="UDP Employee"
+                                        data-info-content-description="Is this employee a member of the UDP?"
+                                        data-info-content-source="UAIR"
+                                        data-info-content-sourcefieldid="source_fieldId">
+                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                </button>
+                                <button type="button" class="btn btn-xs historyPerField employeeUDP" title="Field History" rel="popover" tabindex="-1"
+                                        data-history-content-status="Good"
+                                        data-history-content-date="Today"
+                                        data-history-content-value="True">
+                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                </button>
+                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                            </div>
+                            <label class="control-label">Favorite 80's Song:</label>
+                            <div class="">
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioTraffic" id="radio1" value="option1">
+                                    <label for="radio1">
+                                        We Didn't Start the Fire!
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioTraffic" id="radio2" value="option2" checked="">
+                                    <label for="radio2">
+                                        Walk Like an Egyptian!
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <input type="radio" name="radioTraffic" id="radio3" value="option2" checked="">
+                                    <label for="radio3">
+                                        Never Gonna Give You Up!
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <button type="submit" class="btn btn-default" data-toggle="tooltip" title="Submit"><i role="img" class="fas fa-check">&nbsp;</i>Submit</button>
+            </div><!-- /.col-* -->
+        </form>
+
+    </section>
+
+    @*  Model Attributes
+        ============================================ *@
+    <section id="utilitiesModelAttributes" class="clearfix">
+
+        <h2>Business Glossary:</h2>
+        <hr class="clearfix" />
+        <button id="btn-show-all-children" type="button">Expand All</button>
+        <button id="btn-hide-all-children" type="button">Collapse All</button>
+        <div class="table-responsive">
+            <table id="businessGlossaryTable" class="display table table-hover table-striped">
+                <caption class="sr-only">Business Glossary Names and Descriptions</caption>
+                <thead>
+                    <tr class="tableHeader">
+                        <th scope="col"></th>
+                        <th scope="col">Business Name</th>
+                        <th scope="col">Business Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td data-header="Business Name">[Business Name]</td>
+                        <td data-header="Business Description">[Business Description - Need Data (We are Truncating Because These Descriptions Can Get Very Long Indeed.)]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+
+    @*  Drag/Drop List Re-Order
+        ============================================ *@
+    <section id="utilitiesDragDropReorderList" class="clearfix">
+
+        <h2>Drag/Drop Re-Order List:</h2>
+        <hr class="clearfix" />
+
+        <div class="col-sm-12 col-md-4">
+            <h4>Producers (Reorder):</h4>
+            @*<ul class="reorder-list-container">
+                    <li class="list-item">
+                        <p class="item-content"><span class="order">1</span> Alpha</p>
+                    </li>
+                    <li class="list-item">
+                        <p class="item-content"><span class="order">2</span> Bravo</p>
+                    </li>
+                    <li class="list-item">
+                        <p class="item-content"><span class="order">3</span> Charlie</p>
+                    </li>
+                    <li class="list-item">
+                        <p class="item-content"><span class="order">4</span> Delta</p>
+                    </li>
+                </ul>*@
+        </div><!-- /.col-* -->
+
+        <div class="col-sm-12 col-md-4">
+            <h4>Producers: (Drag/Drop to Reorder):</h4>
+            <ol id="demo1" class="slippylist">
+                <li>Sage</li>
+                <li>UAIR</li>
+                <li>DevelopU</li>
+                <li>UofA</li>
+                <li>Jira</li>
+            </ol>
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-4">
+            <h4>Consumers:</h4>
+            <ol id="test" class="slippylist-no">
+                <li>Sage</li>
+                <li>UAIR</li>
+                <li>DevelopU</li>
+                <li>UofA</li>
+                <li>Jira</li>
+            </ol>
+        </div><!-- /.col-* -->
+
+    </section>
+
+
+    @*  Tree View List
+        ============================================ *@
+    <section id="utilitiesTreeViewList" class="clearfix">
+
+        <h2>Organizational Hierarchy List:</h2>
+        <hr class="clearfix" />
+
+        <div class="col-sm-12 col-md-4">
+            <div class="pull-right">
+                <button type="button" title="Collapse All" id="jsTreeCollapseAll" class="btn btn-xs btn-primary"><i class="fas fa-caret-up"></i></button>
+                <button type="button" title="Expand All" id="jsTreeExpandAll" class="btn btn-xs btn-primary"><i class="fas fa-caret-down"></i></button>
+            </div>
+            <h4>Organizational Unit Hierarchy:</h4>
+            <div class="form-group">
+                <input type="text" id="ajaxsearch" name="ajaxsearch" class="form-control" placeholder="Search" />
+            </div>
+
+            <div id="ajax" class="tree-demo"></div>
+
+            @*<h4>Lazy loading demo</h4>
+                <div id="lazy" class="demo"></div>*@
+
+        </div><!-- /.col-* -->
+
+        <div class="col-sm-12 col-md-8">
+            <div class="hierarchy-details-container">
+                <h4>Organizational Unit Details:</h4>
+                <div class="col-sm-12 col-md-2">
+                    <div class="profile-img"></div>
+                </div>
+                <div class="col-sm-12 col-md-10">
+                    <dl class="hierarchy-details dl-horizontal"></dl>
+                </div>
+            </div>
+            <div class="hr"></div>
+        </div><!-- /.col-* -->
+
+    </section>
+
+
+</div>
+
+
+<div id="tests" class="rowExtraDataContainer hide">
+    <div class="child-row">
+        <p>Testing...</p>
+    </div>
+</div>
+
+
+<!-- Modal - History -->
+<div class="modal fade" id="employeeDataDetailHistoryModal" tabindex="-1" role="dialog" aria-labelledby="employeeDataDetailHistoryModal employeeDataDetailHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataDetailHistoryModalLabel">Data History:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x">&nbsp;</i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <h4>History (per field):</h4>
+                        <div class="table-responsive">
+                            <table id="historyPerFieldTable" class="table table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th>Date:</th>
+                                        <th>Value:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Value">Changed Value (today)</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Date">2019-05-04</td>
+                                        <td data-header="Value">Current Value (yesterday)</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Date">2019-05-03</td>
+                                        <td data-header="Value">Enriched Value (pre-processed)</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Value">Original Value (staging)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                    <div class="col-sm-12">
+                        <h4>Record History:</h4>
+                        <div class="table-responsive">
+                            <table id="historyPerRecordTable" class="table responsive table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Date:</th>
+                                        <th class="all">Name:</th>
+                                        <th class="all">Building Code:</th>
+                                        <th class="all">Address 1:</th>
+                                        <th class="none" title="TESTING">Address 2:</th>
+                                        <th class="all">City:</th>
+                                        <th class="all">State:</th>
+                                        <th class="none">Postal Code:</th>
+                                        <th class="none">Country:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Date">2019-05-04</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Date">2019-05-03</td>
+                                        <td data-header="Name">Slonaker House</td>
+                                        <td data-header="Building Code">109</td>
+                                        <td data-header="Address 1">1027 E. 2 St.</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">AZ</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">United States of America</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Name">Vine Annex</td>
+                                        <td data-header="Building Code">190</td>
+                                        <td data-header="Address 1">1125 N. Vine</td>
+                                        <td data-header="Address 2">&nbsp;</td>
+                                        <td data-header="City">Tucson</td>
+                                        <td data-header="State">Ariz</td>
+                                        <td data-header="Postal Code">85719</td>
+                                        <td data-header="Country">US</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                    <div class="col-sm-12 col-md-6">
+                        <h4>Source Data (per field):</h4>
+                        <div class="table-responsive">
+                            <table id="sourceDataPerFieldTable" class="table table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th>Date:</th>
+                                        <th>Source:</th>
+                                        <th>Current Value:</th>
+                                        <th>Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Date">2019-05-02</td>
+                                        <td data-header="Source System">Sage</td>
+                                        <td data-header="Value">Original Value (staging)</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                    <div class="col-sm-12">
+                        <h4>Source Data (per record):</h4>
+                        <div class="table-responsive">
+                            <table id="sourceDataPerRecordTable" class="table responsive table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Date:</th>
+                                        <th class="all">Source:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-header="Field">Name</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">Slonaker House</td>
+                                        <td data-header="Original Value">Vine Annex</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Building Code</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">109</td>
+                                        <td data-header="Original Value">&nbsp;</td>
+                                        <td data-header="Source Field Id"><span class="text-danger">Not Provided</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Address 1</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">1027 E. 2 St.</td>
+                                        <td data-header="Original Value">1125 N. Vine</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Address_1__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Address 2</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">Ste.#: 109</td>
+                                        <td data-header="Original Value">Unit 109</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Address_2__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">City</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">Tucson</td>
+                                        <td data-header="Original Value">Tucson</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__City__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">State</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">AZ</td>
+                                        <td data-header="Original Value">&nbsp;</td>
+                                        <td data-header="Source Field Id"><span class="text-danger">Not Provided</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Postal Code</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">85719</td>
+                                        <td data-header="Original Value">85719</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Postal_Code__c</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-header="Field">Country</td>
+                                        <td data-header="Date">2019-05-05</td>
+                                        <td data-header="Source">Sage</td>
+                                        <td data-header="Current Value">United States of America</td>
+                                        <td data-header="Original Value">US</td>
+                                        <td data-header="Source Field Id">fHCM2__Work_Location__c.fHCM2__Country__c</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal - Raw Data -->
+<div class="modal fade" id="employeeDataDetailRawDataModal" tabindex="-1" role="dialog" aria-labelledby="employeeDataDetailRawDataModal employeeDataDetailRawDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeDataDetailRawDataModalLabel">Raw Data:</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x">&nbsp;</i></button>
+            </div>
+            <div class="modal-body">
+                Raw Data coming soon...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Popover - Title -->
+<div id="popover-comments-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close Comments"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    <a href="javascript:;" role="button" class=" btn btn-xs btn-link reverse pull-right" title="Add New Note/Comment"><i role="img" class="fas fa-plus-circle">&nbsp;</i> New</a>
+    Comments:
+</div><!-- /.popover (title) -->
+<!-- Popover - Content -->
+<div id="popover-comments-content" class="popover hide">
+    <div class="timeline">
+        <ul>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet chili"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga. Sapien in monti palavris qui num significa nadis i pareci latim. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis.</p>
+                    <div class="people" data-toggle="tooltip" title="Username">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/ashleyford/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                    <div class="time"><i role="img" class="fas fa-calendar-alt"></i> 49 minutes ago</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet sky"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Suco de cevadiss, é um leite divinis, qui tem lupuliz, matis, aguis e fermentis. Interagi no mé, cursus quis, vehicula ac nisi. Aenean vel dui dui. Nullam leo erat, aliquet quis tempus a, posuere ut mi.</p>
+                    <div class="people">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/mattsince87/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                    <div class="time"><i role="img" class="fas fa-calendar-alt"></i> Yesterday</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet chili"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac mauris lectus, non scelerisque augue. Aenean justo massa.</p>
+                    <div class="people">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/ashleyford/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                    <div class="time"><i role="img" class="fas fa-calendar-alt"></i> 3 days ago</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <div class="col-sm-1">
+                    <div class="bullet bloom"></div>
+                </div>
+                <div class="col-sm-11 desc">
+                    <div class="arrow"></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <div class="time"><i role="img" class="fas fa-calendar-alt"></i> 12 weeks ago</div>
+                    <div class="people">
+                        <small class="text-muted">Added by: </small>
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg" alt="user avatar img" title="Username" />
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+
+
+@section scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            /* Toggle Expand/Collapse All */
+            // If any are open, close all
+            // If any are closed, open all
+
+
+
+
+            /* jsTree Search */
+            //$.jstree.defaults.search.search_leaves_only = true;
+            $("#ajaxsearch").keyup(function () {
+                var searchString = $(this).val();
+                console.log(searchString);
+                $('#ajax').jstree('search', searchString);
+            });
+
+            /* jsTree Events */
+            $("#ajax").on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                for (i = 0, j = data.selected.length; i < j; i++) {
+                    r.push(data.instance.get_node(data.selected[i]).text);
+                    //console.log("Node Name: " + data.instance.get_node(data.selected[i]).text);
+                    $('.profile-img').html('<img src="' + data.instance.get_node(data.selected[i]).original.avatar + '" alt="Photo of Selected Node" rel="tooltip" title="Profile Photo" />');
+
+                    $('.hierarchy-details').html(
+                        '<dt>Name: </dt><dd><span rel="tooltip" title="Name Source: ' + data.instance.get_node(data.selected[i]).original.nameSource + ' / Name Date: ' + data.instance.get_node(data.selected[i]).original.nameDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.name + '</span></dd>'
+                    ).append(
+                        '<dt>Code: </dt><dd><span rel="tooltip" title="Code Source: ' + data.instance.get_node(data.selected[i]).original.codeSource + ' / Code Date: ' + data.instance.get_node(data.selected[i]).original.codeDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.code + '</span></dd>'
+                    ).append(
+                        '<dt>Organizational Unit Code: </dt><dd><span rel="tooltip" title="Organizational Unit Code Source: ' + data.instance.get_node(data.selected[i]).original.orgUnitCodeSource + ' / Organizational Unit Code Date: ' + data.instance.get_node(data.selected[i]).original.orgUnitCodeDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.orgUnitCode + '</span></dd>'
+                    ).append(
+                        '<dt>Organizational Unit Type: </dt><dd><span rel="tooltip" title="Organizational Unit Type Source: ' + data.instance.get_node(data.selected[i]).original.orgUnitTypeSource + ' / Organizational Unit Type Date: ' + data.instance.get_node(data.selected[i]).original.orgUnitTypeDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.orgUnitType + '</span></dd>'
+                    ).append(
+                        '<dt>Organization: </dt><dd><span rel="tooltip" title="Organization Source: ' + data.instance.get_node(data.selected[i]).original.orgSource + ' / Organization Date: ' + data.instance.get_node(data.selected[i]).original.orgDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.org + '</span></dd>'
+                    ).append(
+                        '<dt>Parent Organizational Unit: </dt><dd><span rel="tooltip" title="Parent Organizational Unit Source: ' + data.instance.get_node(data.selected[i]).original.parentOrgUnitSource + ' / Parent Organizational Unit Date: ' + data.instance.get_node(data.selected[i]).original.parentOrgUnitDate + '">'
+                        + data.instance.get_node(data.selected[i]).original.parentOrgUnit + '</span></dd>'
+                    );
+                    $('.hierarchy-details-container ~ .hr').html('<hr />');
+                };
+            });
+
+            /* jsTree Configuration */
+            $("#ajax").jstree({
+                "plugins": ["search", "types"],
+                "core": {
+                    "data": {
+                        //"url": "../../js/root.json",
+                        "url": "/js/org-hierarchy.json"
+                        //'url': function (node) {
+                        //    //return node.id === '#' ? '../../js/org-hierarchy.json' : '../../js/ua-children.json';
+                        //    return node.id === '#' ? '/js/ajax_demo_roots.json' : '/js/ajax_demo_children.json';
+                        //},
+                        , 'data': function (node) {
+                            return { 'id': node.id };
+                        }
+                        , "dataType": "json" // needed only if you do not supply JSON headers
+                    }
+                    , "themes": {
+                        "responsive": true
+                        , "stripes": false
+                    }
+                    , "types": {
+                        'default': {
+                            'icon': 'fad fa-caret-right fa-fw'
+                        }
+                        , 'f-open': {
+                            'icon': 'fad fa-chair-office fa-fw'
+                        }
+                        , 'f-closed': {
+                            'icon': 'fad fa-chair-office fa-fw'
+                        }
+                    }
+                }
+            });
+
+            //$('#ajax').jstree({
+            //    'core': {
+            //        'data': {
+            //            'url': function (node) {
+            //                //return node.id === '#' ? '../../js/org-hierarchy.json' : '../../js/ua-children.json';
+            //                return node.id === '#' ? '/js/ajax_demo_roots.json' : '/js/ajax_demo_children.json';
+            //            },
+            //            'data': function (node) {
+            //                return { 'id': node.id };
+            //            },
+            //            'success': function (nodes) {
+
+            //                var validateChildrenArray = function (node) {
+
+            //                    if (!node.children || node.children.length === 0) {
+            //                        node.children = true;
+            //                    }
+            //                    else {
+            //                        for (var i = 0; i < node.children.length; i++) {
+            //                            validateChildrenArray(node.children[i]);
+            //                        }
+            //                    }
+            //                };
+
+            //                for (var i = 0; i < nodes.length; i++) {
+            //                    validateChildrenArray(nodes[i]);
+            //                }
+            //            }
+            //        }
+            //    }
+            //});
+
+            //$('#ajax')
+            //    .jstree({
+            //        "core": {
+            //            "animation": 0,
+            //            "check_callback": true,
+            //            "themes": { "stripes": false },
+            //            'data': {
+            //                'url': function (node) {
+            //                    return node.id === '#' ? '../../js/org-hierarchy.json' : '../../js/ua-children.json';
+            //                },
+            //                'data': function (node) {
+            //                    return { 'id': node.id };
+            //                }
+            //            }
+            //        },
+            //        "types": {
+            //            "#": { "max_children": 6, "max_depth": 4, "valid_children": ["root"] },
+            //            "root": { "icon": "./assets/images/tree_icon.png", "valid_children": ["default"] },
+            //            "default": { "valid_children": ["default", "file"] },
+            //            "file": { "icon": "glyphicon glyphicon-file", "valid_children": [] }
+            //        },
+            //        "plugins": ["contextmenu", "dnd", "search", "state", "types", "wholerow"]
+            //    });
+
+            //// lazy demo
+            //$('#lazy').jstree({
+            //    'core': {
+            //        'data': {
+            //            "url": "//www.jstree.com/fiddle/?lazy"
+            //            , "data": function (node) {
+            //                return { "id": node.id };
+            //            }
+            //        }
+            //    }
+            //});
+
+
+            /* Expand All Nodes */
+            var expandAllNodes = function () {
+                $('#ajax').jstree('open_all');
+            }
+            $('#jsTreeExpandAll').on('click', expandAllNodes)
+
+            /* Collapse All Nodes */
+            var collapseAllNodes = function () {
+                $('#ajax').jstree('close_all');
+            }
+            $('#jsTreeCollapseAll').on('click', collapseAllNodes)
+
+
+            ///* Bind customize icon change function in jsTree open_node event. */
+            ///* Toggle between folder open and folder closed */
+            $('#ajax').on('open_node.jstree', function (e, data) {
+                var icon = $('#' + data.node.id).find('i.jstree-icon.jstree-themeicon').first();
+                //icon.removeClass('fa-folder').addClass('fa-folder-open');
+                icon.removeClass('fa-folder').addClass('fa-chair-office');
+            });
+
+            // bind customize icon change function in jsTree close_node event.
+            $('#ajax').on('close_node.jstree', function (e, data) {
+                var icon = $('#' + data.node.id).find('i.jstree-icon.jstree-themeicon').first();
+                //icon.removeClass('fa-folder-open').addClass('fa-folder');
+                icon.removeClass('fa-folder').addClass('fa-chair-office');
+            });
+
+
+            //// this is for the nested format
+            //var your_tree_nested = $('#ajax').jstree(true).get_json();
+            //// and this is for the flat format (with ID / PARENT)
+            //var your_tree_flat = $('#ajax').jstree(true).get_json(null, { "flat": true });
+            //console.log("YourTreeFlat: " + your_tree_flat);
+
+
+
+
+
+
+
+
+            // Select (Drop-Down) Lists
+            // ---------------------------------------------------------------------
+            // https://select2.org/
+            $('#bd-homeStateSelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            $('#bd-homeCountrySelector').select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+
+            // Rick Roll click event:
+            $('#radio3').on('click', function () {
+                var urlRadio3 = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                window.location.href = urlRadio3;
+            });
+
+
+            // DataTable [Student] Definition
+            // ------------------------------------------------------------
+            var studentTable = $('#studentTable').DataTable({
+                ajax: {
+                    url: "../../js/studentData.txt",
+                    type: "GET",
+                    jsonp: 'callback',
+                    dataType: 'json',
+                    crossDomain: true,
+                },
+                paging: true,
+                pageLength: 10,
+                "lengthMenu": [10, 25, 50, 75, 100],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'Blfrtip',
+                language: {
+                    loadingRecords: '&nbsp;',
+                    processing: 'Processing... <div class="spinner"></div>',
+                    search: 'Filter'
+                },
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ],
+                "columns": [
+                    { "data": "name", "name": "name", "autoWidth": true },
+                    { "data": "eid", "eid": "eid", "autoWidth": true },
+                    { "data": "cid", "Constituent ID": "ConstID", "autoWidth": true },
+                    { "data": "email", "Email": "Email", "autoWidth": true },
+                    { "data": "phone", "Phone": "Phone", "autoWidth": true },
+                    { "data": "source", "source": "Source", "autoWidth": true },
+                    { "data": "errors", "errors": "Errors", "autoWidth": true },
+                    //{ "data": "status", "status": "Status", "autoWidth": true },
+                    { "data": "none", "none": "None", "autoWidth": true },
+                ]
+            });
+
+
+            // DataTable [Business Glossary / Model Attributes] Definition
+            // ------------------------------------------------------------
+            var businessGlossaryTable = $('#businessGlossaryTable2');
+            $(businessGlossaryTable).DataTable({
+                //ajax: {
+                //    url: "../../js/modelAttributes.txt",
+                //    type: "GET",
+                //    jsonp: 'callback',
+                //    dataType: 'json',
+                //    crossDomain: true,
+                //},
+                paging: true,
+                pageLength: 10,
+                "lengthMenu": [10, 25, 50, 75, 100],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'Blfrtip',
+                language: {
+                    search: 'Filter'
+                },
+                // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                columnDefs: [{
+                    targets: 1 // Column # (Zero-based)
+                    , render: $.fn.dataTable.render.ellipsis(50, true)
+                    , width: '30%'
+                }],
+                buttons: [
+                    'excel', 'pdfHtml5', 'print'
+                ],
+                "columns": [
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "description", "name": "Description", "autoWidth": true },
+                    { "data": "source", "name": "DataSource", "autoWidth": true },
+                    { "data": "producer", "name": "Producer", "autoWidth": true },
+                    { "data": "consumer", "name": "Consumer", "autoWidth": true },
+                ]
+            });
+
+
+
+            // DataTable [History Per Record] Definition
+            // ------------------------------------------------------------
+            var historyPerRecordTable = $('#historyPerRecordTable');
+            $(historyPerRecordTable).DataTable({
+                //ajax: {
+                //    url: "../../js/modelAttributes.txt",
+                //    type: "GET",
+                //    jsonp: 'callback',
+                //    dataType: 'json',
+                //    crossDomain: true,
+                //},
+                paging: true,
+                pageLength: 10,
+                "lengthMenu": [10, 25, 50, 75, 100],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'Blfrtip',
+                language: {
+                    search: 'Filter'
+                },
+                // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                columnDefs: [{
+                    targets: 1 // Column # (Zero-based)
+                    , render: $.fn.dataTable.render.ellipsis(50, true)
+                    , width: '20%'
+                },
+                { responsivePriority: 1, targets: 0 },
+                { responsivePriority: 2, targets: -2 }
+                ],
+                responsive: true,
+                order: [
+                    [0, "desc"]
+                ],
+                buttons: [
+                    'excel', 'pdfHtml5', 'print'
+                ],
+                "columns": [
+                    { "data": "date", "date": "Date", "autoWidth": true },
+                    { "data": "name", "name": "Name", "autoWidth": true },
+                    { "data": "buildingCode", "buildingCode": "Building Code", "autoWidth": true },
+                    { "data": "address1", "address1": "Address 1", "autoWidth": true },
+                    { "data": "address2", "address2": "Address 2", "autoWidth": true },
+                    { "data": "city", "city": "City", "autoWidth": true },
+                    { "data": "state", "state": "State", "autoWidth": true },
+                    { "data": "postalCode", "postalCode": "Postal Code", "autoWidth": true },
+                    { "data": "country", "country": "Country", "autoWidth": true },
+                ]
+            });
+
+
+            // DataTable [Source Data Per Record] Definition
+            // ------------------------------------------------------------
+            var sourceDataPerRecordTable = $('#sourceDataPerRecordTable');
+            $(sourceDataPerRecordTable).DataTable({
+                //ajax: {
+                //    url: "../../js/modelAttributes.txt",
+                //    type: "GET",
+                //    jsonp: 'callback',
+                //    dataType: 'json',
+                //    crossDomain: true,
+                //},
+                paging: true,
+                pageLength: 10,
+                "lengthMenu": [10, 25, 50, 75, 100],
+                // dom() more info: https://datatables.net/reference/option/dom ::
+                // B = Buttons
+                // l = page (l)ength changing input control
+                // f = (f)iltering input
+                // r = p(r)ocessing display element
+                // t = (t)able
+                // i = table (i)nfo summary - aka: showing x of x records
+                // p = (p)agination control
+                dom: 'Blfrtip',
+                language: {
+                    search: 'Filter'
+                },
+                // Ellipsis: https://datatables.net/plug-ins/dataRender/ellipsis more info: https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js ::
+                columnDefs: [{
+                    targets: 1 // Column # (Zero-based)
+                    , render: $.fn.dataTable.render.ellipsis(50, true)
+                    , width: '20%'
+                },
+                { responsivePriority: 1, targets: 0 },
+                { responsivePriority: 2, targets: -2 }
+                ],
+                responsive: true,
+                order: [
+                    [0, "desc"]
+                ],
+                buttons: [
+                    'excel', 'pdfHtml5', 'print'
+                ],
+                "columns": [
+                    { "data": "field", "field": "Field", "autoWidth": true },
+                    { "data": "date", "date": "Date", "autoWidth": true },
+                    { "data": "source", "source": "Source", "autoWidth": true },
+                    { "data": "currentValue", "currentValue": "Current Value", "autoWidth": true },
+                    { "data": "originalValue", "originalValue": "Original Value", "autoWidth": true },
+                    { "data": "sourceFieldId", "sourceFieldId": "Source Field Id", "autoWidth": true },
+                ]
+            });
+
+
+
+            // Popover
+            // ---------------------------------------------------------------------
+
+            var $elements = $('.comments');
+            $elements.each(function () {
+                var $element = $(this);
+
+                $element.popover({
+                    html: true
+                    , placement: 'top'
+                    , container: $('body') // This is just so the btn-group doesn't get messed up... also makes sorting the z-index issue easier
+                    , title: function () {
+                        return $('#popover-comments-title').html();
+                    }
+                    , content: function () {
+                        return $('#popover-comments-content').html();
+                        //return $($(this).data('contentwrapper')).html();
+                    }
+                    , trigger: 'click'
+                });
+
+                $element.on('shown.bs.popover', function () {
+                    var popover = $element.data('bs.popover');
+                    if (typeof popover !== "undefined") {
+                        var $tip = popover.tip();
+                        zindex = $tip.css('z-index');
+
+                        $tip.find('.close').bind('click', function () {
+                            popover.hide();
+                        });
+
+                        $tip.mouseover(function () {
+                            $tip.css('z-index', function () {
+                                return zindex + 1;
+                            });
+                        })
+                            .mouseout(function () {
+                                $tip.css('z-index', function () {
+                                    return zindex;
+                                });
+                            });
+                    }
+                });
+            });
+
+
+
+            // Tooltip Titles
+            // ---------------------------------------------------------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+
+
+            // DataTable [Business Glossary] Definition
+            // ------------------------------------------------------------
+
+            var rowExtraDataContainer = $('.rowExtraDataContainer');
+            function format(d) {
+                return ' ' +
+                    //'Salary: ' + d.salary + '<br>' +
+                    //'Start Date: ' + d.start_date + '<br>' +
+                    //'<div id="" class="rowExtraDataContainer">' +
+                    //    '<div class="child-row">' +
+                    //        '<div class="col-sm-12 col-md-6">' +
+                    //            '<h4>Producers: (Drag/Drop to Reorder):</h4>' +
+                    //            '<ol id="demo2" class="slippylist">' +
+                    //                '<li>' + d.data_producer_1 + '</li>' +
+                    //                '<li>' + d.data_producer_2 + '</li>' +
+                    //            '</ol>' +
+                    //        '</div>' +
+                    //        '<div class="col-sm-12 col-md-6">' +
+                    //            '<p>Producer 1: ' + d.data_producer_1 + '<br>' +
+                    //            'Producer 2: ' + d.data_producer_2 + '<br>' +
+                    //            'Producer 3: ' + d.data_producer_3 + '</p>' +
+                    //        '</div>' +
+                    //    '</div>' +
+                    //'</div>';
+                    '<div id="" class="rowExtraDataContainer">' +
+                    '<div class="child-row">' +
+                    '<div class="col-sm-12 col-md-6">' +
+                    '<h4>Producers: (Drag/Drop to Reorder):</h4>' +
+                    '<ul class="reorder-list-container">' +
+                    '<li class="list-item">' +
+                    '<p class="item-content"><span class="order">1</span> ' + d.data_producer_1 + '</p>' +
+                    '</li>' +
+                    '<li class="list-item">' +
+                    '<p class="item-content"><span class="order">2</span> ' + d.data_producer_2 + '</p>' +
+                    '</li>' +
+                    '<li class="list-item">' +
+                    '<p class="item-content"><span class="order">3</span> ' + d.data_producer_3 + '</p>' +
+                    '</li>' +
+                    '<li class="list-item">' +
+                    '<p class="item-content"><span class="order">4</span> ' + d.data_producer_4 + '</p>' +
+                    '</li>' +
+                    '</ul>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+                //rowExtraDataContainer.html();
+            };
+
+            var dt = $('#businessGlossaryTable').DataTable({
+                "processing": true,
+                //"serverSide": true,
+                "ajax": "/js/business-glossary-data.json",
+                "columns": [
+                    {
+                        "class": "details-control",
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ""
+                    },
+                    { "data": "business_name" },
+                    { "data": "business_description" }
+                ],
+                "order": [[1, 'asc']]
+            });
+
+            // Array to track the ids of the details displayed rows
+            var detailRows = [];
+            //
+            $('#businessGlossaryTable tbody').on('click', 'tr:not(tr.details + tr)', function () {
+                var tr = $(this).closest('tr');
+                var row = dt.row(tr);
+                var idx = $.inArray(tr.attr('id'), detailRows);
+
+                if (row.child.isShown()) {
+                    tr.removeClass('details');
+                    row.child.hide();
+
+                    // Remove from the 'open' array
+                    detailRows.splice(idx, 1);
+                }
+                else {
+                    tr.addClass('details');
+                    row.child(format(row.data())).show();
+
+                    // Add to the 'open' array
+                    if (idx === -1) {
+                        detailRows.push(tr.attr('id'));
+                    }
+                }
+            });
+
+            // Handle click on "Expand All" button
+            $('#btn-show-all-children').on('click', function () {
+                // Enumerate all rows
+                dt.rows().every(function () {
+                    // If row has details collapsed
+                    if (!this.child.isShown()) {
+                        // Open this row
+                        this.child(format(this.data())).show();
+                        $(this.node()).addClass('shown details');
+                    }
+                });
+            });
+
+            // Handle click on "Collapse All" button
+            $('#btn-hide-all-children').on('click', function () {
+                // Enumerate all rows
+                dt.rows().every(function () {
+                    // If row has details expanded
+                    if (this.child.isShown()) {
+                        // Collapse row details
+                        this.child.hide();
+                        $(this.node()).removeClass('shown details');
+                    }
+                });
+            });
+
+            // On each draw, loop over the `detailRows` array and show any child rows
+            dt.on('draw', function () {
+                $.each(detailRows, function (i, id) {
+                    $('#' + id + ' td.details-control').trigger('click');
+                });
+            });
+
+
+        }); // End document.ready function
+
+
+
+            //// Slip.js (Drag-Drop Re-Ordering)
+            //// ---------------------------------------------------------------------
+            //function setupSlip(list) {
+            //    list.addEventListener('slip:beforeswipe', function (e) {
+            //        if (e.target.nodeName == 'INPUT' || e.target.classList.contains('demo-no-swipe')) {
+            //            e.preventDefault();
+            //        }
+            //    }, false);
+
+            //    list.addEventListener('slip:beforewait', function (e) {
+            //        if (e.target.classList.contains('instant')) e.preventDefault();
+            //    }, false);
+
+            //    list.addEventListener('slip:afterswipe', function (e) {
+            //        e.target.parentNode.appendChild(e.target);
+            //    }, false);
+
+            //    list.addEventListener('slip:reorder', function (e) {
+            //        e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+            //        return false;
+            //    }, false);
+            //    return new Slip(list);
+            //}
+            //setupSlip(document.getElementById('demo1'));
+
+            // Slip.js (Drag-Drop Re-Ordering)
+            // ---------------------------------------------------------------------
+            //function setupSlip(list) {
+            //    list.addEventListener('slip:beforeswipe', function (e) {
+            //        if (e.target.nodeName == 'INPUT' || e.target.classList.contains('demo-no-swipe')) {
+            //            e.preventDefault();
+            //        }
+            //    }, false);
+
+            //    list.addEventListener('slip:beforewait', function (e) {
+            //        if (e.target.classList.contains('instant')) e.preventDefault();
+            //    }, false);
+
+            //    list.addEventListener('slip:afterswipe', function (e) {
+            //        e.target.parentNode.appendChild(e.target);
+            //    }, false);
+
+            //    list.addEventListener('slip:reorder', function (e) {
+            //        e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+            //        return false;
+            //    }, false);
+            //    return new Slip(list);
+            //}
+            //setupSlip(document.getElementsByClassName('slippylist'));
+
+
+
+    </script>
+
+}

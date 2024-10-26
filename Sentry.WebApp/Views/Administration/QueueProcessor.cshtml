@@ -1,0 +1,74 @@
+﻿@using Sentry.WebApp.ViewModels
+@model QueueProcessorViewModel
+
+<head>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <style>
+        .boldRed {
+            color: darkred;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<br />
+
+<h2>@Model.Title</h2>
+
+
+<div>
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>Application</th>
+                <th>Display Name</th>
+                <th>Service Name</th>
+                <th style="text-align:center;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var application in Model.ApplicationQueueProcessors)
+                {
+                    @if (application.InboundQueueProcessor != null)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(m => application.Name) </td>
+                            <td>@Html.DisplayFor(m => application.InboundQueueProcessor.DisplayName) </td>
+                            <td>@Html.DisplayFor(m => application.InboundQueueProcessor.Name)</td>
+                            @if (application.InboundQueueProcessor.Status.Equals(QueueProcessorStatus.Running))
+                            {
+                                <td style = "text-align: center">@Html.DisplayFor(m => application.InboundQueueProcessor.Status)</td>
+                            }
+                            else
+                            {
+                                <td style = "text-align: center" class="boldRed">*** @Html.DisplayFor(m => application.InboundQueueProcessor.Status) ***</td>
+                            }
+                        </tr>
+                    }
+                    @if (application.OutboundQueueProcessor != null)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(m => application.Name) </td>
+                            <td>@Html.DisplayFor(m => application.OutboundQueueProcessor.DisplayName)</td>
+                            <td>@Html.DisplayFor(m => application.OutboundQueueProcessor.Name)</td>
+                            @if (application.OutboundQueueProcessor.Status.Equals(QueueProcessorStatus.Running))
+                            {
+                                <td style="text-align: center">@Html.DisplayFor(m => application.OutboundQueueProcessor.Status)</td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center" class="boldRed">*** @Html.DisplayFor(m => application.OutboundQueueProcessor.Status) ***</td>
+                            }
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,108 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+
+<ul class="page-title">
+    <li>
+        <h1>
+            Welcome to Your @Model.Title Dashboard
+        </h1>
+    </li>
+</ul>
+
+<div id="content-container" class="content-container" role="main">
+    <div class="row">
+        <div class="col-sm-12">
+            @*<p class="lead">Welcome to your @Model.Title Dashboard!</p>*@
+            <p>Here is where you'll remediate any @Model.Title records which have failed the business' validation rules in the Data Integration Framework<sup>&#174;</sup><sup>&trade;</sup></p>
+            <p>The @Model.Title Integration is made up of several smaller integrations as indicated by the sub-menu items listed below the @Model.Title heading.</p>
+            <p>Select one of the smaller Integrations on the left to begin the remediation process.</p>
+            
+        </div>
+    </div><!-- /.row -->
+
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="/GiftTransmittal/Create?organization=uaf">Initialize Gift Transmittal for the University of Arizona Foundation</a>
+        </div>
+        <div class="col-sm-12">
+            <a href="/GiftTransmittal/Create?organization=ua">Initialize Gift Transmittal for the University of Arizona</a>
+        </div>
+    </div><!-- /.row -->
+    <div class="row">
+        <div class="col-md-4 form-group mt-2">
+            <label class="control-label" for="TransmittalSearchInput">Search</label>
+            <br />
+            <div class="d-inline-flex">
+                <input id="TransmittalSearchInput" type="text" class="form-control" placeholder="Search by Form Number" />
+                <button type="button" class="btn btn-primary ml-3" id="TransmittalSearchButton" title="Search Transmittal"><i role="img" class="fas fa-search"></i></button>
+            </div>
+            <p id="TransmittalSearchMessage" class="text-danger"></p>
+        </div>
+    </div>
+</div><!-- /.content-container -->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+
+            // Color Variables
+            const colors = {
+                primaryBlue: '#0C234B',
+                primarySkyBlue: '#81D3EB',
+                primaryOasisBlue: '#378DBD',
+                primaryAzuriteBlue: '#1E5288',
+                primaryMidnightBlue: '#001C48',
+
+                primaryRed: '#AB0520',
+                primaryRedBloom: '#EF4056',
+                primaryRedChili: '#8B0015',
+
+                neutralCoolGray: '#E2E9EB',
+                neutralWarmGray: '#F4EDE5',
+
+                secondaryLeaf: '#70B865',
+                secondaryRiver: '#007D84',
+                secondarySilver: '#9EABAE',
+                secondaryMesa: '#a95c42',
+
+                legacyDarkSilver: '#49595E',
+            };
+
+        });
+    </script>
+    <script>
+        $('#TransmittalSearchButton').click(function (e) {
+            var formNumber = $('#TransmittalSearchInput').val();
+
+            if (formNumber != undefined && formNumber.length > 0) {
+                SearchByFormNumber(formNumber);
+            }
+        });
+
+        function SearchByFormNumber(formNumber) {
+            $('#TransmittalSearchMessage').text(null);
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetGiftTransmittalByFormNumber")',
+                data: { formNumber: formNumber },
+                headers:
+                {
+                    "RequestVerificationToken": $('input:hidden[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    if (data.id != "00000000-0000-0000-0000-000000000000" &&
+                        data.giftTransmittalItems != undefined && data.giftTransmittalItems.length > 0) {
+                        var url = `@Url.Action("Edit", "GiftTransmittal")?giftTransmittalId=${data.id}&giftTransmittalItemId=${data.giftTransmittalItems[0].id}`;
+                        window.location.href = url;
+                    }
+                    else {
+                        $('#TransmittalSearchMessage').text('No Results')
+                    }
+                },
+                error: function (request, error) {
+                    $('#TransmittalSearchMessage').text('No Results');
+                }
+            });
+        }
+    </script>
+}

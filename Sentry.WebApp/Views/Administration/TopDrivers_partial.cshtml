@@ -1,0 +1,32 @@
+﻿@using Sentry.WebApp.ViewModels
+@model TopDriversViewModel
+
+
+<div id="TopDriversDiv">
+    <table class="table table-bordered table-condensed" id="errorsTable">
+        <thead>
+            <tr>
+                <th style="text-align:center;">Count</th>
+                <th style="text-align:center;width:400px">Error Message</th>
+                <th style="text-align:center;">Logger</th>
+                <th style="text-align:center;">Exception</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model.TopDrivers != null)
+                {
+                    foreach (var logEntry in Model.TopDrivers)
+                    {
+                        <tr>
+                            <td style="text-align: center">@Html.DisplayFor(m => logEntry.MessageCount)</td>
+                            <td>@Html.DisplayFor(m => logEntry.MessageText)</td>
+                            <td>@Html.DisplayFor(m => logEntry.Logger)</td>
+                            <td>@Html.DisplayFor(m => logEntry.Exception)</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>

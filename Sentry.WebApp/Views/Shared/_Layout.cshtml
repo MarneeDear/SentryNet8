@@ -1,0 +1,214 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+
+@using Sentry.WebApp.ViewModels;
+
+@{
+    var modelHelper = new ModelHelper(Context);
+}
+
+<!DOCTYPE html>
+<html lang="en" class="external-links ua-brand-icons">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" />
+    @* @Html.Raw(NewRelic.Api.Agent.NewRelic.GetBrowserTimingHeader()) *@
+    <title>@ViewData["Title"] | Data Steward Dashboard</title>
+
+    <link runat="server" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link runat="server" rel="icon" href="~/favicon.ico" type="image/ico" />
+
+    <!-- Latest icon font stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.uadigital.arizona.edu/lib/ua-brand-icons/latest/ua-brand-icons.css" />
+
+    <!--  UA Bootstrap CSS, icon font not included Compiled and minified -->
+    <!-- updating this breaks a lot of styling-->
+    <link rel="stylesheet" href="https://cdn.uadigital.arizona.edu/lib/ua-bootstrap/v1.0.0-beta.26/ua-bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.digital.arizona.edu/lib/arizona-bootstrap/2.0.25/css/arizona-bootstrap.min.css" crossorigin="anonymous"> -->
+
+    <!-- Data Tables stylesheet -->
+    <!-- UPgrading this breaks the data tables styling -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.2/b-1.5.6/b-colvis-1.5.6/b-html5-1.5.6/b-print-1.5.6/cr-1.5.0/r-2.2.2/rr-1.2.4/sl-1.3.0/datatables.min.css" /> 
+    <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.min.css" />-->
+
+
+    <!-- X-Editable Tables -->
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap-editable.css" /> 
+
+    <!-- Datepicker -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/css/bootstrap-datepicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <!-- Combobox (select2) -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" />
+
+    <!-- PACE loading bar at top of page     -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@latest/pace-theme-default.min.css">
+
+    <!-- ApexCharts.com -->
+    <link rel="stylesheet" type="text/css" href="~/css/apexcharts.css" />
+
+    <!-- Tree View -->
+    <link rel="stylesheet" type="text/css" href="~/css/jstree.css" />
+
+    <!-- Custom stylesheets -->
+    <link rel="stylesheet" type="text/css" href="~/css/site-layout.css" /> 
+    <link rel="stylesheet" type="text/css" href="~/css/uaf-theme.css" /> 
+
+    <!-- Print stylesheets -->
+    <link rel="stylesheet" type="text/css" href="~/css/print.css" />
+
+</head>
+<body id="@Model.PageId">
+    @if (modelHelper.Environment == "dev")
+    {
+        <header class="bg-leaf text-center text-white">
+            <b>Dev Environment</b> <br /> This is not a production environment. Any data entered <b>will</b> be lost.
+        </header>
+    }
+    else if (modelHelper.Environment == "stg")
+    {
+        <header class="bg-mesa text-center text-white">
+            <b>Stage Environment</b> <br /> This is not a production environment. Any data entered <b>will</b> be lost.
+        </header>
+    }
+    else if (modelHelper.Environment == "rebuild")
+    {
+        <header class="bg-bloom text-center text-white">
+            <b>Rebuild Environment</b> <br /> This is not a production environment. Any data entered <b>will</b> be lost.
+        </header>
+    }
+
+    <div class="page-wrapper az-theme toggled">
+
+        <partial name="_NavigationPartial.cshtml" />
+
+        <main class="page-content">
+            <partial name="_HeaderPartial.cshtml" />
+
+            <partial name="_CookieConsentPartial" />
+
+            <div class="container-fluid body-content">
+
+                <section id="content" class="page-row page-row-expanded">
+                    @RenderBody()
+                </section>
+
+                <partial name="_FooterPartial.cshtml" />
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- Pace Loading / Progress Bar -->
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+
+    <!-- jQuery -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    @*<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <!-- jQuery Validate -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.10/jquery.validate.unobtrusive.js"></script>
+
+    <script src="~/js/jquery.dirtyFields.js"></script>
+    <script src="https://kit.fontawesome.com/2a4d4ad988.js" crossorigin="anonymous"></script>
+
+    <!-- Custom Bootstrap Overrides for UA -->
+    <script src="https://cdn.uadigital.arizona.edu/lib/ua-bootstrap/v1.0.0-beta.22/ua-bootstrap.min.js"></script>
+
+    <!-- dataTables upgrade breaks -->
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script> *@
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script> *@
+    <script src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.2/b-1.5.6/b-colvis-1.5.6/b-html5-1.5.6/b-print-1.5.6/cr-1.5.0/r-2.2.2/rr-1.2.4/sl-1.3.0/datatables.min.js"></script>
+    <!--<script src="https://cdn.datatables.net/2.0.3/js/dataTables.min.js"></script> -->
+
+    @* <script src="https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js"></script> *@
+    <script src="https://cdn.datatables.net/plug-ins/1.11.1/dataRender/ellipsis.js"></script>
+
+    <!-- dataTables Checkbox Plugin ( via: https://www.gyrocode.com/projects/jquery-datatables-checkboxes/ ) -->
+    <script src="https://gyrocode.github.io/jquery-datatables-checkboxes/1.2.11/js/dataTables.checkboxes.min.js"></script>
+
+    <!-- X-Editable Tables -->
+    @* <script src="~/js/bootstrap-editable.min.js"></script> *@
+
+    <!-- chart.js -->
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script> *@
+
+    <!-- Google Charts -->
+    @* <script src="https://www.gstatic.com/charts/loader.js"></script> *@
+    @* <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> *@
+
+    <!-- Barfiller.js -->
+    @* <script src="~/js/jquery.barfiller.js"></script> *@
+
+    <!-- ApexCharts.com 
+    <script src="~/js/apexcharts.js"></script>
+    -->
+
+    <!-- amcharts -->
+    <script src="https://www.amcharts.com/lib/4/core.js"
+            asp-fallback-src="~/lib/amcharts/core.js"
+            asp-suppress-fallback-integrity="true"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"
+            asp-fallback-src="~/lib/amcharts/charts.js"
+            asp-suppress-fallback-integrity="true"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"
+            asp-fallback-src="~/lib/amcharts/animated.js"
+            asp-suppress-fallback-integrity="true"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/material.js"
+            asp-fallback-src="~/lib/amcharts/material.js"
+            asp-suppress-fallback-integrity="true"></script>
+    <script src="https://www.amcharts.com/lib/4/plugins/forceDirected.js"></script>
+    
+
+    <!-- Moment: -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+
+    <!-- Datepicker via: https://github.com/uxsolutions/bootstrap-datepicker, http://www.daterangepicker.com/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <!-- Change On Scroll -->
+    <script src="~/js/in-view.min.js"></script>
+
+    <!-- Select2 Dropdown Select -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"></script>
+
+    <!-- Draggable via: https://greensock.com/draggable 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/utils/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.4/TweenMax.min.js"></script>
+    -->
+
+    <!-- Drag/Swipe Library via: https://github.com/kornelski/slip -->
+    @*<script src="~/js/slip.js"></script>*@
+
+    <!-- Tree View -->
+    <script src="~/js/jstree.min.js" type="text/javascript"></script>
+
+    <!-- Money Mask 
+    <script src="~/js/jquery.maskMoney.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+    -->
+
+    <!-- Numeral.js -->
+    @* <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script> *@
+
+    <!-- Custom -->
+    <script defer src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+       var getRemediationCountsURL = '@Url.Action("GetCounts", "Integration")';
+    </script>
+    <script type="text/javascript" src="@Url.Content($"~/js/Navigation.js")"></script>
+
+
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,43 @@
+﻿@model Sentry.WebApp.ViewModels.GiftDisbursements.GiftDisbursementsViewModel
+
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeIs" value=" @Model.DisbursementTo.Payee.PayeeIs" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeName" value="@Model.DisbursementTo.Payee.PayeeName" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeAddress1" value="@Model.DisbursementTo.Payee.PayeeAddress1" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeCity" value="@Model.DisbursementTo.Payee.PayeeCity" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeState" value="@Model.DisbursementTo.Payee.PayeeState" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeZip" value="@Model.DisbursementTo.Payee.PayeeZip" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeePaymentType" value="@Model.DisbursementTo.Payee.PayeePaymentType" />
+<input type="hidden" asp-for="DisbursementTo.Payee.PayeeSpecialInstructions" value="@Model.DisbursementTo.Payee.PayeeSpecialInstructions" />
+
+<dl class="dl-horizontal">
+    <dt>UA Employee:</dt>
+    <dd>@Model.DisbursementTo.Payee.UAEmployee</dd>
+    <dt>Payee Name:</dt>
+    <dd>@Model.DisbursementTo.Payee.PayeeName</dd>
+    <dt>Address:</dt>
+    <dd>
+        @Model.DisbursementTo.Payee.PayeeAddress1<br />
+        @Model.DisbursementTo.Payee.PayeeCity, @Model.DisbursementTo.Payee.PayeeState @Model.DisbursementTo.Payee.PayeeZip
+    </dd>
+    <dt>Payee Payment Type:</dt>
+    <dd>@Model.DisbursementTo.Payee.PayeePaymentType</dd>
+    <dt>Special Instructions:</dt>
+    <dd>@Model.DisbursementTo.Payee.PayeeSpecialInstructions</dd>
+    <dt>W-9 Year</dt>
+    <dd>@Model.DisbursementTo.Payee.PayeeW9Year</dd>
+    <dt>
+        ICA Year 
+        @if (Model.DisbursementTo.Payee.PayeeICAYearExpired)
+        {
+            <span id="ICAYearExpired" class="badge badge-red" title="Vendor's ICA has expired or is not on file">
+                Expired
+            </span>
+        }
+    </dt>
+    <dd>@Model.DisbursementTo.Payee.PayeeICAYear </dd>
+</dl>
+
+
+
+
+

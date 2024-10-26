@@ -1,0 +1,21 @@
+﻿<input id="hidden_SupportingDoc_Id" type="hidden" value="0" />
+<input id="hidden_SupportingDoc_FileName" type="hidden" value="" />
+
+<div class="modal fade" id="deleteSupportingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="pleaseWaitSupportingDocumentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel"><span id="DeleteFileName"></span> </h5>
+            </div>
+            <div class="row">
+                <div class="modal-body">
+                    <span id="DeleteMessage"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="Yes" class="btn btn-primary pull-left" onclick="DeleteFileAjax()">Yes</button>
+                <button type="button" id="No" class="btn btn-blue" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>

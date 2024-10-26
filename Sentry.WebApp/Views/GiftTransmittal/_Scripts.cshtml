@@ -1,0 +1,21 @@
+﻿@using Sentry.WebApp.ViewModels;
+@{
+    var modelHelper = new ModelHelper(Context);
+}
+
+<script type="text/javascript" src="@Url.Content($"~/js/GiftTransmittal.js?version={modelHelper.Version}")"></script>
+<script>
+    var Organization = '@Model.Organization';
+    var GetGiftTransmittalsURL = '@Url.Action("Edit", "GiftTransmittal")';
+    var createGiftTransmittalURL = '@Url.Action("Create")';
+    var PreparerDetailsURL = '@Url.Action("GetEmployeesByEmployeeId", "GiftTransmittal")';
+    var getCollegesURL = '@Url.Action("GetColleges")';
+    var getDepartmentsURL = '@Url.Action("GetDepartments")';
+    var getProjectsURL = '@Url.Action("GetProjects")';
+    var SearchProjectURL = '@Url.Action("SearchProject")';
+    var deleteDistributionURL = '@Url.Action("DeleteDistribution")'
+    var uploadSupportingDocumentURL = '@Url.Action("UploadSupportingDocument")';
+    var deleteSupportingDocumentURL = '@Url.Action("DeleteSupportingDocument")';
+    var getSupportingDocumentsURL = "@Url.Action("GetSupportingDocuments")";
+    var viewSupportingDocumentURL = "@Url.Action("ViewSupportingDocument")";
+</script>

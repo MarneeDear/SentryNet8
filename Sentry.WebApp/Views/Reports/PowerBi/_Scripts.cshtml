@@ -1,0 +1,8 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Sentry.WebApp.ViewModels
+
+@{
+   var modelHelper = new ModelHelper(Context);
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.23.1/powerbi.min.js" integrity="sha512-30PYMgFkaF5Ir4s3i+/APAhp5aUi9nXKFSgOMPQ3LttPyYp79CzUaP7lvYGh6fKpOCBCOoD/RKoJtY5Iv8HT4g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="@Url.Content($"~/js/powerbi-reports.js?version={modelHelper.Version}")"></script>

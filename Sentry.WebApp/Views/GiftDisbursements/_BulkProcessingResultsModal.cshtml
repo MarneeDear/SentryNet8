@@ -1,0 +1,32 @@
+﻿<!-- Please Wait Modal -->
+<div class="modal fade" id="bulkProcessingResultsModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="bulkProcessingResultsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkProcessingResultsModalLabel">Bulk Processing Results</h5>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <span id="resultsMessage"
+                          style="color:firebrick;"></span>
+                </p>
+                <p>
+                    Clicking away from this box will refresh the page.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-link" 
+                        data-dismiss="modal"
+                        onclose="location.reload(); return true;"
+                        onclick="location.reload(); return true;">
+                    Refresh Page
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

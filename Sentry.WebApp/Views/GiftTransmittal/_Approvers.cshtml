@@ -1,0 +1,108 @@
+﻿@model Sentry.WebApp.ViewModels.GiftTransmittal.GiftTransmittalViewModel
+
+<table id="ApproversTable" class="table approvers">
+    <thead>
+        <tr>
+            <th class="col-md-2">Approver</th>
+            <th class="col-md-2">Approver Type</th>
+            <th class="col-md-2">Approved On</th>
+            <th class="col-md-6">Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var approver in Model.Approvals.Where(a => a.ApprovalStageCode != 3))
+        {
+            <tr>
+                <td>@approver.ApproverFirstName @approver.ApproverLastName</td>
+                <td>
+                    @approver.ApproverType
+                </td>
+                @if (!approver.ApprovedOn.HasValue)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    if (approver.Approved == true)
+                    {
+                        <td><i class="fa fa-circle-check" title="Approved by @approver.ApproverEmployeeId, on @approver.ApprovedOn"></i> @approver.ApprovedOn</td>
+
+                    }
+                    else
+                    {
+                        <td><i class="rejectedStatus fa fa-exclamation-triangle text-danger" title="Rejected by @approver.ApproverEmployeeId, on @approver.ApprovedOn"></i> @approver.ApprovedOn</td>
+
+                    }
+                }
+                <td>@approver.Comments</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<div class="modal fade" id="ApprovalHistoryModal" tabindex="-1" role="dialog" aria-labelledby="ApprovalHistoryModal ApprovalHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lgr" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="ApprovalHistoryModalLabel">Approval History</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <table id="ApprovalHistoryTable" class="table approvers">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">Approver</th>
+                            <th class="col-md-2">Stage</th>
+                            <th class="col-md-2">Approved</th>
+                            <th class="col-md-2">Approved On</th>
+                            <th class="col-md-6">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(Model.ApprovalHistory != null)
+                        {
+                            @foreach (var approver in Model.ApprovalHistory)
+                            {
+                                <tr>
+                                    <td>@approver.ApproverFirstName @approver.ApproverLastName</td>
+                                    <td>
+                                        @approver.ApproverType
+                                    </td>
+                                    <td>
+                                        @if (approver.ApprovedOn.HasValue && approver.ApprovedOn.Value > DateTime.MinValue)
+                                        {
+                                            @(approver.Approved ? "Approved" : "Rejected")
+                                        }
+                                    </td>
+                                    @if (!approver.ApprovedOn.HasValue || approver.ApprovedOn.Value <= DateTime.MinValue)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        if (approver.Approved == true)
+                                        {
+                                            <td><i class="fa fa-circle-check" title="Approved by @approver.ApproverEmployeeId, on @approver.ApprovedOn"></i> @approver.ApprovedOn</td>
+
+                                        }
+                                        else
+                                        {
+                                            <td><i class="rejectedStatus fa fa-exclamation-triangle text-danger" title="Rejected by @approver.ApproverEmployeeId, on @approver.ApprovedOn"></i> @approver.ApprovedOn</td>
+
+                                        }
+                                    }
+                                    <td>@approver.Comments</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (LastName) -->
