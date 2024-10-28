@@ -1,0 +1,139 @@
+﻿@model Sentry.WebApp.ViewModels.DegreeCompareViewModel
+
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="studentEnrollmentMatchCompareModalLabel">Compare Records for: <span class="record-text h3">@Model.Student</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="panel-toolbar">
+        <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.IntegrationDate)</span>
+        <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+    </div>
+    <div class="row matching">
+        <div class="col-sm-12 col-md-6">
+            <h5><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId)</h5>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Integration Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayFor(m => m.DegreeEducationalInstitution_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeEducationalInstitution)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicYear_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicYear)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreePreferredClassOf_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreePreferredClassOf)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeTerm_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeTerm)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeDate_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeDate)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeEducationLevel_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeEducationLevel)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeType_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeType)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeDegree_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeDegree)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeHonors_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeHonors)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeStatus_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeStatus)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicProgram_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicProgram)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicPlan_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicPlan)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicPlanType_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicPlanType)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicSubplan_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicSubplan)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicSubplanType_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicSubplanType)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeCheckoutStatus_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeCheckoutStatus)</dd>
+                    </dl>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-6">
+            <h5><strong>System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId_Compare)</h5>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Compare Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayFor(m => m.DegreeEducationalInstitution_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeEducationalInstitution_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicYear_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicYear_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreePreferredClassOf_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreePreferredClassOf_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeTerm_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeTerm_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeDate_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeDate_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeEducationLevel_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeEducationLevel_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeType_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeType_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeDegree_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeDegree_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeHonors_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeHonors_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeStatus_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeStatus_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicProgram_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicProgram_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicPlan_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicPlan_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicPlanType_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicPlanType_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicSubplan_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicSubplan_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeAcademicSubplanType_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeAcademicSubplanType_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.DegreeCheckoutStatus_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.DegreeCheckoutStatus_Compare)</dd>
+                    </dl>
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-link no-match text-left" data-dismiss="modal" data-toggle="tooltip" title="Not a Match"><i role="img" class="fas fa-times">&nbsp;</i> Not a Match</button>
+                    <button type="submit" class="btn btn-primary match pull-right" title="Match this Record" formaction="@Url.Action("StudentDegreeManualMatch", "Student", new { Id = Model.Id, IntegrationId = Model.IntegrationId, SystemId = Model.SystemId, MasterId = Model.MasterId })"><i role="img" class="fas fa-check">&nbsp;</i> Match!</button>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    @*<button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>*@
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

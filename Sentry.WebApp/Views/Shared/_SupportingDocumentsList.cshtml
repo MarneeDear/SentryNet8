@@ -1,0 +1,67 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@model Sentry.WebApp.ViewModels.SupportingDocuments.SupportingDocumentsListViewModel
+
+ <div id="SupportingDocumentsSection">
+
+    <ul id="SupportingDocumentList" style="list-style-type: none; margin-left: -20px">
+        @if (!String.IsNullOrEmpty(Model.Error)) 
+        { 
+            <li>
+                <p class="alert alert-danger"><i class="fa fa-triangle-exclamation" title="There was a PaperSave malfunction. Please refresh or retry."></i> @Model.Error</p>
+            </li>
+        } 
+        @foreach (var supportingDoc in Model.SupportingDocuments)
+        {
+            <li>       
+                @if (!Model.PreventDelete)
+                {
+                    <button type="button" id="deleteBtn" class="mb-2" title="Delete Document" onclick="deleteFile(@supportingDoc.Id, '@supportingDoc.FileName')">
+                        <i class="fa fa-trash-can" title="Delete @supportingDoc.FileName"></i>
+                    </button>
+                }               
+                &nbsp;&nbsp;
+                <label>
+                    <a href="@Configuration["PaperSaveDocumentUrl"]@supportingDoc.Id" class="" target="_blank">
+                        View in PaperSave <i class="fa fa-paper-plane" aria-hidden="true" title="View in PaperSave"></i>
+                    </a>
+                </label>
+                &nbsp;&nbsp;
+                <label>
+                    <a href="@Url.Action("ViewSupportingDocument", new { id = supportingDoc.Id })" class="" target="_blank">
+                        Download <i class="fa fa-download" aria-hidden="true" title="Download"></i>
+                    </a>
+                </label>
+                &nbsp;&nbsp;
+                <label>@supportingDoc.FileName @(!String.IsNullOrWhiteSpace(supportingDoc.SupportingDocumentTypeDisplay) ? $"({supportingDoc.SupportingDocumentTypeDisplay})" : "")</label>
+            </li>
+        }
+
+    </ul>
+
+    <input id="hidden_SupportingDoc_Id" type="hidden" value="0" />
+    <input id="hidden_SupportingDoc_FileName" type="hidden" value="" />
+
+    <div class="modal fade" id="deleteSupportingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="pleaseWaitSupportingDocumentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel"><span id="DeleteFileName"></span> </h5>
+                </div>
+                <div class="row">
+                    <div class="modal-body">
+                        <span id="DeleteMessage"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="Yes" class="btn btn-primary pull-left" onclick="DeleteFileAjax()">Yes</button>
+                    <button type="button" id="No" class="btn btn-blue" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+
+
+
+

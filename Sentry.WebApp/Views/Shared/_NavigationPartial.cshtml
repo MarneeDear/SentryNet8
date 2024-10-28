@@ -1,0 +1,651 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+@using Microsoft.Extensions.Configuration
+@using Microsoft.AspNetCore.Http
+@inject IConfiguration Configuration
+@{
+    var modelHelper = new Sentry.WebApp.ViewModels.ModelHelper(Context);
+    // var backgroundColor = modelHelper.Environment == "dev" ? "background-color:darkgreen" : 
+    // modelHelper.Environment == "stg" ? "background-color:sienna" : "";
+    // modelHelper.Environment == "rebuild" ? "background-color:deeppink" : "";
+    var backgroundColor = "";
+    if (modelHelper.Environment == "dev")
+    {
+        backgroundColor = "background-color:darkgreen";
+    }
+    if (modelHelper.Environment == "stg")
+    {
+        backgroundColor = "background-color:sienna";
+    }
+    if (modelHelper.Environment == "rebuild")
+    {
+        backgroundColor = "background-color:deeppink";
+    }
+}
+<!-- Via: https://bootsnipp.com/snippets/Q0dAX // https://azouaoui-med.github.io/pro-sidebar-template/src/ -->
+<nav id="sidebar" class="sidebar-wrapper" >
+    <div class="sidebar-brandnew">
+        <div id="toggle-sidebar">
+            <span class="fa-stack fa-2x">
+                <i role="img" class="fas fa-bars fa-stack-1x"></i>
+                <i role="img" class="fas fa-square fa-stack-2x"></i>
+                <i role="img" class="fas fa-caret-left fa-stack-1x"></i>
+                <i role="img" class="fas fa-caret-right fa-stack-1x"></i>
+            </span>
+        </div>
+    </div>
+    <div class="sidebar-content" style="@backgroundColor">
+        <!-- sidebar-header  -->
+        <div class="sidebar-header">
+            <div class="user-pic">
+                <img class="img-responsive img-rounded"
+                     src="~/img/user.jpg"
+                     alt="@Html.Raw(Model.User ?? "Sentry") Avatar Picture"
+                     title="@Html.Raw(Model.User ?? "Sentry") Avatar Picture" />
+            </div>
+            <div class="user-info sidebar-menu">
+                <ul>
+                    <li class="sidebar-dropdown">
+                        <a href="#">
+                            <span class="user-name">@Html.Raw(Model.User ?? "Sentry User")</span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                
+                                <li class="">
+                                    <a asp-area="" asp-controller="Account" asp-action="Logout">
+                                        <i role="img" class="fa fa-sign-out-alt">&nbsp;</i>
+                                        <span>Log Out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- sidebar-menu  -->
+        <div class="sidebar-menu navigation" role="navigation">
+            <ul>
+                <li @(Model.PageId == "dashboardPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" title="Dashboard Home">
+                        <i role="img" class="fa fa-tachometer-alt-fast">&nbsp;</i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                @if (Model.NavigationGroups.Any(m => m.Name == "Organization" && m.Accessible) && (modelHelper.IsAdmin || modelHelper.IsRecordsRole))
+                {
+                    <li @(Model.PageId == "organizationalHierarchyPage" || Model.PageId == "officeLocationPage" || Model.PageId == "organizationalUnitPage" || Model.PageId == "academicCatalogPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                        <a asp-area="" asp-controller="Organization" asp-action="OrganizationalHierarchy" title="Organization">
+                            <i role="img" class="fa fa-sitemap">&nbsp;</i>
+                            <span>Organization</span>
+                            <span id="OrganizationParentCount"></span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Organization" && m.NavigationItem.Any(i => i.Name == "OfficeLocation" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "officeLocationPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Organization" asp-action="OfficeLocationList" title="Office Locations">
+                                            <i role="img" class="fa fa-location-circle">&nbsp;</i>
+                                            <span>Office Locations</span>
+                                            <span id="OfficeLocationCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Organization" && m.NavigationItem.Any(i => i.Name == "OrganizationalUnit" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "organizationalUnitPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Organization" asp-action="OrganizationalUnitList" title="Organizational Unit">
+                                            <i role="img" class="fa fa-chart-network">&nbsp;</i>
+                                            <span>Organizational Unit</span>
+                                            <span id="OrganizationalUnitCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Organization" && m.NavigationItem.Any(i => i.Name == "AcademicCatalog" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "academicCatalogPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Organization" asp-action="AcademicCatalogList" title="Academic Catalog">
+                                            <i role="img" class="fa fa-cabinet-filing">&nbsp;</i>
+                                            <span>Academic Catalog</span>
+                                            <span id="AcademicCatalogCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                }
+                @if (Model.NavigationGroups.Any(m => m.Name == "Employee" && m.Accessible) && (modelHelper.IsAdmin || modelHelper.IsRecordsRole))
+                {
+                    @if (Model.NavigationGroups.Any(m => m.Name == "Employee" && m.NavigationItem.Any(i => i.Name == "Employee" && i.Accessible)))
+                    {
+                        <li @(Model.PageId == "employeePage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                            <a asp-area="" asp-controller="Employee" asp-action="EmployeeList" title="Employee">
+                                <i role="img" class="fa fa-id-badge">&nbsp;</i>
+                                <span>Employee</span>
+                                <span id="EmployeeCount"></span>
+                            </a>
+                        </li>
+                    }
+                }
+                @if (Model.NavigationGroups.Any(m => m.Name == "Finance" && m.Accessible) && (modelHelper.IsFinancialRole || modelHelper.IsAdmin))
+                {
+                    <li @(Model.PageId == "financialDashboardPage" 
+                        || Model.PageId == "postToGLPage" 
+                        || Model.PageId == "designationPage" 
+                        || Model.PageId == "giftTransmittalsPage" 
+                        || Model.PageId == "giftDisbursementsPage" 
+                        || Model.PageId == "fundsTransferPage"
+                        || Model.PageId == "fundsTransferReviewerDashboardPage"
+                        || Model.PageId == "fundsTransferApproverDashboardPage"
+                        || Model.PageId == "fundsTransferGeneralCounselDashboardPage"
+                        || Model.PageId == "fundsTransferUnroutedPage"
+                        || Model.PageId == "fundsTransferReadyForProcessingPage"
+                        || Model.PageId == "fundsTransferUnrestrictedPage"
+                        || Model.PageId == "fundsTransferRestrictedPage"
+                        || Model.PageId == "fundsTransferEndowmentPage"
+                        || Model.PageId == "fundsTransferGiftPage"
+                        || Model.PageId == "fundsTransferGeneralCounselPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                        <a asp-area="" asp-controller="Financial" asp-action="Index" title="Finance">
+                            <i role="img" class="fa fa-money-check">&nbsp;</i>
+                            <span>Finance</span>
+                            <span id="FinanceParentCount"></span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Finance" && m.NavigationItem.Any(i => i.Name == "Designation" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "designationPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Financial" asp-action="DesignationList" title="Designations">
+                                            <i role="img" class="fa fa-tasks">&nbsp;</i>
+                                            <span>Designations</span>
+                                            <span id="DesignationCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Finance" && m.NavigationItem.Any(i => i.Name == "GiftTransmittal" && i.Accessible)) && modelHelper.IsARRole)
+                                {
+                                    <li @(Model.PageId == "giftTransmittalsPage" || Model.PageId == "giftTransmittalTransfersPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                                        <a asp-area="" asp-controller="GiftTransmittal" asp-action="Index" title="Gift Transmittals">
+                                            <i role="img" class="fa fa-money-check-pen" title="transfer-money-icon"></i>
+                                            <span>Gift Transmittals</span>
+                                            <span id="GiftTransmittalCount"></span>
+                                        </a>
+                                        <div class="sidebar-submenu">
+                                            <ul>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="GTForms" title="Gift Transmittal for the University of Arizona Foundation">
+                                                        <i class="fa fa-building-columns" title="building-columns-icon"></i>
+                                                        <span>UAF</span>
+                                                        <span id="UafCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="GUForms" title="Gift Transmittal for the University of Arizona">
+                                                        <i class="fa fa-school-flag" title="school-icon"></i>
+                                                        <span>UA</span>
+                                                        <span id="UaCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="InitializedForms" title="Initialized Gift Transmittal">
+                                                        <i class="fa fa-school-flag" title="school-icon"></i>
+                                                        <span>Initialized</span>
+                                                        <span id="InitializedCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="WaitingOnBursarForms" title="Waiting on Bursar Forms Gift Transmittal">
+                                                        <i class="fa fa-pause" title="school-icon"></i>
+                                                        <span>Waiting on Bursar</span>
+                                                        <span id="WaitingForBursarCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="WaitingOnPreparerForms" title="Waiting on Preparer Forms Gift Transmittal">
+                                                        <i class="fa fa-pause" title="school-icon"></i>
+                                                        <span>Waiting on Preparer</span>
+                                                        <span id="WaitingForPreparerCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="SecondaryApproverForms" title="Secondary Approver Forms Gift Transmittal">
+                                                        <i class="fa fa-file-signature" title="school-icon"></i>
+                                                        <span>Secondary Approval</span>
+                                                        <span id="SecondaryApproverCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="FinalizeGTForms" title="Finalize Gift Transmittal">
+                                                        <i class="fa fa-check-square" title="school-icon"></i>
+                                                        <span>UAF Finalize</span>
+                                                        <span id="GTFinalizeCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftTransmittal" asp-action="FinalizeGUForms" title="Finalize Gift Transmittal">
+                                                        <i class="fa fa-check-square" title="school-icon"></i>
+                                                        <span>UA Finalize</span>
+                                                        <span id="GUFinalizeCount"></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Finance" && m.NavigationItem.Any(i => i.Name == "GiftDisbursement" && i.Accessible)) 
+                                && modelHelper.IsAPRole)
+                                {
+                                    <li @(Model.PageId == "giftDisbursementsPage" || Model.PageId == "giftDisbursementsUATransfersPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                                        <a asp-area="" asp-controller="GiftDisbursements" asp-action="Index" title="Gift Disbursements">
+                                            <i role="img" class="fa fa-money-bill-trend-up" title="money-trend-up-icon"></i>
+                                            <span>Gift Disbursements</span>
+                                            <span id="DisbursementCount"></span>
+                                        </a>
+                                        <div class="sidebar-submenu">
+                                            <ul>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftDisbursements" asp-action="UATransfers" title="UA Transfers to Review">
+                                                        <i class="fa fa-money-bill-transfer" title="transfer-money-icon"></i>
+                                                        <span>UA Transfers</span>
+                                                        <span id="ETDisbursementCount">
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftDisbursements" asp-action="Scholarships" title="Scholarship Transfers to Review">
+                                                        <i class="fa fa-money-check-dollar-pen" title="transfer-money-icon"></i>
+                                                        <span>Scholarships</span>
+                                                        <span id="STDisbursementCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftDisbursements" asp-action="Disbursements" title="Disbursements to Review">
+                                                        <i class="fa fa-file-invoice-dollar" title="transfer-money-icon"></i>
+                                                        <span>Disbursements</span>
+                                                        <span id="EMDisbursementCount"></span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="" asp-controller="GiftDisbursements" asp-action="ReadyForProcessing" title="Disbursements Ready for Processing">
+                                                        <i class="fa fa-rectangle-list" title="transfer-money-icon"></i>
+                                                        <span>Ready for Processing</span>
+                                                        <span id="ReadyForProcessingDisbursementCount"></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Finance" && m.NavigationItem.Any(i => i.Name == "NewVendorRequest" && i.Accessible)) && (modelHelper.IsAPReviewerRole || modelHelper.IsAPManagerRole))
+                                {
+                                    <li @(Model.PageId == "newVendorsPage"  ? Html.Raw("class='active") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="NewVendor" asp-action="List" title="New Vendor">
+                                            <i role="img" class="fa fa-person">&nbsp;</i>
+                                            <span>New Vendor Request</span>
+                                            <span id="NewVendorCount"></span>
+                                        </a>
+                                     </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Finance" && m.NavigationItem.Any(i => i.Name == "FundsTransfer" && i.Accessible)) 
+                                        && modelHelper.IsFTRole)
+                                {
+                                    <li @(Model.PageId == "fundsTransferPage"
+                                        || Model.PageId == "fundsTransferReviewerDashboardPage"
+                                        || Model.PageId == "fundsTransferApproverDashboardPage"
+                                        || Model.PageId == "fundsTransferGeneralCounselDashboardPage"
+                                        || Model.PageId == "fundsTransferUnroutedPage"
+                                        || Model.PageId == "fundsTransferReadyForProcessingPage"
+                                        || Model.PageId == "fundsTransferUnrestrictedPage"
+                                        || Model.PageId == "fundsTransferRestrictedPage"
+                                        || Model.PageId == "fundsTransferEndowmentPage"
+                                        || Model.PageId == "fundsTransferGiftPage"
+                                        || Model.PageId == "fundsTransferGeneralCounselPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="Index" title="Funds Transfer">
+                                            <i role="img" class="fa fa-money-bill-transfer" title="money-trend-up-icon"></i>
+                                            <span>Funds Transfer</span>
+                                            <span id="FundsTransferCount"></span>
+                                        </a>
+                                        <div class="sidebar-submenu">
+                                            <ul>
+                                                @if (modelHelper.IsFTReviewerRole)
+                                                {
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="Unrouted" title="Funds Transfers ready for review">                                                            
+                                                            <i class="fa-regular fa-route"></i>
+                                                            <span>Unrouted</span>
+                                                            <span id="UnroutedFundsTransferCount">
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="ReadyForProcessing" title="Funds Transfer Ready for Processing">
+                                                            <i class="fa fa-rectangle-list" title="transfer-money-icon"></i>
+                                                            <span>Ready for Processing</span>
+                                                            <span id="ReadyForProcessingFundsTransfersCount"></span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (modelHelper.IsFTApproverRole)
+                                                {
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="Unrestricted" title="Unrestricted Funds Transfers">                                                           
+                                                            <i class="fa-regular fa-money-bills-simple" title=""></i>
+                                                            <span>Unrestricted</span>
+                                                            <span id="UnrestrictedFundsTransferCount">
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="Restricted" title="Restricted Funds Transfers">                                                            
+                                                            <i class="fa-light fa-filter-circle-dollar"></i>
+                                                            <span>Restricted</span>
+                                                            <span id="RestrictedFundsTransferCount">
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="Endowment" title="Endowment Funds Transfers">
+                                                            <i class="fa fa-handshake" title="handshake-icon"></i>
+                                                            <span>Endowment</span>
+                                                            <span id="EndowmentFundsTransferCount">
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="Gift" title="Gift Funds Transfers">
+                                                            <i class="fa fa-gift" title="gift-icon"></i>
+                                                            <span>Gift</span>
+                                                            <span id="GiftFundsTransferCount">
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if(modelHelper.IsFTGeneralCounselApproverRole)
+                                                {
+                                                    <li>
+                                                        <a asp-area="" asp-controller="FundsTransfer" asp-action="GeneralCounsel" title="Fund 30 and 40 Funds Transfers">
+                                                            <i class="fa fa-gift" title="gift-icon"></i>
+                                                            <span>General Counsel</span>
+                                                            <span id="GeneralCounselFundsTansferCount">
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.Accessible) && (modelHelper.IsAdmin || modelHelper.IsRecordsRole))
+                {
+                    <li @(Model.PageId == "studentDashboardPage" || Model.PageId == "studentBioDemPage" || Model.PageId == "studentDegreePage" || Model.PageId == "studentEnrollmentPage" || Model.PageId == "studentAcademicPlanPage" || Model.PageId == "studentParentPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                        <a asp-area="" asp-controller="Student" asp-action="Index" title="Student">
+                            <i role="img" class="fa fa-user-graduate">&nbsp;</i>
+                            <span>Student</span>
+                            <span id="StudentCount"></span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "BioDem" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentBioDemPage" || Model.PageId == "studentPage" ? Html.Raw("class='active'") : "")>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentList" title="Bio/Dem">
+                                            <i role="img" class="fa fa-book-user">&nbsp;</i>
+                                            <span>Bio/Dem</span>
+                                            <span id="StudentBioDemCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "Enrollment" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentEnrollmentPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentEnrollmentList" title="Enrollment">
+                                            <i role="img" class="fa fa-money-check-edit">&nbsp;</i>
+                                            <span>Enrollment</span>
+                                            <span id="StudentEnrollmentCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "Degree" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentDegreePage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentDegreeList" title="Degree">
+                                            <i role="img" class="fa fa-scroll-old">&nbsp;</i>
+                                            <span>Degree</span>
+                                            <span id="StudentDegreeCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "AcademicPlan" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentAcademicPlanPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentAcademicPlanList" title="Academic Plan">
+                                            <i role="img" class="fa fa-map">&nbsp;</i>
+                                            <span>Academic Plan</span>
+                                            <span id="StudentAcademicPlanCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "AcademicInvolvement" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentAcademicInvolvementPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentAcademicInvolvementList" title="Academic Involvement">
+                                            <i role="img" class="fa fa-graduation-cap">&nbsp;</i>
+                                            <span>Academic Involvement</span>
+                                            <span id="StudentAcademicInvolvementCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "Scholarship" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentScholarshipPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentScholarshipList" title="Scholarship">
+                                            <i role="img" class="fa fa-money-bill-wave">&nbsp;</i>
+                                            <span>Scholarship</span>
+                                            <span id="StudentScholarshipCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "Contact" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentContactPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentContactList" title="Contact">
+                                            <i role="img" class="fa fa-id-card-alt">&nbsp;</i>
+                                            <span>Contact</span>
+                                            <span id="StudentContactCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Student" && m.NavigationItem.Any(i => i.Name == "Parent" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "studentParentPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Student" asp-action="StudentParentList" title="Parent">
+                                            <i role="img" class="fa fa-users">&nbsp;</i>
+                                            <span>Parent</span>
+                                            <span id="StudentParentCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                }
+                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.Accessible) && (modelHelper.IsAdmin || modelHelper.IsRecordsRole))
+                {
+                    <li @(Model.PageId == "constituentDashboardPage" || Model.PageId == "constituentPage" || Model.PageId == "constituentIndividualPage" || Model.PageId == "constituentPhonePage" || Model.PageId == "constituentEmailPage" || Model.PageId == "constituentAddressPage" || Model.PageId == "constituentGroupPage" || Model.PageId == "constituentOrganizationPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                        <a asp-area="" asp-controller="Constituent" asp-action="Index" title="Constituent">
+                            <i role="img" class="fa fa-address-card">&nbsp;</i>
+                            <span>Constituent</span>
+                            <span id="ConstituentCount"></span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.NavigationItem.Any(i => i.Name == "Individual" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "constituentPage" || Model.PageId == "constituentIndividualPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Constituent" asp-action="ConstituentList" title="Individual">
+                                            <i role="img" class="fa fa-id-badge">&nbsp;</i>
+                                            <span>Individual</span>
+                                            <span id="ConstituentIndividualCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.NavigationItem.Any(i => i.Name == "Phone" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "constituentPage" || Model.PageId == "constituentPhonePage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Constituent" asp-action="ConstituentPhoneList" title="Phone">
+                                            <i role="img" class="fa fa-phone-alt">&nbsp;</i>
+                                            <span>Phone</span>
+                                            <span id="ConsituentPhoneCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.NavigationItem.Any(i => i.Name == "Email" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "constituentPage" || Model.PageId == "constituentEmailPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Constituent" asp-action="ConstituentEmailList" title="Email">
+                                            <i role="img" class="fa fa-envelope-open-text">&nbsp;</i>
+                                            <span>Email</span>
+                                            <span id="ConstituentEmailCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.NavigationItem.Any(i => i.Name == "Group" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "constituentGroupPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Constituent" asp-action="ConstituentGroupList" title="Coming Soon...">
+                                            <i role="img" class="fa fa-users-class">&nbsp;</i>
+                                            <span>Group</span>
+                                            <span id="ConstituentCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.NavigationItem.Any(i => i.Name == "Organization" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "constituentOrganizationPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Constituent" asp-action="ConstituentOrganizationList" title="Coming Soon...">
+                                            <i role="img" class="fa fa-sitemap">&nbsp;</i>
+                                            <span>Organization</span>
+                                            <span id="ConstituentCount"></span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Constituent" && m.NavigationItem.Any(i => i.Name == "Address" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "constituentAddressPage" || Model.PageId == "constituentAddressPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="ConstituentAddress" asp-action="ConstituentAddressList" title="Address">
+                                            <i role="img" class="fa fa-id-badge">&nbsp;</i>
+                                            <span>Address</span>
+                                            <span id="ConstituentAddressCount"></span>                                           
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                }
+                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.Accessible) && (modelHelper.IsAdmin))
+                {
+                    <li @(Model.PageId == "integrationMonitorPage" || Model.PageId == "queueProcessorPage" || Model.PageId == "queueEntryCountsPage" || Model.PageId == "integrationHealthPage" || Model.PageId == "topDriversPage" ? Html.Raw("class='active sidebar-dropdown'") : Html.Raw("class='sidebar-dropdown'"))>
+                        <a href="#" title="Administration">
+                            <i role="img" class="fa fa-cogs">&nbsp;</i>
+                            <span>Administration</span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                <li @(Model.PageId == "integrationMonitorPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                    <a asp-area="" asp-controller="Administration" asp-action="RolesAdmin" title="Roles">
+                                        <i role="img" class="fa fa-solid fa-hammer">&nbsp;</i>
+                                        <span>Roles</span>
+                                    </a>
+                                </li>
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.NavigationItem.Any(i => i.Name == "Monitor" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "integrationMonitorPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Administration" asp-action="Monitor" title="Monitoring">
+                                            <i role="img" class="fa fa-tasks">&nbsp;</i> 
+                                            <span>Monitoring</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.NavigationItem.Any(i => i.Name == "QueueProcessor" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "queueProcessorPage" ? Html.Raw("class='active' ") : Html.Raw(" "))>
+                                        <a asp-area="" asp-controller="Administration" asp-action="QueueProcessor" title="Queue Processors">
+                                            <i role="img" class="fa fa-sliders-h-square">&nbsp;</i>
+                                            <span>Queue Processors</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.NavigationItem.Any(i => i.Name == "QueueEntryCounts" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "queueEntryCountsPage" ? Html.Raw("class='active' ") : Html.Raw(" "))>
+                                        <a asp-area="" asp-controller="Administration" asp-action="QueueEntryCounts" title="Queue Entry Counts">
+                                            <i role="img" class="fa fa-sliders-h-square">&nbsp;</i>
+                                            <span>Queue Entry Counts</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.NavigationItem.Any(i => i.Name == "IntegrationHealth" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "integrationHealthPage" ? Html.Raw("class='active' ") : Html.Raw(" "))>
+                                        <a asp-area="" asp-controller="Administration" asp-action="IntegrationHealth" title="Integration Health">
+                                            <i role="img" class="fa fa-medkit">&nbsp;</i>
+                                            <span>Integration Health</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.NavigationItem.Any(i => i.Name == "TopDrivers" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "topDriversPage" ? Html.Raw("class='active' ") : Html.Raw(" "))>
+                                        <a asp-area="" asp-controller="Administration" asp-action="TopDrivers" title="Top Drivers">
+                                            <i role="img" class="fa fa-map">&nbsp;</i>
+                                            <span>Top Drivers</span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (Model.NavigationGroups.Any(m => m.Name == "Administration" && m.NavigationItem.Any(i => i.Name == "IntegrationServiceStatuses" && i.Accessible)))
+                                {
+                                    <li @(Model.PageId == "integrationServiceStatusesPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                                        <a asp-area="" asp-controller="Administration" asp-action="IntegrationServiceStatuses" title="Integration Service Statuses">
+                                            <i role="img" class="fa fa-exclamation-square">&nbsp;</i>
+                                            <span>Integration Service Statuses</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </li>
+                }
+                @if (Model.NavigationGroups.Any(m => m.Name == "Utilities" && m.Accessible))
+                {
+                    @if (Model.NavigationGroups.Any(m => m.Name == "Utilities" && m.NavigationItem.Any(i => i.Name == "Utilities" && i.Accessible)))
+                    {
+                        <li @(Model.PageId == "uiUtilitiesPage" ? Html.Raw("class='active'") : Html.Raw(""))>
+                            <a asp-area="" asp-controller="Home" asp-action="UI_Utilities" title="UI Utilities">
+                                <i role="img" class="fa fa-cogs">&nbsp;</i>
+                                <span>UI Utilities</span>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+            <small class="versioning">
+                Project Name: <a href="https://www.dictionary.com/browse/sentry" title="A soldier stationed at a place to stand guard..." target="_blank">Sentry</a><br />Current Version: @Configuration["Version"]
+            </small>
+        </div>
+        <!-- sidebar-menu  -->
+    </div>
+    <!-- sidebar-content  -->
+</nav>
+<!-- sidebar-wrapper  -->
+
+
+

@@ -1,0 +1,411 @@
+﻿@model Sentry.WebApp.ViewModels.BaseViewModel
+
+<ul class="page-title">
+    <li>
+        <h1>
+            Welcome to Your @Model.Title Dashboard
+        </h1>
+    </li>
+</ul>
+
+
+<div id="content-container" class="content-container" role="main">
+    <div class="row">
+        <div class="col-sm-12">
+            @*<p class="lead">Welcome to your @Model.Title Dashboard!</p>*@
+            <p>Here is where you'll remediate any @Model.Title records which have failed the business' validation rules in the Data Integration Framework<sup>&#174;</sup><sup>&trade;</sup> The @Model.Title Integration is made up of several smaller integrations as indicated by the sub-menu items listed below the @Model.Title heading. Select one of the smaller Integrations on the left to begin the remediation process.</p>
+        </div>
+
+        @*<div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary enrolledByDegree chart">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Enrolled by Degree Type:</h3>
+                    <div class="panel-toolbar">
+                        <div class="form-group mb-0">
+                            <label for="amCharts-dateSelector" class="sr-only control-label">Select: </label>
+                            <select id="amCharts-dateSelector" class="form-control thisChart-dateSelector">
+                                <option value="currentYear" selected>Current Year</option>
+                                <option value="lastYear">Last Year</option>
+                                <option value="dateRange">Date Range</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="chartjs-wrapper clearfix">
+                        <div id="studentDegreeTypes" style="height: 400px;"></div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col* -->
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="panel panel-primary monthClose chart">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Degrees Awarded by Degree Type:</h3>
+                    <div class="panel-toolbar">
+                        <div class="form-group mb-0">
+                            <label for="amCharts-dateSelector" class="sr-only control-label">Select: </label>
+                            <select id="amCharts-dateSelector" class="form-control thisChart-dateSelector">
+                                <option value="currentYear">Current Year</option>
+                                <option value="lastYear" selected>Last Year</option>
+                                <option value="dateRange">Date Range</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="chartjs-wrapper clearfix">
+                        <div id="numberofDegreesAwardedByType" style="height: 400px;" class=""></div>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div><!-- /.col* -->*@
+    </div><!-- /.row -->
+
+</div><!-- /.content-container -->
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+
+            // Color Variables
+            const colors = {
+                primaryBlue: '#0C234B',
+                primarySkyBlue: '#81D3EB',
+                primaryOasisBlue: '#378DBD',
+                primaryAzuriteBlue: '#1E5288',
+                primaryMidnightBlue: '#001C48',
+
+                primaryRed: '#AB0520',
+                primaryRedBloom: '#EF4056',
+                primaryRedChili: '#8B0015',
+
+                neutralCoolGray: '#E2E9EB',
+                neutralWarmGray: '#F4EDE5',
+
+                secondaryLeaf: '#70B865',
+                secondaryRiver: '#007D84',
+                secondarySilver: '#9EABAE',
+                secondaryMesa: '#a95c42',
+
+                legacyDarkSilver: '#49595E',
+            };
+
+
+            var systemUserName = '@Model.User';
+            window.systemUserName = '@Model.User';
+            var arr = systemUserName.split('.');
+            var second = arr[1];
+            $('.user-name').html(arr[0]);
+
+
+            // ///////////////////////////////////////////////////////////////
+
+
+            //// Set left/right padding on calendar date text depending on width (number of characters)
+            //// get character count
+            //var calendarTextContainer = $('#numberofDegreesAwardedByType');
+            //var calendarText = $('.calendar-text');
+            //var calendarTextLength = $('.calendar-text').text().length;
+            //console.log("date length = " + calendarTextLength);
+            //var calendarTextValue = $('.calendar-text').text();
+            //console.log("date value = " + calendarTextValue);
+
+            //// if greater than 1, set padding to 0.15em
+            //if (calendarTextLength > 1) {
+            //    calendarText.css({'padding': '0 0.15em'});
+            //} else { // else set padding to 0.35em
+            //    calendarText.css({ 'padding': '0 0.35em' });
+            //};
+
+            ////if (calendarTextValue <= 4) {
+            ////    calendarTextContainer.addClass('danger');
+            ////} else if (calendarTextValue <= 7) {
+            ////    calendarText.addClass('danger');
+            ////};
+
+            ////if (calendarTextValue <= 8) {
+            ////    calendarTextContainer.addClass('warning');
+            ////} else if (calendarTextValue <= 12) {
+            ////    calendarText.addClass('warning');
+            ////};
+
+            //if (calendarTextValue <= 4) {
+            //    calendarTextContainer.addClass('danger');
+            //} else if (calendarTextValue <= 9) {
+            //    calendarTextContainer.addClass('warning');
+            //};
+
+
+            // ///////////////////////////////////////////////////////////////
+
+
+            ///**
+            // * ---------------------------------------
+            // * Created using amCharts 4.
+            // *
+            // * For more information visit:
+            // * https://www.amcharts.com/
+            // *
+            // * Documentation is available at:
+            // * https://www.amcharts.com/docs/v4/
+            // * ---------------------------------------
+            // */
+
+            //// Themes begin
+            ////am4core.useTheme(am4themes_dataviz);
+            //am4core.useTheme(am4themes_animated);
+            //// Themes end
+
+            //// Create chart instance
+            //var chart = am4core.create("numberofDegreesAwardedByType", am4charts.RadarChart);
+
+            //// Add data
+            //// Large to Small:
+            //chart.data = [{
+            //    "category": "Bachelors Degree",
+            //    "value": 1939,
+            //    "full": 2000
+            //}, {
+            //    "category": "Post Bachelors",
+            //    "value": 869,
+            //    "full": 2000
+            //}, {
+            //    "category": "Masters",
+            //    "value": 1830,
+            //    "full": 2000
+            //}, {
+            //    "category": "Sixth-year Degree",
+            //    "value": 1351,
+            //    "full": 2000
+            //}, {
+            //    "category": "Doctorate Degree",
+            //    "value": 1183,
+            //    "full": 2000
+            //}, {
+            //    "category": "University",
+            //    "value": 1458,
+            //    "full": 2000
+            //}];
+
+            ////// Add data
+            ////// Small to Large:
+            ////chart.data = [{
+            ////    "category": "Check",
+            ////    "value": 32,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Credit Card",
+            ////    "value": 25,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Cash",
+            ////    "value": 15,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Gift-In-Kind",
+            ////    "value": 10,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Other",
+            ////    "value": 9,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Pledge - Gift Commitment",
+            ////    "value": 7,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Pledge - Legally Binding",
+            ////    "value": 4,
+            ////    "full": 35
+            ////}, {
+            ////    "category": "Wire",
+            ////    "value": 1,
+            ////    "full": 35
+            ////}];
+
+            //// Make chart not full circle
+            //chart.startAngle = -90;
+            //chart.endAngle = 180;
+            //chart.innerRadius = am4core.percent(15);
+
+            //// Set number format
+            //chart.numberFormatter.numberFormat = "#.#";
+
+            //// Create axes
+            //var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            //categoryAxis.dataFields.category = "category";
+            //categoryAxis.renderer.grid.template.location = 0;
+            //categoryAxis.renderer.grid.template.strokeOpacity = 0;
+            //categoryAxis.renderer.labels.template.horizontalCenter = "right";
+            //categoryAxis.renderer.labels.template.fontWeight = 500;
+            //categoryAxis.renderer.labels.template.adapter.add("fill", function (fill, target) {
+            //    return (target.dataItem.index >= 0) ? chart.colors.getIndex(target.dataItem.index) : fill;
+            //});
+            //categoryAxis.renderer.minGridDistance = 10;
+
+            //var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            //valueAxis.renderer.grid.template.strokeOpacity = 0;
+            //valueAxis.min = 0;
+            //valueAxis.max = 2000;
+            //valueAxis.strictMinMax = true;
+
+            //// Create series
+            //var series1 = chart.series.push(new am4charts.RadarColumnSeries());
+            //series1.dataFields.valueX = "full";
+            //series1.dataFields.categoryY = "category";
+            //series1.clustered = false;
+            //series1.columns.template.fill = new am4core.InterfaceColorSet().getFor("alternativeBackground");
+            //series1.columns.template.fillOpacity = 0.08;
+            //series1.columns.template.cornerRadiusTopLeft = 20;
+            //series1.columns.template.strokeWidth = 0;
+            //series1.columns.template.radarColumn.cornerRadius = 20;
+
+            //var series2 = chart.series.push(new am4charts.RadarColumnSeries());
+            //series2.dataFields.valueX = "value";
+            //series2.dataFields.categoryY = "category";
+            //series2.clustered = false;
+            //series2.columns.template.strokeWidth = 0;
+            //series2.columns.template.tooltipText = "{category}: [bold]{value}[/]";
+            //series2.columns.template.radarColumn.cornerRadius = 20;
+
+            //series2.columns.template.adapter.add("fill", function (fill, target) {
+            //    return chart.colors.getIndex(target.dataItem.index);
+            //});
+
+            //// Add cursor
+            //chart.cursor = new am4charts.RadarCursor();
+            
+
+            // ///////////////////////////////////////////////////////////////
+
+
+            @*var chart = am4core.create("studentDegreeTypes", am4charts.XYChart);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            chart.paddingRight = 40;
+
+            chart.data = [{
+                "name": "Bachelors",
+                "steps": 1351,
+                "href": '@Url.Content("~/img/educationDegreeType-Bachelors.png")'
+            }, {
+                "name": "Post BA",
+                "steps": 1183,
+                "href": '@Url.Content("~/img/educationDegreeType-PostBachelors.png")'
+            }, {
+                "name": "Masters",
+                "steps": 1830,
+                "href": '@Url.Content("~/img/educationDegreeType-Masters.png")'
+            }, {
+                "name": "Sixth-year",
+                "steps": 869,
+                "href": '@Url.Content("~/img/educationDegreeType-SixthYear.png")'
+            }, {
+                "name": "Doctorate",
+                "steps": 1672,
+                "href": '@Url.Content("~/img/educationDegreeType-Doctor.png")'
+            }, {
+                "name": "University",
+                "steps": 728,
+                "href": '@Url.Content("~/img/educationDegreeType-University.png")'
+            }];
+
+            var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "name";
+            categoryAxis.renderer.grid.template.strokeOpacity = 0;
+            categoryAxis.renderer.minGridDistance = 10;
+            categoryAxis.renderer.labels.template.dx = -40;
+            categoryAxis.renderer.minWidth = 120;
+            categoryAxis.renderer.tooltip.dx = -40;
+
+            var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            valueAxis.renderer.inside = true;
+            valueAxis.renderer.labels.template.fillOpacity = 0.3;
+            valueAxis.renderer.grid.template.strokeOpacity = 0;
+            valueAxis.min = 0;
+            valueAxis.cursorTooltipEnabled = false;
+            valueAxis.renderer.baseGrid.strokeOpacity = 0;
+            valueAxis.renderer.labels.template.dy = 20;
+
+            var series = chart.series.push(new am4charts.ColumnSeries);
+            series.dataFields.valueX = "steps";
+            series.dataFields.categoryY = "name";
+            series.tooltipText = "{valueX.value}";
+            series.tooltip.pointerOrientation = "vertical";
+            series.tooltip.dy = - 30;
+            series.columnsContainer.zIndex = 100;
+
+            var columnTemplate = series.columns.template;
+            columnTemplate.height = am4core.percent(50);
+            columnTemplate.maxHeight = 50;
+            columnTemplate.column.cornerRadius(60, 10, 60, 10);
+            columnTemplate.strokeOpacity = 0;
+
+            series.heatRules.push({ target: columnTemplate, property: "fill", dataField: "valueX", min: am4core.color("#e5dc36"), max: am4core.color("#5faa46") });
+            series.mainContainer.mask = undefined;
+
+            var cursor = new am4charts.XYCursor();
+            chart.cursor = cursor;
+            cursor.lineX.disabled = true;
+            cursor.lineY.disabled = true;
+            cursor.behavior = "none";
+
+            var bullet = columnTemplate.createChild(am4charts.CircleBullet);
+            bullet.circle.radius = 30;
+            bullet.valign = "middle";
+            bullet.align = "left";
+            bullet.isMeasured = true;
+            bullet.interactionsEnabled = false;
+            bullet.horizontalCenter = "right";
+            bullet.interactionsEnabled = false;
+
+            var hoverState = bullet.states.create("hover");
+            var outlineCircle = bullet.createChild(am4core.Circle);
+            outlineCircle.adapter.add("radius", function (radius, target) {
+                var circleBullet = target.parent;
+                return circleBullet.circle.pixelRadius + 10;
+            })
+
+            var image = bullet.createChild(am4core.Image);
+            image.width = 60;
+            image.height = 60;
+            image.horizontalCenter = "middle";
+            image.verticalCenter = "middle";
+            image.propertyFields.href = "href";
+
+            image.adapter.add("mask", function (mask, target) {
+                var circleBullet = target.parent;
+                return circleBullet.circle;
+            })
+
+            var previousBullet;
+            chart.cursor.events.on("cursorpositionchanged", function (event) {
+                var dataItem = series.tooltipDataItem;
+
+                if (dataItem.column) {
+                    var bullet = dataItem.column.children.getIndex(1);
+
+                    if (previousBullet && previousBullet != bullet) {
+                        previousBullet.isHover = false;
+                    }
+
+                    if (previousBullet != bullet) {
+
+                        var hs = bullet.states.getKey("hover");
+                        hs.properties.dx = dataItem.column.pixelWidth;
+                        bullet.isHover = true;
+
+                        previousBullet = bullet;
+                    }
+                }
+            });*@
+
+
+            // ///////////////////////////////////////////////////////////////
+
+
+        });
+    </script>
+}

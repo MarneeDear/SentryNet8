@@ -1,0 +1,25 @@
+﻿@model Sentry.WebApp.ViewModels.SupportingDocuments.SupportingDocumentsListViewModel
+<div id="SupportingDocumentsSection">
+
+
+    <ul id="SupportingDocumentList" style="list-style-type: none; margin-left: -20px">
+        @if (!String.IsNullOrEmpty(Model.Error))
+        {
+            <li>
+                <p class="alert alert-danger"><i class="fa fa-triangle-exclamation" title="There was a PaperSave malfunction. Please refresh or retry."></i> @Model.Error</p>
+            </li>
+        }
+        @foreach (var supportingDoc in Model.SupportingDocuments)
+        {
+            <li>
+                <a href="@Url.Action("ViewSupportingDocument", new { id = supportingDoc.Id })" class="" target="_blank">@supportingDoc.FileName</a>
+            </li>
+        }
+
+    </ul>
+
+</div>
+
+
+
+

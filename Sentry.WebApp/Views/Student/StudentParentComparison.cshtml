@@ -1,0 +1,143 @@
+﻿@model Sentry.WebApp.ViewModels.StudentParentCompareViewModel
+@using Sentry.WebApp.Extensions;
+
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="studentMatchCompareModalLabel">Compare Records for: <span class="record-text h3">@Model.LastName, @Model.FirstName</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="panel-toolbar">
+        <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.IntegrationDate)</span>
+        <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+    </div>
+    <div class="row matching">
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@Html.Raw(Model.System ?? " Source " + @Model.System) Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt data-different="@(Model.FirstName_IsDifferent.ToString())">First Name:</dt>
+                        <dd data-different="@(Model.FirstName_IsDifferent.ToString())">@Html.DisplayFor(m => m.FirstName)</dd>
+                        <dt data-different="@(Model.PreferredName_IsDifferent.ToString())">Preferred Name:</dt>
+                        <dd data-different="@(Model.PreferredName_IsDifferent.ToString())">@Html.DisplayFor(m => m.PreferredName)</dd>
+                        <dt data-different="@(Model.LastName_IsDifferent.ToString())">Last Name:</dt>
+                        <dd data-different="@(Model.LastName_IsDifferent.ToString())">@Html.DisplayFor(m => m.LastName)</dd>
+                        <dt data-different="@(Model.Suffix_IsDifferent.ToString())">@Html.DisplayFor(m => m.Suffix_BusinessName):</dt>
+                        <dd data-different="@(Model.Suffix_IsDifferent.ToString())">@Html.DisplayFor(m => m.Suffix)</dd>
+                        <dt data-different="@(Model.StudentId_IsDifferent.ToString())">Student Id:</dt>
+                        <dd data-different="@(Model.StudentId_IsDifferent.ToString())">@Html.DisplayFor(m => m.StudentId)</dd>
+                        <dt data-different="@(Model.StudentFirstName_IsDifferent.ToString())">Student First Name:</dt>
+                        <dd data-different="@(Model.StudentFirstName_IsDifferent.ToString())">@Html.DisplayFor(m => m.StudentFirstName)</dd>
+                        <dt data-different="@(Model.StudentLastName_IsDifferent.ToString())">Student Last Name:</dt>
+                        <dd data-different="@(Model.StudentLastName_IsDifferent.ToString())">@Html.DisplayFor(m => m.StudentLastName)</dd>
+                        <dt data-different="@(Model.Relationship_IsDifferent.ToString())">@Html.DisplayFor(m => m.Relationship_BusinessName):</dt>
+                        <dd data-different="@(Model.Relationship_IsDifferent.ToString())">@Html.DisplayFor(m => m.Relationship)</dd>
+                        <dt data-different="@(Model.Phone1Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Number_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone1Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Number)</dd>
+                        <dt data-different="@(Model.Phone1Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Extension_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone1Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Extension)</dd>
+                        <dt data-different="@(Model.Phone2Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Number_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone2Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Number)</dd>
+                        <dt data-different="@(Model.Phone2Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Extension_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone2Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Extension)</dd>
+                        <dt data-different="@(Model.EmailAddress1_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress1_BusinessName):</dt>
+                        <dd data-different="@(Model.EmailAddress1_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress1)</dd>
+                        <dt data-different="@(Model.EmailAddress2_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress2_BusinessName):</dt>
+                        <dd data-different="@(Model.EmailAddress2_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress2)</dd>
+                    </dl>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">MDS Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt data-different="@(Model.FirstName_IsDifferent.ToString())">First Name:</dt>
+                        <dd data-different="@(Model.FirstName_IsDifferent.ToString())">@Html.DisplayFor(m => m.FirstName_Compare)</dd>
+                        <dt data-different="@(Model.PreferredName_IsDifferent.ToString())">Preferred Name:</dt>
+                        <dd data-different="@(Model.PreferredName_IsDifferent.ToString())">@Html.DisplayFor(m => m.PreferredName_Compare)</dd>
+                        <dt data-different="@(Model.LastName_IsDifferent.ToString())">Last Name:</dt>
+                        <dd data-different="@(Model.LastName_IsDifferent.ToString())">@Html.DisplayFor(m => m.LastName_Compare)</dd>
+                        <dt data-different="@(Model.Suffix_IsDifferent.ToString())">@Html.DisplayFor(m => m.Suffix_BusinessName):</dt>
+                        <dd data-different="@(Model.Suffix_IsDifferent.ToString())">@Html.DisplayFor(m => m.Suffix_Compare)</dd>
+                        <dt data-different="@(Model.StudentId_IsDifferent.ToString())">Student Id:</dt>
+                        <dd data-different="@(Model.StudentId_IsDifferent.ToString())">@Html.DisplayFor(m => m.StudentId_Compare)</dd>
+                        <dt data-different="@(Model.StudentFirstName_IsDifferent.ToString())">Student First Name:</dt>
+                        <dd data-different="@(Model.StudentFirstName_IsDifferent.ToString())">@Html.DisplayFor(m => m.StudentFirstName_Compare)</dd>
+                        <dt data-different="@(Model.StudentLastName_IsDifferent.ToString())">Student Last Name:</dt>
+                        <dd data-different="@(Model.StudentLastName_IsDifferent.ToString())">@Html.DisplayFor(m => m.StudentLastName_Compare)</dd>
+                        <dt data-different="@(Model.Relationship_IsDifferent.ToString())">@Html.DisplayFor(m => m.Relationship_BusinessName):</dt>
+                        <dd data-different="@(Model.Relationship_IsDifferent.ToString())">@Html.DisplayFor(m => m.Relationship_Compare)</dd>
+                        <dt data-different="@(Model.Phone1Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Number_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone1Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Number_Compare)</dd>
+                        <dt data-different="@(Model.Phone1Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Extension_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone1Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone1Extension_Compare)</dd>
+                        <dt data-different="@(Model.Phone2Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Number_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone2Number_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Number_Compare)</dd>
+                        <dt data-different="@(Model.Phone2Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Extension_BusinessName):</dt>
+                        <dd data-different="@(Model.Phone2Extension_IsDifferent.ToString())">@Html.DisplayFor(m => m.Phone2Extension_Compare)</dd>
+                        <dt data-different="@(Model.EmailAddress1_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress1_BusinessName):</dt>
+                        <dd data-different="@(Model.EmailAddress1_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress1_Compare)</dd>
+                        <dt data-different="@(Model.EmailAddress2_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress2_BusinessName):</dt>
+                        <dd data-different="@(Model.EmailAddress2_IsDifferent.ToString())">@Html.DisplayFor(m => m.EmailAddress2_Compare)</dd>
+                    </dl>
+
+                    @if (Model.SystemRecords != null)
+                    {
+                        <hr />
+                        <dl>
+                            @foreach (var systemRecord in Model.SystemRecords)
+                            {
+                                <dt>Source System: <strong>@systemRecord.SystemName</strong></dt>
+                                <dd><a href="@Model.SourceRecordUrl(systemRecord.SystemName, systemRecord.SystemRecordId, Model.IntegrationName)" title="View in @systemRecord.SystemName" target="_blank">@systemRecord.SystemRecordId</a></dd>
+                            }
+                        </dl>
+                    }
+
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-link no-match text-left" data-dismiss="modal" data-toggle="tooltip" title="Not a Match"><i role="img" class="fas fa-times">&nbsp;</i> Not a Match</button>
+                    <button type="submit" class="btn btn-primary match pull-right" title="Match this Record" formaction="@Url.Action("StudentParentManualMatch", "Student", new { Id = Model.Id, IntegrationId = Model.IntegrationId, SystemId = Model.SystemId, MasterId = Model.MasterId })"><i role="img" class="fas fa-check">&nbsp;</i> Match!</button>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    @*<button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>*@
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

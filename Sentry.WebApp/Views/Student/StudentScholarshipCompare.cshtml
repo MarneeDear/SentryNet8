@@ -1,0 +1,102 @@
+﻿@model Sentry.WebApp.ViewModels.StudentScholarshipCompareViewModel
+
+<!-- Modal - Compare Record -->
+<div class="modal-header">
+    <h3 class="modal-title" id="studentEnrollmentMatchCompareModalLabel">Compare Records for: <span class="record-text h3">@Model.Student</span></h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+</div>
+<div class="modal-body">
+    <div class="panel-toolbar">
+        <span class="integrationDate"><strong>Integration Date:</strong>&nbsp;@Html.DisplayFor(m => m.IntegrationDate)</span>
+        <span class="sourceSystem"><strong>Source System:</strong>&nbsp;@Html.DisplayFor(m => m.System)</span>
+        <span class="sourceSystemRecord"><strong>Source System Record Id:</strong>&nbsp;@Html.DisplayFor(m => m.SourceRecordId)</span>
+    </div>
+    <div class="row matching">
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Integration Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayFor(m => m.Student_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.Student)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipAcademicYear_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipAcademicYear)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipTerm_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipTerm)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipDesignation_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipDesignation)</dd>
+                        <dt>@Html.DisplayFor(m => m.Scholarship_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.Scholarship)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipDepartment_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipDepartment)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipAmount_BusinessName):</dt>
+                        <dd>@String.Format("{0:c}", Model.ScholarshipAmount)</dd>
+                    </dl>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+        <div class="col-sm-12 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Compare Record</h3>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayFor(m => m.Student_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.Student_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipAcademicYear_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipAcademicYear_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipTerm_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipTerm_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipDesignation_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipDesignation_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.Scholarship_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.Scholarship_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipDepartment_BusinessName):</dt>
+                        <dd>@Html.DisplayFor(m => m.ScholarshipDepartment_Compare)</dd>
+                        <dt>@Html.DisplayFor(m => m.ScholarshipAmount_BusinessName):</dt>
+                        <dd>@String.Format("{0:c}", Model.ScholarshipAmount_Compare)</dd>
+                    </dl>
+                </div>
+                <div class="panel-footer">
+                    <button type="button" class="btn btn-link no-match text-left" data-dismiss="modal" data-toggle="tooltip" title="Not a Match"><i role="img" class="fas fa-times">&nbsp;</i> Not a Match</button>
+                    <button type="submit" class="btn btn-primary match pull-right" title="Match this Record" formaction="@Url.Action("StudentScholarshipManualMatch", "Student", new { Id = Model.Id, IntegrationId = Model.IntegrationId, SystemId = Model.SystemId, MasterId = Model.MasterId })"><i role="img" class="fas fa-check">&nbsp;</i> Match!</button>
+                </div>
+            </div><!-- /.panel-* -->
+        </div><!-- /.col-* -->
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-link pull-left" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><i role="img" class="fas fa-times">&nbsp;</i> Cancel</button>
+    @*<button type="button" class="btn btn-primary pull-right" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>*@
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Tooltip Titles
+            //----------------------
+            $(".ellipsis[title]").each(function (i, obj) {
+
+                $(this).tooltip({
+                    title: $(this).attr("tooltip-title")
+                    , container: 'body'
+                    , placement: 'top'
+                    , trigger: 'hover'
+                });
+
+                $('body').on('hidden.bs.tooltip', function () {
+                    var tooltips = $('.tooltip').not('.in');
+                    if (tooltips) {
+                        tooltips.remove();
+                    }
+                });
+
+            });
+
+        });
+    </script>
+}

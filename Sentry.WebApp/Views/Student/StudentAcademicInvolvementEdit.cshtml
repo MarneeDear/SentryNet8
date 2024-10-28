@@ -1,0 +1,1320 @@
+﻿@model Sentry.WebApp.ViewModels.StudentAcademicInvolvementViewModel
+@using Sentry.WebApp.Extensions;
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@if (Model != null)
+{
+    <ul class="page-title">
+        <li>
+            <h2>
+                Date:
+                <span title="Date of Integration: @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")"> @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString("MM/dd/yyyy") : "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source:
+                <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+            </h2>
+        </li>
+        <li>
+            <h2>
+                Source Record Id:
+                <span title="Source System Record Id">@(Model.SourceRecordId != "" || Model.SourceRecordId != null ? Html.Raw(Model.SourceRecordId) : Html.Raw("N/A"))</span>
+            </h2>
+        </li>
+    </ul>
+
+    <ol class="breadcrumb">
+        <li><a asp-area="" asp-controller="Home" asp-action="Index">Sentry Home</a></li>
+        <li><a asp-area="" asp-controller="Student" asp-action="Index">Student Dashboard</a></li>
+        <li><a asp-area="" asp-controller="Student" asp-action="StudentAcademicInvolvementList">Record List</a></li>
+        <li class="active">Record Details</li>
+    </ol>
+
+    <div id="content-container" class="content-container" role="main">
+        <form asp-action="StudentAcademicInvolvementEdit" id="StudentAcademicInvolvementEditForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SystemId" />
+            <input type="hidden" asp-for="System" />
+            <input type="hidden" asp-for="SourceRecordId" />
+            <input type="hidden" asp-for="IntegrationId" />
+            <input type="hidden" asp-for="Integration" />
+            <input type="hidden" asp-for="CreatedOnDT" />
+            <input type="hidden" asp-for="IsChanged" />
+            @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+            {
+                @Html.HiddenFor(m => m.HistoryData[i].HistoryDate)
+            }
+
+            <div class="panel panel-secondary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@Model.Title for: <span class="record-text h3">@Model.StudentId</span> <span class="updatedFormAlert label label-warning hide">Modified</span></h3>
+                    <div class="panel-toolbar">
+                        <a href="#StudentAcademicInvolvementSourceDataModal" class="btn btn-sm btn-link" target="_blank" data-toggle="modal" title="View Source Data"><i role="img" class="fas fa-database fa-sm">&nbsp;</i>Source Data</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="col-sm-12 col-md-12 panel-container">
+                        <div class="panel panel-secondary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Enrollment Details:</h4>
+                                <div class="panel-toolbar">
+                                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+
+                                <fieldset>
+                                    <legend class="sr-only">Enrollment Details:</legend>
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.StudentName_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="StudentName_BusinessName" />
+                                                <input type="hidden" asp-for="StudentName_BusinessDescription" />
+                                                <input type="hidden" asp-for="StudentName_Source" />
+                                                <input type="hidden" asp-for="StudentName_Status" />
+                                                <input type="hidden" asp-for="StudentNameName" />
+                                                <input type="hidden" asp-for="StudentNameCode" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.StudentName_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.StudentName_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.StudentName_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#studentStudentNameHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].StudentName_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].StudentName)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="StudentName">@Model.StudentName_BusinessName: </label>
+                                            @*<input asp-for="StudentName" class="form-control" placeholder="@Model.StudentName_BusinessName" />*@
+                                            <select id="StudentName" class="select2 form-control">
+                                                <option value="">-- Select Student --</option>
+                                                <option value="thebigbear" selected>Owen Benjamin Smith</option>
+                                                <option value="more">Actual List of Students Coming Soon...</option>
+                                            </select>
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="StudentName" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.AcademicInvolvementType_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="AcademicInvolvementType_BusinessName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementType_BusinessDescription" />
+                                                <input type="hidden" asp-for="AcademicInvolvementType_Source" />
+                                                <input type="hidden" asp-for="AcademicInvolvementType_Status" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTypeName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTypeCode" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.AcademicInvolvementType_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.AcademicInvolvementType_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.AcademicInvolvementType_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#studentAcademicInvolvementTypeHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementType_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementType)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="AcademicInvolvementType">@Model.AcademicInvolvementType_BusinessName: </label>
+                                            @*<select id="AcademicInvolvementType" class="select2 form-control">
+                                                    <option value="">-- Select Academic Involvement Type --</option>
+                                                    <option value="greeklife" selected>Greek Life</option>
+                                                    <option value="more">More...</option>
+                                                </select>*@
+                                            @Html.DropDownListFor(
+                                                m => m.AcademicInvolvementType,
+                                                Model.StudentAcademicInvolvementTypeList,
+                                                htmlAttributes: new { @class = "form-control" }
+                                            )
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="AcademicInvolvementType" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.AcademicInvolvementName_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="AcademicInvolvementName_BusinessName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementName_BusinessDescription" />
+                                                <input type="hidden" asp-for="AcademicInvolvementName_Source" />
+                                                <input type="hidden" asp-for="AcademicInvolvementName_Status" />
+                                                <input type="hidden" asp-for="AcademicInvolvementNameName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementNameCode" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.AcademicInvolvementName_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.AcademicInvolvementName_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.AcademicInvolvementName_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#studentAcademicInvolvementNameHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementName_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementName)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="AcademicInvolvementName">@Model.AcademicInvolvementName_BusinessName: </label>
+                                            @*<select id="AcademicInvolvementName" class="select2 form-control">
+                                                <option value="">-- Select Academic Involvement Name --</option>
+                                                <option value="kappaalphapsi" selected>Kappa Alpha Psi</option>
+                                                <option value="more">More...</option>
+                                            </select>*@
+                                            @Html.DropDownListFor(
+                                                m => m.AcademicInvolvementName,
+                                                Model.StudentAcademicInvolvementNameList,
+                                                htmlAttributes: new { @class = "form-control" }
+                                            )
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="AcademicInvolvementName" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.AcademicInvolvementAcademicYear_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="AcademicInvolvementAcademicYear_BusinessName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementAcademicYear_BusinessDescription" />
+                                                <input type="hidden" asp-for="AcademicInvolvementAcademicYear_Source" />
+                                                <input type="hidden" asp-for="AcademicInvolvementAcademicYear_Status" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.AcademicInvolvementAcademicYear_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.AcademicInvolvementAcademicYear_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.AcademicInvolvementAcademicYear_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#StudentAcademicInvolvementAcademicYearHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementAcademicYear_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementAcademicYear)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="AcademicInvolvementAcademicYear">@Model.AcademicInvolvementAcademicYear_BusinessName: </label>
+                                            <input asp-for="AcademicInvolvementAcademicYear" class="form-control" placeholder="@Model.AcademicInvolvementAcademicYear_BusinessName" />
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="AcademicInvolvementAcademicYear" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                    <div class="col-xs-12 col-sm-6 col-lg-4">
+                                        <div class='form-group @string.Format("status{0}", Model.AcademicInvolvementTerm_Status)'>
+                                            <div class="pull-right">
+                                                <input type="hidden" asp-for="AcademicInvolvementTerm_BusinessName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTerm_BusinessDescription" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTerm_Source" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTerm_Status" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTermName" />
+                                                <input type="hidden" asp-for="AcademicInvolvementTermCode" />
+                                                <button type="button" class="btn btn-xs infoPerField" rel="popover" tabindex="-1"
+                                                        data-info-content-name="@Html.DisplayFor(m => m.AcademicInvolvementTerm_BusinessName)"
+                                                        data-info-content-description="@Html.DisplayFor(m => m.AcademicInvolvementTerm_BusinessDescription)"
+                                                        data-info-content-source="@Html.DisplayFor(m => m.System)"
+                                                        data-info-content-sourcefieldid="@Html.DisplayFor(m => m.AcademicInvolvementTerm_Source)">
+                                                    <i role="img" class="fas fa-info-circle fa-sm">&nbsp;</i><span>Info</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs historyPerField" title="Field History" data-toggle="modal" data-target="#studentAcademicInvolvementTermHistoryModal" tabindex="-1"
+                                                        data-history-content-status="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementTerm_Status)"
+                                                        data-history-content-date="@Html.DisplayFor(m => m.HistoryData[0].HistoryDate)"
+                                                        data-history-content-value="@Html.DisplayFor(m => m.HistoryData[0].AcademicInvolvementTerm)">
+                                                    <i role="img" class="fas fa-history fa-sm">&nbsp;</i><span>History</span>
+                                                </button>
+                                                <button type="button" class="btn btn-xs form-error text-danger hide" rel="popover" title="Field Errors:" tabindex="-1"><i role="img" class="fas fa-exclamation-triangle fa-sm">&nbsp;</i><span>Error</span></button>
+                                            </div>
+                                            <label class="control-label" for="AcademicInvolvementTerm">@Model.AcademicInvolvementTerm_BusinessName: </label>
+                                            @Html.DropDownListFor(
+                                                m => m.AcademicInvolvementTerm,
+                                                Model.StudentAcademicInvolvementTermList,
+                                                htmlAttributes: new { @class = "form-control" }
+                                            )
+                                            <span class="fa fa-cog form-control-feedback" aria-hidden="true" title="Enriched"></span>
+                                            <span class="fa fa-pen-square form-control-feedback" aria-hidden="true" title="Changed"></span>
+                                            <span class="fa fa-check-square form-control-feedback" aria-hidden="true" title="Good"></span>
+                                            <span class="fa fa-exclamation-triangle form-control-feedback" aria-hidden="true" title="Bad"></span>
+                                            <span asp-validation-for="AcademicInvolvementTerm" class="text-danger help-block"></span>
+                                        </div>
+                                    </div><!-- /.col-* -->
+                                </fieldset>
+
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel-primary -->
+                    </div><!-- /.panel-container -->
+
+                </div><!-- /.panel-body -->
+
+                <div class="panel-footer text-right">
+                    <a asp-area="" asp-controller="Student" asp-action="StudentAcademicInvolvementList" class="btn btn-link" title="Cancel Changes" data-toggle="tooltip"><i role="img" class="fas fa-times">&nbsp;</i>Discard</a>
+                    <button type="submit" id="btnSavePartial" class="btn btn-info" title="Save Partial Record" data-toggle="tooltip" formaction='@Url.Action("StudentAcademicInvolvementSave", "Student")' disabled="disabled">
+                        <i role="img" class="fas fa-save">&nbsp;</i>Save Partial Record
+                    </button>
+                    <button type="submit" id="btnResolve" class="btn btn-primary" title="Re-Validate Record" data-toggle="tooltip" formaction='@Url.Action("StudentAcademicInvolvementRevalidate", "Student")'>
+                        <i role="img" class="fas fa-check">&nbsp;</i>Resolve Record
+                    </button>
+                </div><!-- /.panel-footer -->
+
+            </div><!-- /.panel-secondary -->
+        </form>
+    </div><!-- /.content-container -->
+
+    <div id="callbackBox"></div>
+
+}
+else
+{
+    // Temporary: Record Not Found Content
+    // TODO: Implement error handling
+    <div class="recordNotFoundContent">
+        <ul class="page-title">
+            <li>
+                <h1>Ya done messed up, A-A-ron...</h1>
+                <h3>Record not found</h3>
+                <p>More than likely, there's a NULL value which is not being accounted for yet.</p>
+            </li>
+        </ul>
+        <img src="~/img/page-rip-hole.jpg" alt="Error Image" />
+        <p><a asp-area="" asp-controller="Student" asp-action="StudentAcademicInvolvementList">Back to List</a></p>
+    </div>
+}
+
+<!-- Popover - Title: Legend -->
+<div id="popover-legend-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    <span>Status Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Legend -->
+<div id="popover-legend-content" class="popover hide">
+    <div class="">
+        <table id="historyPerFieldTable" class="table historyData table-striped">
+            <thead>
+                <tr class="tableHeader">
+                    <th>Status:</th>
+                    <th>Description:</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="changedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-pen-square" data-toggle="tooltip" title="Changed Data"></i> Changed Data</td>
+                    <td data-header="Meaning">This data was manually modified by a Data Steward</td>
+                </tr>
+                <tr class="goodDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-check-square" data-toggle="tooltip" title="Valid Data"></i> Valid Data</td>
+                    <td data-header="Date">This data is valid</td>
+                </tr>
+                <tr class="enrichedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-cog" data-toggle="tooltip" title="Enriched Data"></i> Enriched Data</td>
+                    <td data-header="Date">This data was enriched by the Integration Framework</td>
+                </tr>
+                <tr class="badDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-ban" data-toggle="tooltip" title="Invalid Data"></i> Invalid Data</td>
+                    <td data-header="Date">This data is invalid</td>
+                </tr>
+                <tr class="notProvidedDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Data not applicable"></i> N/A</td>
+                    <td data-header="Date">This data is not appliciable</td>
+                </tr>
+                <tr class="sourceDataHistory">
+                    <td data-header="Status"><i role="img" class="fas fa-server" data-toggle="tooltip" title="Source Data"></i> Source Data</td>
+                    <td data-header="Date">Original data provided by the Source System</td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!-- /.timeline -->
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Info -->
+<div id="popover-info-title" class="popover hide" role="tooltip">
+    @*<a href="javascript:;" type="button" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>*@
+    <span>Field Information:</span>
+</div><!-- /.popover (title) -->
+<!-- Popover - Content: Info -->
+<div id="popover-info-content" class="popover hide">
+    <ul class="triangle">
+        <li>
+            <span><strong>Business Glossary Name:</strong> <span id="popover-info-content-name">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Business Glossary Description:</strong> <span id="popover-info-content-description">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source System:</strong> <span id="popover-info-content-source">[No Data Provided]</span></span>
+        </li>
+        <li>
+            <span><strong>Source Field Id:</strong> <span id="popover-info-content-sourcefieldid">[No Data Provided]</span></span>
+        </li>
+    </ul>
+</div><!-- /.popover (content) -->
+<!-- Popover - Title: Field History -->
+<div id="popover-history-title" class="popover hide" role="tooltip">
+    <a href="javascript:;" role="button" class="pull-right close" title="Close"><i role="img" class="btn-icon ua-brand-x">&nbsp;</i></a>
+    Field History:
+</div><!-- /.popover (title) -->
+<!-- Modal - Content: StudentName History -->
+<div class="modal fade" id="studentStudentNameHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studentStudentNameHistoryModal studentStudentNameHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentStudentNameHistoryModalLabel">@Model.StudentName_BusinessName History: @Model.StudentName</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="StudentNameHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.StudentName_Source ?? " Not Provided in " + @Model.System)"></i><button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        if (Model.StudentName_Status == "Good" || Model.HistoryData[i].StudentName_Status == "Enriched")
+                                        {
+                                            <tr class="@Model.HistoryData[i].StudentName_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].StudentName_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].StudentName_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].StudentName)
+                                                        @*@Html.Raw(Model.HistoryData[i].StudentName ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].StudentName)
+                                                    </span>
+                                                    @(Model.HistoryData[i].StudentName_Status != "Source" && Model.HistoryData[i].StudentName_Status == "Enriched" ? Html.Raw("<i role='img' class='fas fa-question-circle fa-sm' title='Click to learn more about enrichment...'></i>") : Html.Raw(""))
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="@Model.HistoryData[i].StudentName_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].StudentName_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].StudentName_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].StudentName)
+                                                        @*@Html.Raw(Model.HistoryData[i].StudentName ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].StudentName)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (StudentName) -->
+<!-- Modal - Content: StudentMasterId History -->
+<div class="modal fade" id="StudentMasterIdHistoryModal" tabindex="-1" role="dialog" aria-labelledby="StudentMasterIdModal StudentMasterIdHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="StudentAcademicInvolvementAcademicYearHistoryModalLabel">@Model.StudentMasterId_BusinessName History: @Model.StudentMasterId</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="StudentMasterIdHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.StudentMasterId_Source ?? "Not Provided in " + @Model.System)"></i><button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        if (Model.StudentMasterId_Status == "Good" || Model.HistoryData[i].StudentMasterId_Status == "Enriched")
+                                        {
+                                            <tr class="@Model.HistoryData[i].StudentMasterId_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].StudentMasterId_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].StudentMasterId_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].StudentMasterId)
+                                                        @Html.HiddenFor(m => m.HistoryData[i].StudentMasterId)
+                                                    </span>
+                                                    @(Model.HistoryData[i].StudentMasterId_Status != "Source" && Model.HistoryData[i].StudentMasterId_Status == "Enriched" ? Html.Raw("<i role='img' class='fas fa-question-circle fa-sm' title='Click to learn more about enrichment...'></i>") : Html.Raw(""))
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="@Model.HistoryData[i].StudentMasterId_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].StudentMasterId_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].StudentMasterId_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].StudentMasterId)
+                                                        @Html.HiddenFor(m => m.HistoryData[i].StudentMasterId)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (StudentMasterId) -->
+<!-- Modal - Content: AcademicInvolvementAcademicYear History -->
+<div class="modal fade" id="StudentAcademicInvolvementAcademicYearHistoryModal" tabindex="-1" role="dialog" aria-labelledby="StudentAcademicInvolvementAcademicYearHistoryModal StudentAcademicInvolvementAcademicYearHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="StudentAcademicInvolvementAcademicYearHistoryModalLabel">@Model.AcademicInvolvementAcademicYear_BusinessName History: @Model.AcademicInvolvementAcademicYear</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="AcademicYearHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.AcademicInvolvementAcademicYear_Source ?? "Not Provided in " + @Model.System)"></i><button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        if (Model.AcademicInvolvementAcademicYear_Status == "Good" || Model.HistoryData[i].AcademicInvolvementAcademicYear_Status == "Enriched")
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementAcademicYear_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementAcademicYear_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementAcademicYear_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementAcademicYear)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementAcademicYear ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementAcademicYear)
+                                                    </span>
+                                                    @(Model.HistoryData[i].AcademicInvolvementAcademicYear_Status != "Source" && Model.HistoryData[i].AcademicInvolvementAcademicYear_Status == "Enriched" ? Html.Raw("<i role='img' class='fas fa-question-circle fa-sm' title='Click to learn more about enrichment...'></i>") : Html.Raw(""))
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementAcademicYear_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementAcademicYear_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementAcademicYear_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementAcademicYear)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementAcademicYear ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementAcademicYear)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (AcademicInvolvementAcademicYear) -->
+<!-- Modal - Content: AcademicInvolvementTerm History -->
+<div class="modal fade" id="studentAcademicInvolvementTermHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studentAcademicInvolvementTermHistoryModal studentAcademicInvolvementTermHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentAcademicInvolvementTermHistoryModalLabel">@Model.AcademicInvolvementTerm_BusinessName History: @Model.AcademicInvolvementTerm</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="AcademicInvolvementTermHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.AcademicInvolvementTerm_Source ?? " Not Provided in " + @Model.System)"></i><button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        if (Model.AcademicInvolvementTerm_Status == "Good" || Model.HistoryData[i].AcademicInvolvementTerm_Status == "Enriched")
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementTerm_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementTerm_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementTerm_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementTerm)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementTerm ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementTerm)
+                                                    </span>
+                                                    @(Model.HistoryData[i].AcademicInvolvementTerm_Status != "Source" && Model.HistoryData[i].AcademicInvolvementTerm_Status == "Enriched" ? Html.Raw("<i role='img' class='fas fa-question-circle fa-sm' title='Click to learn more about enrichment...'></i>") : Html.Raw(""))
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementTerm_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementTerm_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementTerm_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementTerm)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementTerm ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementTerm)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (AcademicInvolvementTerm) -->
+<!-- Modal - Content: AcademicInvolvementType History -->
+<div class="modal fade" id="studentAcademicInvolvementTypeHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studentAcademicInvolvementTypeHistoryModal studentAcademicInvolvementTypeHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentAcademicInvolvementTypeHistoryModalLabel">@Model.AcademicInvolvementType_BusinessName History: @Model.AcademicInvolvementType</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="AcademicInvolvementTypeHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.AcademicInvolvementType_Source ?? " Not Provided in " + @Model.System)"></i><button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        if (Model.AcademicInvolvementType_Status == "Good" || Model.HistoryData[i].AcademicInvolvementType_Status == "Enriched")
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementType_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementType_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementType_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementType)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementType ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementType)
+                                                    </span>
+                                                    @(Model.HistoryData[i].AcademicInvolvementType_Status != "Source" && Model.HistoryData[i].AcademicInvolvementType_Status == "Enriched" ? Html.Raw("<i role='img' class='fas fa-question-circle fa-sm' title='Click to learn more about enrichment...'></i>") : Html.Raw(""))
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementType_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementType_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementType_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementType)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementType ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementType)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (AcademicInvolvementType) -->
+<!-- Modal - Content: AcademicInvolvementName History -->
+<div class="modal fade" id="studentAcademicInvolvementNameHistoryModal" tabindex="-1" role="dialog" aria-labelledby="studentAcademicInvolvementNameHistoryModal studentAcademicInvolvementNameHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentAcademicInvolvementNameHistoryModalLabel">@Model.AcademicInvolvementName_BusinessName History: @Model.AcademicInvolvementName</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="AcademicInvolvementNameHistoryDataPerFieldTable" class="table responsive historyDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all date">Date:</th>
+                                        <th class="all name">Name: <i role="img" class="fas fa-question-circle fa-sm" title="@Html.Raw(Model.AcademicInvolvementName_Source ?? " Not Provided in " + @Model.System)"></i><button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History Legend <i role="img" class="fas fa-question-circle"></i></button></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i <= Model.HistoryData.Count - 1; i++)
+                                    {
+                                        if (Model.AcademicInvolvementName_Status == "Good" || Model.HistoryData[i].AcademicInvolvementName_Status == "Enriched")
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementName_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementName_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementName_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementName)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementName ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementName)
+                                                    </span>
+                                                    @(Model.HistoryData[i].AcademicInvolvementName_Status != "Source" && Model.HistoryData[i].AcademicInvolvementName_Status == "Enriched" ? Html.Raw("<i role='img' class='fas fa-question-circle fa-sm' title='Click to learn more about enrichment...'></i>") : Html.Raw(""))
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr class="@Model.HistoryData[i].AcademicInvolvementName_Status.GetHistoryFieldStatusClass()">
+                                                <td data-header="Date">
+                                                    @Model.HistoryData[i].HistoryDate
+                                                </td>
+                                                <td data-header="Name">
+                                                    <i role="img" class="fas @Model.HistoryData[i].AcademicInvolvementName_Status.GetHistoryFieldIconClass()"></i>
+                                                    <span data-toggle="tooltip" title="@Model.HistoryData[i].AcademicInvolvementName_Status">
+                                                        @Html.DisplayFor(m => m.HistoryData[i].AcademicInvolvementName)
+                                                        @*@Html.Raw(Model.HistoryData[i].AcademicInvolvementName ?? "N/A")*@
+                                                        @Html.HiddenFor(m => m.HistoryData[i].AcademicInvolvementName)
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (AcademicInvolvementName) -->
+<!-- Modal - Source Data -->
+<div class="modal fade" id="StudentAcademicInvolvementSourceDataModal" tabindex="-1" role="dialog" aria-labelledby="StudentAcademicInvolvementSourceDataModal StudentAcademicInvolvementSourceDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="StudentAcademicInvolvementSourceDataModalLabel">Record Source Data:</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-toggle="tooltip" title="Close"><i aria-hidden="true" class="ua-brand-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="legend pull-right">
+                    <button class="btn btn-sm btn-link infoLegend" data-toggle="tooltip" type="button" aria-expanded="false">History/Source Legend <i role="img" class="fas fa-question-circle"></i></button>
+                </div><!-- /.legend -->
+                <ul class="page-title">
+                    <li>
+                        <h2>
+                            Integration Date:
+                            <span title="Date of Integration">
+                                @Html.Raw(Model.CreatedOnDT.HasValue ? Model.CreatedOnDT.Value.ToString() : "N/A")
+                            </span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            Source System:
+                            <span title="Source System">@Html.Raw(Model.System ?? "N/A")</span>
+                        </h2>
+                    </li>
+                    <li>
+                        <h2>
+                            System Record Id:
+                            <span title="Source System Record Id">@Html.Raw(Model.SourceRecordId ?? "N/A")</span>
+                        </h2>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table id="officeLocationSourceDataPerRecordTable" class="table responsive sourceDataContainer table-striped">
+                                <thead>
+                                    <tr class="tableHeader">
+                                        <th class="all">Field:</th>
+                                        <th class="all">Current Value:</th>
+                                        <th class="all">Original Value:</th>
+                                        <th class="all">Source Field Id:</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="@Model.StudentName_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.StudentName_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.StudentName_Status">
+                                                <i role="img" class="fas @Model.StudentName_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.StudentName
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="StudentName_OriginalValue" />
+                                            <span title="Original Value">@(Model.StudentName_OriginalValue != null ? Html.Raw(Model.StudentName_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.StudentName_Source == "" || Model.StudentName_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.StudentName_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.AcademicInvolvementAcademicYear_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.AcademicInvolvementAcademicYear_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.AcademicInvolvementAcademicYear_Status">
+                                                <i role="img" class="fas @Model.AcademicInvolvementAcademicYear_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.AcademicInvolvementAcademicYear
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="AcademicInvolvementAcademicYear_OriginalValue" />
+                                            <span title="Original Value">@(Model.AcademicInvolvementAcademicYear_OriginalValue != null ? Html.Raw(Model.AcademicInvolvementAcademicYear_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.AcademicInvolvementAcademicYear_Source == "" || Model.AcademicInvolvementAcademicYear_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.AcademicInvolvementAcademicYear_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.AcademicInvolvementTerm_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.AcademicInvolvementTerm_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.AcademicInvolvementTerm_Status">
+                                                <i role="img" class="fas @Model.AcademicInvolvementTerm_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.AcademicInvolvementTerm
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="AcademicInvolvementTerm_OriginalValue" />
+                                            <span title="Original Value">@(Model.AcademicInvolvementTerm_OriginalValue != null ? Html.Raw(Model.AcademicInvolvementTerm_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.AcademicInvolvementTerm_Source == "" || Model.AcademicInvolvementTerm_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.AcademicInvolvementTerm_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.AcademicInvolvementType_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.AcademicInvolvementType_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.AcademicInvolvementType_Status">
+                                                <i role="img" class="fas @Model.AcademicInvolvementType_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.AcademicInvolvementType
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="AcademicInvolvementType_OriginalValue" />
+                                            <span title="Original Value">@(Model.AcademicInvolvementType_OriginalValue != null ? Html.Raw(Model.AcademicInvolvementType_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.AcademicInvolvementType_Source == "" || Model.AcademicInvolvementType_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.AcademicInvolvementType_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="@Model.AcademicInvolvementName_Status.GetHistoryFieldStatusClass()">
+                                        <td data-header="Field">@Model.AcademicInvolvementName_BusinessName</td>
+                                        <td data-header="Current Value">
+                                            <span title="@Model.AcademicInvolvementName_Status">
+                                                <i role="img" class="fas @Model.AcademicInvolvementName_Status.GetHistoryFieldIconClass()"></i>&nbsp;
+                                                @Model.AcademicInvolvementName
+                                            </span>
+                                        </td>
+                                        <td data-header="Original Value">
+                                            <input type="hidden" asp-for="AcademicInvolvementName_OriginalValue" />
+                                            <span title="Original Value">@(Model.AcademicInvolvementName_OriginalValue != null ? Html.Raw(Model.AcademicInvolvementName_OriginalValue) : Html.Raw(""))</span>
+                                        </td>
+                                        <td data-header="Source Field Id">
+                                            @if (Model.AcademicInvolvementName_Source == "" || Model.AcademicInvolvementName_Source == null)
+                                            {
+                                                <span class="notProvidedDataHistory"><i role="img" class="fas fa-exclamation-triangle"></i>&nbsp; Not Provided in @Model.System</span>;
+                                            }
+                                            else
+                                            {
+                                                @Model.AcademicInvolvementName_Source
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><!-- /.col-* -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="tooltip" title="Close"><i role="img" class="fas fa-times">&nbsp;</i> Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal (Source Data) -->
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            // https://select2.org/
+            // -------------------------------------------------
+
+            // StudentName ---
+            var studentNameDropDown = $('#StudentName');
+            $(studentNameDropDown).select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Get/Set Current Drop-Down Value:
+            // -------------------------------------------------
+            $(studentNameDropDown).on('change', function () {
+
+                var url = '@Html.Raw(Url.Action("GetStudentAcademicInvolvementTermMasterId", "Student"))' + '/' + $(this).find(":selected").val();
+                $.getJSON(url, function (data) {
+                    console.log(data);
+                    console.log("success");
+                    $('#StudentNameName').val(data.studentNameName);
+                    $('#StudentNameCode').val(data.studentNameCode);
+                });
+
+                // get current value/text
+                var currentStudentNameSelectListValue = $(this).find(":selected").val();
+                //alert(currentStudentNameSelectListValue);
+
+                // set current value on hidden field
+                if (currentStudentNameSelectListValue !== "") {
+                    $(studentNameDropDown).val(currentStudentNameSelectListValue);
+                } else {
+                    $(studentNameDropDown).val("");
+                };
+            });
+
+
+
+
+            // AcademicInvolvementTerm ---
+            var academicInvolvementTermDropDown = $('#AcademicInvolvementTerm');
+            $(academicInvolvementTermDropDown).select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Get/Set Current Drop-Down Value:
+            // -------------------------------------------------
+            $(academicInvolvementTermDropDown).on('change', function () {
+
+                var url = '@Html.Raw(Url.Action("GetStudentAcademicInvolvementTermMasterId", "Student"))' + '/' + $(this).find(":selected").val();
+                $.getJSON(url, function (data) {
+                    console.log(data);
+                    console.log("success");
+                    $('#AcademicInvolvementTermName').val(data.academicInvolvementTermName);
+                    $('#AcademicInvolvementTermCode').val(data.academicInvolvementTermCode);
+                });
+
+                // get current value/text
+                var currentAcademicInvolvementTermSelectListValue = $(this).find(":selected").val();
+                //alert(currentAcademicInvolvementTermSelectListValue);
+
+                // set current value on hidden field
+                if (currentAcademicInvolvementTermSelectListValue !== "") {
+                    $(academicInvolvementTermDropDown).val(currentAcademicInvolvementTermSelectListValue);
+                } else {
+                    $(academicInvolvementTermDropDown).val("");
+                };
+            });
+
+
+
+
+            // AcademicInvolvementType ---
+            var academicInvolvementTypeDropDown = $('#AcademicInvolvementType');
+            $(academicInvolvementTypeDropDown).select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Get/Set Current Drop-Down Value:
+            // -------------------------------------------------
+            $(academicInvolvementTypeDropDown).on('change', function () {
+
+                var url = '@Html.Raw(Url.Action("GetStudentAcademicInvolvementTypeMasterId", "Student"))' + '/' + $(this).find(":selected").val();
+                $.getJSON(url, function (data) {
+                    console.log(data);
+                    console.log("success");
+                    $('#AcademicInvolvementTypeName').val(data.academicInvolvementTypeName);
+                    $('#AcademicInvolvementTypeCode').val(data.academicInvolvementTypeCode);
+                });
+
+                // get current value/text
+                var currentAcademicInvolvementTypeSelectListValue = $(this).find(":selected").val();
+                //alert(currentAcademicInvolvementTypeSelectListValue);
+
+                // set current value on hidden field
+                if (currentAcademicInvolvementTypeSelectListValue !== "") {
+                    $(academicInvolvementTypeDropDown).val(currentAcademicInvolvementTypeSelectListValue);
+                } else {
+                    $(academicInvolvementTypeDropDown).val("");
+                };
+            });
+
+
+
+
+            // AcademicInvolvementName ---
+            var academicInvolvementNameDropDown = $('#AcademicInvolvementName');
+            $(academicInvolvementNameDropDown).select2({
+                selectOnClose: true,
+                width: '100%'
+            });
+            // Get/Set Current Drop-Down Value:
+            // -------------------------------------------------
+            $(academicInvolvementNameDropDown).on('change', function () {
+
+                var url = '@Html.Raw(Url.Action("GetStudentAcademicInvolvementNameMasterId", "Student"))' + '/' + $(this).find(":selected").val();
+                $.getJSON(url, function (data) {
+                    console.log(data);
+                    console.log("success");
+                    $('#AcademicInvolvementNameName').val(data.academicInvolvementNameName);
+                    $('#AcademicInvolvementNameCode').val(data.academicInvolvementNameCode);
+                });
+
+                // get current value/text
+                var currentAcademicInvolvementNameSelectListValue = $(this).find(":selected").val();
+                //alert(currentAcademicInvolvementNameSelectListValue);
+
+                // set current value on hidden field
+                if (currentAcademicInvolvementNameSelectListValue !== "") {
+                    $(academicInvolvementNameDropDown).val(currentAcademicInvolvementNameSelectListValue);
+                } else {
+                    $(academicInvolvementNameDropDown).val("");
+                };
+            });
+
+
+
+
+            // For use in the external javascript file (site.js) ::
+            var systemVariableName = '@Model.System';
+            window.systemVariableName = '@Model.System';
+            console.log("Source System: " + window.systemVariableName);
+
+
+            // --------------------------------------------------------------
+
+
+
+            var form = $('.content-container > form');
+            var formGroup = $(':input').parent('.form-group');
+            var editedClass = 'fa-pen-square';
+
+            // Get Current Form Field Value:
+            // -------------------------------------------------
+            $(form).on('keyup change paste', ':input', function () {
+
+                var formField = $(this);
+                var thisFormFieldsValue = $(this).val();
+                //console.log('form field value: ' + thisFormFieldsValue);
+
+                return (formField);
+                console.log(formField);
+
+            });
+
+
+            var dfOptions = {
+                denoteDirtyForm: true,
+                denoteDirtyOptions: true,
+                dirtyOptionClass: "dirtyChoice",
+                trimText: true,
+                textboxContext: 'parent',
+
+                preFieldChangeCallback: function (originalValue) {
+                    //$("#callbackBox").html("[preFieldChangeCallback] Original value of field '" + $(this).attr("name") + "' is: " + originalValue + "<br />");
+                },
+                fieldChangeCallback: function (originalValue, result) {
+                    //$("#callbackBox").append("[fieldChange callback] Original value of field  '" + $(this).attr("name") + "' is: " + originalValue + ".  Dirty status is " + result + "<br />");
+                },
+                formChangeCallback: function (result, dirtyFieldsArray) {
+                    var recordName = "@Model.StudentId";
+                    var dirtyFieldParentPanelTitle = $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert');
+                    var cleanFieldParentPanelTitle = $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert');
+                    if (result) { // Dirty
+                        //$("#callbackBox").append("[formChangeCallback] Form is dirty. Dirty fields are: " + dirtyFieldsArray + "<br />");
+                        $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                        $(this).find("#btnResolve").removeAttr("disabled");
+                        //$(dirtyFieldParentPanelTitle).removeClass("hide").html("*" + recordName + "'s record has been modified*");
+                        $(dirtyFieldParentPanelTitle).removeClass("hide").html("*Save your changes*");
+                        $('#btnSavePartial').removeAttr('disabled');
+                        $('#IsChanged').val(true);
+
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').addClass('dirtyField').addClass('has-feedback');
+                            $('.form-group.dirtyField').parents('.panel').find('.updatedFormAlert').removeClass("hide").html("*Save your changes*");
+                        });
+                    }
+                    else { // Clean
+                        //$("#callbackBox").append("[formChangeCallback] Form is clean.<br />");
+                        $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                        $(this).find("#btnSavePartial").attr("disabled", "disabled");
+                        $('#IsChanged').val(false);
+
+                        $(cleanFieldParentPanelTitle).addClass("hide").html("");
+                        // Validate Drop-down form fields:
+                        $("select").on("select2:close", function (e) {
+                            $(this).valid();
+                            $(this).parents('.form-group').removeClass('dirtyField has-feedback');
+                            $('.form-group:not(".dirtyField")').parents('.panel').find('.updatedFormAlert').addClass("hide").html("");
+                        });
+                    }
+                    //Scrolls the logging div to the bottom
+                    //var objDiv = document.getElementById("callbackBox");
+                    //objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            };
+
+            $(form).dirtyFields(dfOptions);
+
+
+        });
+    </script>
+
+}
