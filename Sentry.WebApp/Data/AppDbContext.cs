@@ -767,7 +767,7 @@ namespace Sentry.WebApp.Data
         {
             try
             {
-               Database.ExecuteSql($"{$"{(ActionIsEnable ? "ENABLE" : "DISABLE")}"} TRIGGER [{@Schema}].[{@Table}_Trigger] ON [{@Schema}].[{@Table}]",
+               Database.ExecuteSqlRaw($"{$"{(ActionIsEnable ? "ENABLE" : "DISABLE")}"} TRIGGER [{@Schema}].[{@Table}_Trigger] ON [{@Schema}].[{@Table}]",
                         new SqlParameter("@Schema", Schema),
                         new SqlParameter("@Table", Table)
                     );
