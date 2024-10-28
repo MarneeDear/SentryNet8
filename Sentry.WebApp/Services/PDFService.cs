@@ -79,11 +79,11 @@ namespace Sentry.WebApp.Services
             _logger.LogTrace($"SaveToFile returned {returnValue}");
             if (System.IO.File.Exists(fileName))
             {
-                _logger.LogTrace("Saved PDFDocument", fileName);
+                _logger.LogTrace($"Saved PDFDocument [{fileName}]");
             }
             else
             {
-                _logger.LogError("Save PDFDocument FAILED", fileName);
+                _logger.LogError($"Saved PDFDocument [{fileName}]");
             }
 
             //Need this to properly display link
@@ -491,7 +491,7 @@ namespace Sentry.WebApp.Services
                 .ForEach(i => i.GiftTransmittalItemDistributions.ToList()
                 .ForEach(d =>
                 {
-                    if (!BFEProjects) BFEProjects = CheckBFEFlag(d.FundAccount, _logger);
+                    if (!BFEProjects) BFEProjects = CheckBFEFlag(d.FundAccount);
                 }));
             if (gt.GiftTransmittalItems.Count(i => (i.GiftTransmittalItemRecognitionCredits.Any()) || (i.Package != null && i.Package != "")) > 0) qp.DrawText(230, 260, "*Soft Credit/Package");
             if (BFEProjects) qp.DrawText(345, 260, "*BFE");
@@ -545,14 +545,14 @@ namespace Sentry.WebApp.Services
             }
         }
 
-        private bool CheckBFEFlag(string distFundDesc, ILogger _logger)
+        private bool CheckBFEFlag(string distFundDesc)
         {
             bool hasBFEFlag = (bool)_domainService.MasterDataWebService.CheckIfDesignationIsBFE(distFundDesc).Result;
             //bool hasBFEFlag = _context.BFEProjects.Where(i => i.ProjectId == distFundDesc).Count() > 0;
             return hasBFEFlag;
         }
 
-        private void DrawFooter(DebenuPDFLibraryAX1511.PDFLibrary qp, GiftTransmittal gt, ref PDF model)
+        private static  void DrawFooter(DebenuPDFLibraryAX1511.PDFLibrary qp, GiftTransmittal gt, ref PDF model)
         {
             //Set content for table footer.
 
@@ -626,7 +626,7 @@ namespace Sentry.WebApp.Services
             qp.DrawLine(250, 560, 250, 585);
         }
 
-        private void SetFonts(DebenuPDFLibraryAX1511.PDFLibrary qp, ref PDF model)
+        private static void SetFonts(DebenuPDFLibraryAX1511.PDFLibrary qp, ref PDF model)
         {
             model.FONT_HELVELTICA = qp.AddStandardFont(4);
             model.FONT_HELVETICA_BOLD = qp.AddStandardFont(5);
