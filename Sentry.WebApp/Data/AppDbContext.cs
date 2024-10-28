@@ -695,7 +695,7 @@ namespace Sentry.WebApp.Data
         #region Designation
         public IEnumerable<DesignationDetail> GetDesignationHistory(int SystemId, long Id)
         {
-            return DesignationDetails.FromSqlRaw($"SELECT * FROM Integration.DesignationHistory({Id}, {SystemId})").ToList();
+            return DesignationDetails.FromSql($"SELECT * FROM Integration.DesignationHistory({Id}, {SystemId})").ToList();
         }
 
         public DesignationMatchDetail GetDesignationMatchDetails(int SystemId, long Id)
@@ -767,7 +767,7 @@ namespace Sentry.WebApp.Data
         {
             try
             {
-               Database.ExecuteSqlRaw($"{$"{(ActionIsEnable ? "ENABLE" : "DISABLE")}"} TRIGGER [{@Schema}].[{@Table}_Trigger] ON [{@Schema}].[{@Table}]",
+               Database.ExecuteSql($"{$"{(ActionIsEnable ? "ENABLE" : "DISABLE")}"} TRIGGER [{@Schema}].[{@Table}_Trigger] ON [{@Schema}].[{@Table}]",
                         new SqlParameter("@Schema", Schema),
                         new SqlParameter("@Table", Table)
                     );
