@@ -16,8 +16,8 @@ namespace Sentry.WebApp.Security
         private readonly IConfiguration _config;
         public IServiceProvider ServiceProvider { get; set; }
 
-        public AuthenticationKeyHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options, IConfiguration config, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock, IServiceProvider serviceProvider)
-            : base(options, logger, encoder, clock)
+        public AuthenticationKeyHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options, IConfiguration config, ILoggerFactory logger, UrlEncoder encoder, IServiceProvider serviceProvider)
+            : base(options, logger, encoder)
         {
             ServiceProvider = serviceProvider;
             _config = config;

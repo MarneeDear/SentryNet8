@@ -40,12 +40,12 @@ namespace Sentry.WebApp.Services.PowerBi
                 }
                 catch (MsalUiRequiredException)
                 {
-                    SecureString password = new SecureString();
-                    foreach (var key in azureAd.Value.PbiPassword)
-                    {
-                        password.AppendChar(key);
-                    }
-                    authenticationResult = clientApp.AcquireTokenByUsernamePassword(azureAd.Value.ScopeBase, azureAd.Value.PbiUsername, password).ExecuteAsync().Result;
+                    //SecureString password = new SecureString();
+                    //foreach (var key in azureAd.Value.PbiPassword)
+                    //{
+                    //    password.AppendChar(key);
+                    //}
+                    //authenticationResult = clientApp.AcquireTokenByUsernamePassword(azureAd.Value.ScopeBase, azureAd.Value.PbiUsername, azureAd.Value.PbiPassword).ExecuteAsync().Result;
                 }
             }
 
