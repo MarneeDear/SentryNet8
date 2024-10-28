@@ -1,0 +1,75 @@
+﻿body {
+    /*background-color: #b59e98;*/
+    background-color: white;
+    /*background-image: url('../img/page-rip-hole.jpg');*/
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: grid;
+    margin: 0;
+    padding-bottom: 0;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    place-items: center center;
+}
+
+#fourHundredFour {
+    display: none;
+}
+
+.center-block.text-center .img {
+    background-color: black;
+    -webkit-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 50px 0px rgba(0,0,0,0.5);
+    display: grid;
+    margin: 2em 0;
+    padding: 0;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+    place-items: center center;
+}
+
+.center-block.text-center .img {
+    height: 476px;
+}
+
+h3 {
+    /*color: rgba(var(--main-bg-color-rgb), 0.5);*/
+    font-style: italic;
+    text-transform: uppercase;
+}
+
+.errorcode {
+    color: white;
+    font-size: 6em;
+    font-weight: bold;
+    left: 37.23%;
+    opacity: .1;
+    position: absolute;
+    text-transform: uppercase;
+    text-align: center;
+    top: 40%;
+}
+
+a,
+a:link,
+a:visited {
+    /*color: rgba(var(--main-bg-color-rgb), 0.75);*/
+    font-weight: normal;
+    padding-bottom: 0.25em;
+}
+
+    a:hover,
+    a:active {
+        border-bottom: 2px solid black;
+        color: black;
+        text-decoration: none;
+    }
+
+    a.remove-external-link-icon:hover,
+    a.remove-external-link-icon:active {
+        border-bottom: none;
+        text-decoration: none;
+    }
